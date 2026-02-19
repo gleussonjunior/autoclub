@@ -357,23 +357,52 @@ const VIA  = urlParams.get("via") || "";
 let todosCarros = [], filtrados = [], garajeiro = null;
 
 async function fetchSheet(aba) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(aba)}`;
+  // headers=2 tells gviz that row 2 has the column headers (row 1 is the colored title)
+  // range skips row 3 (the legend/subtitle row) so data starts cleanly from row 4
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(aba)}&headers=2&range=A2:Z10000`;
   const res  = await fetch(url);
   const text = await res.text();
   const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
-  const cols = json.table.cols.map(c => c.label);
-  return json.table.rows.map(row => {
-    const obj = {};
-    row.c.forEach((cell, i) => {
-      obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : "") : "";
-    });
-    return obj;
-  });
+  const cols = json.table.cols.map(c => c.label.trim());
+  const rows = json.table.rows
+    .map(row => {
+      const obj = {};
+      row.c.forEach((cell, i) => {
+        obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? String(cell.v).trim() : "") : "";
+      });
+      return obj;
+    })
+    // skip row index 0 which is the legend/subtitle row (row 3 in sheet)
+    .slice(1)
+    .filter(row => Object.values(row).some(v => String(v).trim().length > 0));
+  return rows;
 }
 
 function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
-function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
-function fKm(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/\D/g,"")); return isNaN(n)?v:n.toLocaleString("pt-BR")+" km"; }
+
+function fixImgUrl(url) {
+  if (!url || String(url).trim() === '') return '';
+  const s = String(url).trim();
+  // Convert Google Drive share link to direct image link
+  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing -> https://drive.google.com/uc?export=view&id=FILE_ID
+  const driveMatch = s.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveMatch) {
+    return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+  }
+  return s;
+}
+function fPreco(v) {
+  if (v === '' || v === null || v === undefined) return '–';
+  // Sheets may send as number or as "R$ 115.000" string
+  const s = String(v).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.');
+  const n = parseFloat(s);
+  return isNaN(n) ? String(v) : 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+}
+function fKm(v) {
+  if (v === '' || v === null || v === undefined) return '–';
+  const n = parseFloat(String(v).replace(/[^\d]/g,''));
+  return isNaN(n) ? String(v) : Math.round(n).toLocaleString('pt-BR') + ' km';
+}
 
 function wppLink(c, via="") {
   const tel = (garajeiro?.WhatsApp||"").replace(/\D/g,"");
@@ -391,16 +420,21 @@ async function init() {
     ]);
 
     // Identificar garajeiro pelo slug da URL
-    const slugAtual = SLUG || (garajeiros[0] && garajeiros[0].Slug) || "";
-    garajeiro = garajeiros.find(g => g.Slug === slugAtual) || garajeiros[0];
+    const slugAtual = (SLUG || "").trim().toLowerCase();
+    garajeiro = garajeiros.find(g => String(g.Slug || "").trim().toLowerCase() === slugAtual) || garajeiros[0];
 
     if (!garajeiro) {
       document.getElementById("grid").innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Garagem não encontrada.</p></div>`;
       return;
     }
 
-    // Filtrar carros dessa garagem que estão disponíveis
-    const todosDestaGaragem = carros.filter(c => c.Garajeiro === garajeiro.Slug || c.Garajeiro === garajeiro.Nome);
+    // Filtrar carros dessa garagem — compara slug e nome de forma flexível
+    const slugG = String(garajeiro.Slug || "").trim().toLowerCase();
+    const nomeG = String(garajeiro.Nome || "").trim().toLowerCase();
+    const todosDestaGaragem = carros.filter(c => {
+      const cGar = String(c.Garajeiro || "").trim().toLowerCase();
+      return cGar === slugG || cGar === nomeG;
+    });
     todosCarros = todosDestaGaragem.filter(c => {
       const status = String(c.Status || "Disponível").trim();
       return status === "Disponível";
@@ -456,8 +490,8 @@ function render(carros) {
   document.getElementById("grid-count").textContent = `${carros.length} veículo${carros.length!==1?"s":""} encontrado${carros.length!==1?"s":""}`;
   if (!carros.length) { grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum veículo encontrado.</p></div>`; return; }
   grid.innerHTML = carros.map((c,i) => {
-    const imgTag = c.Foto ? `<img class="card-img" src="${c.Foto}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : "";
-    const ph = `<div class="card-img-placeholder" ${c.Foto?"style='display:none'":""}>🚗</div>`;
+    const imgTag = fixImgUrl(c.Foto) ? `<img class="card-img" src="${fixImgUrl(c.Foto)}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : "";
+    const ph = `<div class="card-img-placeholder" ${fixImgUrl(c.Foto)?"style='display:none'":"">🚗</div>`;
     return `<div class="card" style="animation-delay:${i*.04}s" onclick="abrirModal(${i})">
       <div class="card-img-wrap">${imgTag}${ph}${c.Destaque?`<div class="badge-destaque">Destaque</div>`:""}${c.Codigo?`<div class="badge-code">${c.Codigo}</div>`:""}</div>
       <div class="card-body">
@@ -480,7 +514,7 @@ function abrirModal(i) {
   document.getElementById("m-comb").textContent  = c.Combustível||"–";
   const op = document.getElementById("m-op-wrap");
   if (c.Opcionais) { op.style.display="block"; document.getElementById("m-op").textContent=c.Opcionais; } else op.style.display="none";
-  document.getElementById("modal-img-wrap").innerHTML = c.Foto?`<img class="modal-img" src="${c.Foto}" alt="${c.Modelo}">`:`<div class="modal-img-placeholder">🚗</div>`;
+  document.getElementById("modal-img-wrap").innerHTML = fixImgUrl(c.Foto)?`<img class="modal-img" src="${fixImgUrl(c.Foto)}" alt="${c.Modelo}">`:`<div class="modal-img-placeholder">🚗</div>`;
   document.getElementById("m-wpp").href = wppLink(c,VIA);
   document.getElementById("overlay").classList.add("open");
   document.body.style.overflow="hidden";
