@@ -371,7 +371,8 @@ async function fetchSheet(aba) {
     cols.forEach((col, i) => {
       const cell = row.c ? row.c[i] : null;
       if (cell && cell.v !== null && cell.v !== undefined) {
-        obj[col] = String(cell.f !== null && cell.f !== undefined ? cell.f : cell.v).trim();
+        // Sempre usar cell.v (valor bruto) — cell.f pode retornar formatação errada
+        obj[col] = String(cell.v).trim();
       } else {
         obj[col] = '';
       }
@@ -429,6 +430,8 @@ async function init() {
       fetchSheet("Garajeiros"),
       fetchSheet("Carros")
     ]);
+
+
 
     // Identificar garajeiro pelo slug da URL
     const slugAtual = (SLUG || "").trim().toLowerCase();
@@ -542,4 +545,3 @@ init();
 </script>
 </body>
 </html>
-
