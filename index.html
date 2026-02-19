@@ -491,7 +491,7 @@ function render(carros) {
   if (!carros.length) { grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum veículo encontrado.</p></div>`; return; }
   grid.innerHTML = carros.map((c,i) => {
     const imgTag = fixImgUrl(c.Foto) ? `<img class="card-img" src="${fixImgUrl(c.Foto)}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : "";
-    const ph = `<div class="card-img-placeholder" ${fixImgUrl(c.Foto)?"style='display:none'":"">🚗</div>`;
+    const ph = `<div class="card-img-placeholder" ${fixImgUrl(c.Foto)?"style='display:none'":""}>🚗</div>`;
     return `<div class="card" style="animation-delay:${i*.04}s" onclick="abrirModal(${i})">
       <div class="card-img-wrap">${imgTag}${ph}${c.Destaque?`<div class="badge-destaque">Destaque</div>`:""}${c.Codigo?`<div class="badge-code">${c.Codigo}</div>`:""}</div>
       <div class="card-body">
