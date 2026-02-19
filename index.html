@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoClub</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:      #f5f5f7;
@@ -21,12 +20,14 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
     font-size: 17px;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   /* HEADER */
@@ -38,19 +39,19 @@
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid rgba(0,0,0,.08);
     display: flex; align-items: center;
-    padding: 0 22px;
+    padding: 0 28px;
     justify-content: space-between;
   }
 
-  .logo { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.3px; color: var(--text); }
+  .logo { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.5px; color: var(--text); }
   .header-garage { font-size: 0.82rem; color: var(--muted); }
 
   /* HERO */
   .hero {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 32px 22px 28px;
-    display: flex; align-items: center; gap: 18px;
+    padding: 40px 28px 36px;
+    display: flex; align-items: center; gap: 20px;
   }
 
   .avatar {
@@ -63,8 +64,8 @@
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
   .hero-info h1 {
-    font-size: 1.5rem; font-weight: 700;
-    letter-spacing: -0.4px; line-height: 1.2;
+    font-size: 1.75rem; font-weight: 700;
+    letter-spacing: -0.8px; line-height: 1.1;
   }
 
   .hero-city { font-size: 0.88rem; color: var(--muted); margin-top: 3px; }
@@ -72,8 +73,8 @@
   .hero-stats { display: flex; gap: 24px; margin-top: 14px; }
 
   .stat-num {
-    font-size: 1.35rem; font-weight: 700;
-    letter-spacing: -0.5px; color: var(--text); display: block;
+    font-size: 1.5rem; font-weight: 700;
+    letter-spacing: -0.8px; color: var(--text); display: block;
   }
   .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
 
@@ -81,7 +82,7 @@
   .filters {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 0 22px;
+    padding: 0 28px;
     display: flex; align-items: center; gap: 6px;
     height: 52px; overflow-x: auto; scrollbar-width: none;
   }
@@ -90,7 +91,7 @@
   .chip {
     padding: 5px 14px; border-radius: 99px;
     border: 1px solid var(--border); background: transparent;
-    font-family: 'Inter', sans-serif; font-size: 0.82rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 0.82rem;
     font-weight: 500; cursor: pointer; white-space: nowrap;
     color: var(--text-2); transition: all .15s; flex-shrink: 0;
   }
@@ -104,7 +105,7 @@
   }
   .search-wrap input {
     padding: 7px 14px 7px 32px; border: 1px solid var(--border);
-    border-radius: 8px; font-family: 'Inter', sans-serif;
+    border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
     font-size: 0.84rem; background: var(--bg); color: var(--text);
     width: 200px; outline: none; transition: all .15s;
   }
@@ -115,7 +116,7 @@
   }
 
   /* GRID */
-  .grid-section { padding: 20px 22px 40px; max-width: 1200px; margin: 0 auto; }
+  .grid-section { padding: 24px 28px 56px; max-width: 1200px; margin: 0 auto; }
   .grid-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .grid-count { font-size: 0.8rem; color: var(--muted); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
@@ -157,8 +158,8 @@
     backdrop-filter: blur(6px);
   }
 
-  .card-body { padding: 14px 16px 16px; }
-  .card-title { font-size: 1.02rem; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; }
+  .card-body { padding: 16px 18px 18px; }
+  .card-title { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.4px; line-height: 1.25; }
   .card-year { font-size: 0.82rem; color: var(--muted); margin-top: 2px; margin-bottom: 10px; }
 
   .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
@@ -172,14 +173,15 @@
     border-top: 1px solid var(--border); padding-top: 11px;
   }
 
-  .price { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.4px; }
+  .price { font-size: 1.22rem; font-weight: 700; letter-spacing: -0.6px; }
 
   .btn-wpp {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--blue); color: #fff; border: none;
-    padding: 7px 15px; border-radius: 99px;
-    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    padding: 8px 18px; border-radius: 99px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 0.82rem; font-weight: 500;
     cursor: pointer; text-decoration: none; transition: background .15s; white-space: nowrap;
+    letter-spacing: -0.1px;
   }
   .btn-wpp:hover { background: var(--blue-dk); }
 
@@ -220,7 +222,7 @@
 
   .modal-body { padding: 22px 24px 26px; }
   .modal-code { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-  .modal-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 2px; }
+  .modal-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.7px; margin-bottom: 2px; }
   .modal-year { color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; }
 
   .modal-grid {
@@ -250,7 +252,7 @@
 
   .btn-modal-wpp {
     flex: 1; background: var(--blue); color: #fff; border: none;
-    padding: 12px; border-radius: 99px; font-family: 'Inter', sans-serif;
+    padding: 12px; border-radius: 99px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
     font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none;
     text-align: center; display: flex; align-items: center;
     justify-content: center; gap: 6px; transition: background .15s;
@@ -259,7 +261,7 @@
 
   .btn-modal-close {
     padding: 12px 20px; border: 1px solid var(--border); border-radius: 99px;
-    background: transparent; font-family: 'Inter', sans-serif;
+    background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
     cursor: pointer; font-size: 0.88rem; color: var(--text-2); transition: background .15s;
   }
   .btn-modal-close:hover { background: var(--bg); }
@@ -348,23 +350,26 @@
 <footer>Catálogo digital por <a href="#">AutoClub</a></footer>
 
 <script>
-const CONFIG = { SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q", ABA_GARAJEIROS: "Garajeiros", ABA_CARROS: "Carros" };
+const SHEET_ID = "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q";
 const urlParams = new URLSearchParams(window.location.search);
 const SLUG = urlParams.get("garajeiro") || "";
 const VIA  = urlParams.get("via") || "";
 let todosCarros = [], filtrados = [], garajeiro = null;
 
-const EXEMPLO = {
-  garajeiro: { Nome:"João Silva", Slug:"joao-silva", Cidade:"São Paulo — SP", WhatsApp:"11999999999", "Foto Perfil":"" },
-  carros: [
-    { Codigo:"AG-001", Marca:"Honda",      Modelo:"Civic EXL",        Ano:"2021", Preço:115000, Cor:"Prata",           KM:38000, Combustível:"Flex",    Opcionais:"Couro, Teto Solar, Câmera de Ré, Sensor de Estacionamento", Foto:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80", Destaque:"SIM", Status:"Disponível" },
-    { Codigo:"AG-002", Marca:"Toyota",     Modelo:"Corolla XEi",      Ano:"2022", Preço:138000, Cor:"Branco Perolado", KM:22000, Combustível:"Flex",    Opcionais:"Central Multimídia, Apple CarPlay, Android Auto",            Foto:"https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80", Destaque:"",    Status:"Disponível" },
-    { Codigo:"AG-003", Marca:"Volkswagen", Modelo:"Golf GTI",         Ano:"2020", Preço:142000, Cor:"Cinza Carbono",  KM:51000, Combustível:"Gasolina", Opcionais:"Bancos em Couro, Freios Brembo, Faróis de LED",             Foto:"https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80", Destaque:"",    Status:"Disponível" },
-    { Codigo:"AG-004", Marca:"Toyota",     Modelo:"Hilux SRX",        Ano:"2023", Preço:289000, Cor:"Preto",          KM:8000,  Combustível:"Diesel",   Opcionais:"4x4, Couro, Multimídia 8\", Controle de Tração",           Foto:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", Destaque:"SIM", Status:"Disponível" },
-    { Codigo:"AG-005", Marca:"Honda",      Modelo:"HR-V EXL",         Ano:"2022", Preço:128000, Cor:"Vermelho",       KM:31000, Combustível:"Flex",    Opcionais:"Teto Solar Panorâmico, Câmera 360°, Bancos em Couro",       Foto:"https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80", Destaque:"",    Status:"Disponível" },
-    { Codigo:"AG-006", Marca:"Volkswagen", Modelo:"T-Cross Highline", Ano:"2023", Preço:118000, Cor:"Azul",           KM:15000, Combustível:"Flex",    Opcionais:"Teto Solar, Apple CarPlay, Assistente de Faixa",            Foto:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80", Destaque:"",    Status:"Disponível" },
-  ]
-};
+async function fetchSheet(aba) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(aba)}`;
+  const res  = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+  const cols = json.table.cols.map(c => c.label);
+  return json.table.rows.map(row => {
+    const obj = {};
+    row.c.forEach((cell, i) => {
+      obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : "") : "";
+    });
+    return obj;
+  });
+}
 
 function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
 function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
@@ -378,25 +383,61 @@ function wppLink(c, via="") {
 }
 
 async function init() {
-  garajeiro   = EXEMPLO.garajeiro;
-  todosCarros = EXEMPLO.carros.filter(c => (c.Status||"Disponível") !== "Vendido");
-  const nome  = garajeiro.Nome;
-  document.title = `${nome} — AutoClub`;
-  document.getElementById("hero-nome").textContent     = nome;
-  document.getElementById("hero-city").textContent     = garajeiro.Cidade||"";
-  document.getElementById("header-garage").textContent = nome;
-  document.getElementById("avatar").textContent        = nome.charAt(0).toUpperCase();
-  if (garajeiro["Foto Perfil"]) document.getElementById("avatar").innerHTML = `<img src="${garajeiro["Foto Perfil"]}" alt="${nome}">`;
-  document.getElementById("stat-total").textContent    = todosCarros.length;
-  document.getElementById("stat-vendidos").textContent = EXEMPLO.carros.filter(c=>c.Status==="Vendido").length;
-  const marcas = [...new Set(todosCarros.map(c=>c.Marca).filter(Boolean))];
-  const bar = document.getElementById("filters");
-  marcas.forEach(m => {
-    const b = document.createElement("button");
-    b.className="chip"; b.dataset.filter=slugify(m); b.textContent=m;
-    b.onclick=function(){filtrar(this);}; bar.insertBefore(b,bar.querySelector(".search-wrap"));
-  });
-  filtrados = [...todosCarros]; render(filtrados);
+  try {
+    // Buscar garajeiros e carros do Google Sheets
+    const [garajeiros, carros] = await Promise.all([
+      fetchSheet("Garajeiros"),
+      fetchSheet("Carros")
+    ]);
+
+    // Identificar garajeiro pelo slug da URL
+    const slugAtual = SLUG || (garajeiros[0] && garajeiros[0].Slug) || "";
+    garajeiro = garajeiros.find(g => g.Slug === slugAtual) || garajeiros[0];
+
+    if (!garajeiro) {
+      document.getElementById("grid").innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Garagem não encontrada.</p></div>`;
+      return;
+    }
+
+    // Filtrar carros dessa garagem que estão disponíveis
+    const todosDestaGaragem = carros.filter(c => c.Garajeiro === garajeiro.Slug || c.Garajeiro === garajeiro.Nome);
+    todosCarros = todosDestaGaragem.filter(c => {
+      const status = String(c.Status || "Disponível").trim();
+      return status === "Disponível";
+    });
+
+    const vendidos = todosDestaGaragem.filter(c => String(c.Status || "").trim() === "Vendido");
+
+    const nome = garajeiro.Nome || "Garagem";
+    document.title = `${nome} — AutoClub`;
+    document.getElementById("hero-nome").textContent     = nome;
+    document.getElementById("hero-city").textContent     = garajeiro.Cidade || "";
+    document.getElementById("header-garage").textContent = nome;
+    document.getElementById("avatar").textContent        = nome.charAt(0).toUpperCase();
+
+    const foto = garajeiro["Foto Perfil"] || garajeiro["Foto"];
+    if (foto) document.getElementById("avatar").innerHTML = `<img src="${foto}" alt="${nome}">`;
+
+    document.getElementById("stat-total").textContent    = todosCarros.length;
+    document.getElementById("stat-vendidos").textContent = vendidos.length;
+
+    // Filtros de marca
+    const marcas = [...new Set(todosCarros.map(c => c.Marca).filter(Boolean))];
+    const bar = document.getElementById("filters");
+    marcas.forEach(m => {
+      const b = document.createElement("button");
+      b.className = "chip"; b.dataset.filter = slugify(m); b.textContent = m;
+      b.onclick = function(){ filtrar(this); };
+      bar.insertBefore(b, bar.querySelector(".search-wrap"));
+    });
+
+    filtrados = [...todosCarros];
+    render(filtrados);
+
+  } catch (err) {
+    console.error("Erro ao carregar planilha:", err);
+    document.getElementById("grid").innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Erro ao carregar dados. Verifique se a planilha está pública.</p></div>`;
+  }
 }
 
 let filtroAtivo="todos", buscaAtiva="";
