@@ -377,30 +377,11 @@ function wppLink(c, via="") {
   return `https://wa.me/55${tel}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}* na cor *${c.Cor}*${cod}. Ainda está disponível?${ind}`)}`;
 }
 
-
 async function init() {
-  try {
-    const urlGarajeiros = `https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_GARAJEIROS}`;
-    const urlCarros     = `https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_CARROS}`;
-
-    const resG = await fetch(urlGarajeiros);
-    const resC = await fetch(urlCarros);
-
-    const listaGarajeiros = await resG.json();
-    const listaCarros     = await resC.json();
-
-    garajeiro = listaGarajeiros.find(g => g.ID === CONFIG.GARAJEIRO_ID) || listaGarajeiros[0];
-    todosCarros = listaCarros.filter(c => c.GarajeiroID === garajeiro.ID);
-
-    renderGarajeiro();
-    renderCarros(todosCarros);
-
-  } catch (error) {
-    console.error("Erro ao carregar Google Sheets:", error);
-    alert("Erro ao carregar dados da planilha. Verifique se ela está pública.");
-  }
-}
- — AutoClub`;
+  garajeiro   = EXEMPLO.garajeiro;
+  todosCarros = EXEMPLO.carros.filter(c => (c.Status||"Disponível") !== "Vendido");
+  const nome  = garajeiro.Nome;
+  document.title = `${nome} — AutoClub`;
   document.getElementById("hero-nome").textContent     = nome;
   document.getElementById("hero-city").textContent     = garajeiro.Cidade||"";
   document.getElementById("header-garage").textContent = nome;
