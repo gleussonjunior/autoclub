@@ -357,25 +357,36 @@ const VIA  = urlParams.get("via") || "";
 let todosCarros = [], filtrados = [], garajeiro = null;
 
 async function fetchSheet(aba) {
-  // headers=2 tells gviz that row 2 has the column headers (row 1 is the colored title)
-  // range skips row 3 (the legend/subtitle row) so data starts cleanly from row 4
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(aba)}&headers=2&range=A2:Z10000`;
   const res  = await fetch(url);
+  if (!res.ok) throw new Error(`Erro HTTP ${res.status}`);
   const text = await res.text();
-  const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
-  const cols = json.table.cols.map(c => c.label.trim());
-  const rows = json.table.rows
-    .map(row => {
-      const obj = {};
-      row.c.forEach((cell, i) => {
-        obj[cols[i]] = cell ? (cell.v !== null && cell.v !== undefined ? String(cell.v).trim() : "") : "";
-      });
-      return obj;
-    })
-    // skip row index 0 which is the legend/subtitle row (row 3 in sheet)
-    .slice(1)
-    .filter(row => Object.values(row).some(v => String(v).trim().length > 0));
-  return rows;
+  const start = text.indexOf('{');
+  const end   = text.lastIndexOf('}');
+  if (start === -1) throw new Error('Planilha nao encontrada. Esta publica?');
+  const data = JSON.parse(text.slice(start, end + 1));
+  const cols = data.table.cols.map(c => (c.label || '').trim());
+  const rows = data.table.rows.map(row => {
+    const obj = {};
+    cols.forEach((col, i) => {
+      const cell = row.c ? row.c[i] : null;
+      if (cell && cell.v !== null && cell.v !== undefined) {
+        obj[col] = String(cell.f !== null && cell.f !== undefined ? cell.f : cell.v).trim();
+      } else {
+        obj[col] = '';
+      }
+    });
+    return obj;
+  });
+  // Filtra linha de legenda (row 0) e linhas vazias
+  return rows.filter((row, idx) => {
+    if (idx === 0) {
+      const first = Object.values(row).find(v => v.length > 0) || '';
+      const lower = first.toLowerCase();
+      return !['ex:', 'somente', 'nome da', 'url da', 'separar', 'slug do', 'flex/gas'].some(kw => lower.includes(kw));
+    }
+    return Object.values(row).some(v => v.length > 0);
+  });
 }
 
 function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
@@ -531,3 +542,4 @@ init();
 </script>
 </body>
 </html>
+
