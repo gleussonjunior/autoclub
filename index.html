@@ -1,117 +1,144 @@
 <script>
-// Substitua o SHEET_ID pelo ID da sua planilha (encontrado na URL dela)
+// CONFIGURAÇÃO - Substitua pelo ID da sua planilha
 const CONFIG = { 
   SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q", 
-  ABA_CARROS: "Carros" 
+  ABA_CARROS: "Carros",
+  ABA_GARAJEIROS: "Garajeiros"
 };
 
 const urlParams = new URLSearchParams(window.location.search);
-const VIA = urlParams.get("via") || "";
-let todosCarros = [], filtrados = [], garajeiro = { Nome: "AutoClub", Cidade: "Brasil", WhatsApp: "5511999999999" };
+const SLUG = urlParams.get("garajeiro") || "joao-silva"; // Default se não houver na URL
+const VIA  = urlParams.get("via") || "";
 
-// Funções Utilitárias
+let todosCarros = [], filtrados = [], garajeiro = null;
+
+// Funções de Formatação
 function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
 function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
 function fKm(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/\D/g,"")); return isNaN(n)?v:n.toLocaleString("pt-BR")+" km"; }
 
-function wppLink(c, via="") {
-  const tel = garajeiro.WhatsApp.replace(/\D/g,"");
-  const cod = c.Codigo?` (Cód. ${c.Codigo})`:"";
-  const ind = via?`\n🤝 Indicado por: ${via}`:"";
-  return `https://wa.me/${tel}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}*${cod}.${ind}`)}`;
+// Converte link do Google Drive para link direto de imagem
+function fixDriveUrl(url) {
+  if (url && url.includes("drive.google.com")) {
+    const id = url.split("/d/")[1]?.split("/")[0];
+    return `https://drive.google.com/uc?export=view&id=${id}`;
+  }
+  return url;
 }
 
-// BUSCA DE DADOS DA PLANILHA
-async function fetchSheetData() {
-  try {
-    // URL para exportar a aba específica como CSV
-    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.ABA_CARROS}`;
-    const response = await fetch(url);
-    const csvText = await response.text();
-    
-    // Converte CSV para Array de Objetos
-    const lines = csvText.split('\n');
-    const headers = lines[0].replace(/"/g, '').split(',');
-    
-    return lines.slice(1).map(line => {
-      const data = line.replace(/"/g, '').split(',');
-      return headers.reduce((obj, header, i) => {
-        obj[header.trim()] = data[i]?.trim();
-        return obj;
-      }, {});
-    });
-  } catch (e) {
-    console.error("Erro ao buscar dados:", e);
-    return [];
-  }
+function wppLink(c, via="") {
+  const tel = (garajeiro?.WhatsApp || "").replace(/\D/g,"");
+  const cod = c.Codigo ? ` (Cód. ${c.Codigo})` : "";
+  const ind = via ? `\n🤝 Indicado por: ${via}` : "";
+  return `https://wa.me/55${tel}?text=${encodeURIComponent(`Olá! Vi o *${c.Marca} ${c.Modelo}* no site. Ainda está disponível?${cod}${ind}`)}`;
+}
+
+// BUSCA DE DADOS (CSV do Google Sheets)
+async function fetchCSV(aba) {
+  const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`;
+  const resp = await fetch(url);
+  const text = await resp.text();
+  const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)); // Regex para não quebrar vírgulas dentro de aspas
+  const headers = rows[0].map(h => h.replace(/"/g, '').trim());
+  return rows.slice(1).map(row => {
+    return headers.reduce((obj, h, i) => {
+      obj[h] = row[i] ? row[i].replace(/"/g, '').trim() : "";
+      return obj;
+    }, {});
+  });
 }
 
 async function init() {
-  const data = await fetchSheetData();
-  
-  // Filtra apenas carros disponíveis
-  todosCarros = data.filter(c => c.Marca && (c.Status || "Disponível").toLowerCase() !== "vendido");
-  
-  // Atualiza Interface
-  document.getElementById("hero-nome").textContent = garajeiro.Nome;
-  document.getElementById("hero-city").textContent = garajeiro.Cidade;
-  document.getElementById("avatar").textContent = garajeiro.Nome.charAt(0);
-  document.getElementById("stat-total").textContent = todosCarros.length;
-  document.getElementById("stat-vendidos").textContent = data.length - todosCarros.length;
+  try {
+    const [dadosCarros, dadosGarajeiros] = await Promise.all([
+      fetchCSV(CONFIG.ABA_CARROS),
+      fetchCSV(CONFIG.ABA_GARAJEIROS)
+    ]);
 
-  // Gerar Filtros Dinâmicos por Marca
-  const marcas = [...new Set(todosCarros.map(c => c.Marca))];
-  const filterContainer = document.getElementById("filters");
-  marcas.forEach(m => {
-    const b = document.createElement("button");
-    b.className = "chip";
-    b.dataset.filter = slugify(m);
-    b.textContent = m;
-    b.onclick = function() { filtrar(this); };
-    filterContainer.insertBefore(b, filterContainer.querySelector(".search-wrap"));
-  });
+    // 1. Encontrar o Garajeiro atual
+    garajeiro = dadosGarajeiros.find(g => g.Slug === SLUG) || dadosGarajeiros[0];
 
-  filtrados = [...todosCarros];
-  render(filtrados);
+    // 2. Filtrar carros deste garajeiro que não estão vendidos
+    todosCarros = dadosCarros.filter(c => 
+      c.Garajeiro === SLUG && 
+      (c.Status || "Disponível").toLowerCase() !== "vendido" &&
+      c.Marca
+    );
+
+    // 3. Atualizar Interface (com proteção contra elementos nulos)
+    const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+    
+    document.title = `${garajeiro.Nome} — AutoClub`;
+    setText("hero-nome", garajeiro.Nome);
+    setText("header-garage", garajeiro.Nome);
+    setText("hero-city", garajeiro.Cidade || "Brasil");
+    setText("stat-total", todosCarros.length);
+    setText("stat-vendidos", dadosCarros.filter(c => c.Garajeiro === SLUG && c.Status === "Vendido").length);
+
+    const av = document.getElementById("avatar");
+    if(av) {
+      if(garajeiro["Foto Perfil"]) av.innerHTML = `<img src="${garajeiro["Foto Perfil"]}">`;
+      else av.textContent = garajeiro.Nome.charAt(0).toUpperCase();
+    }
+
+    // 4. Filtros de Marcas
+    const marcas = [...new Set(todosCarros.map(c => c.Marca).filter(Boolean))];
+    const bar = document.getElementById("filters");
+    if(bar) {
+      marcas.forEach(m => {
+        const b = document.createElement("button");
+        b.className="chip"; b.dataset.filter=slugify(m); b.textContent=m;
+        b.onclick=function(){filtrar(this);}; 
+        bar.insertBefore(b, bar.querySelector(".search-wrap"));
+      });
+    }
+
+    filtrados = [...todosCarros];
+    render(filtrados);
+
+  } catch (err) {
+    console.error("Erro ao carregar dados:", err);
+    const grid = document.getElementById("grid");
+    if(grid) grid.innerHTML = `<p style="padding:20px">Erro ao carregar planilha. Verifique se ela foi "Publicada na Web".</p>`;
+  }
 }
 
-// Lógica de Filtro e Busca
-let filtroAtivo = "todos", buscaAtiva = "";
+// Funções de Filtro e Render seguem a mesma lógica do seu código original
 function filtrar(btn) { 
-  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  filtroAtivo = btn.dataset.filter;
-  aplicar();
-}
-
-function buscar(v) { 
-  buscaAtiva = v.toLowerCase(); 
+  document.querySelectorAll(".chip").forEach(b=>b.classList.remove("active")); 
+  btn.classList.add("active"); 
+  filtroAtivo = btn.dataset.filter; 
   aplicar(); 
 }
 
+let filtroAtivo="todos", buscaAtiva="";
+function buscar(v) { buscaAtiva=v.toLowerCase(); aplicar(); }
+
 function aplicar() {
   filtrados = todosCarros.filter(c => {
-    const marcaOk = filtroAtivo === "todos" || slugify(c.Marca) === filtroAtivo;
-    const txtOk = !buscaAtiva || `${c.Marca} ${c.Modelo} ${c.Cor}`.toLowerCase().includes(buscaAtiva);
+    const marcaOk = filtroAtivo==="todos" || slugify(c.Marca||"")=== filtroAtivo;
+    const txtOk = !buscaAtiva || [c.Modelo,c.Marca,c.Cor].some(f=>(f||"").toLowerCase().includes(buscaAtiva));
     return marcaOk && txtOk;
-  });
+  }); 
   render(filtrados);
 }
 
 function render(carros) {
   const grid = document.getElementById("grid");
-  document.getElementById("grid-count").textContent = `${carros.length} veículo(s)`;
+  if(!grid) return;
   
-  if (!carros.length) {
-    grid.innerHTML = `<div class="empty"><p>Nenhum veículo encontrado.</p></div>`;
-    return;
+  setText("grid-count", `${carros.length} veículo(s)`);
+  
+  if (!carros.length) { 
+    grid.innerHTML=`<div class="empty"><p>Nenhum veículo encontrado.</p></div>`; 
+    return; 
   }
-
-  grid.innerHTML = carros.map((c, i) => `
+  
+  grid.innerHTML = carros.map((c,i) => `
     <div class="card" onclick="abrirModal(${i})">
       <div class="card-img-wrap">
-        ${c.Foto ? `<img class="card-img" src="${c.Foto}">` : `<div class="card-img-placeholder">🚗</div>`}
-        ${c.Destaque === "SIM" ? `<div class="badge-destaque">Destaque</div>` : ""}
+        <img class="card-img" src="${fixDriveUrl(c.Foto)}" onerror="this.src='https://via.placeholder.com/400x300?text=Sem+Foto'">
+        ${c.Destaque==="SIM" ? `<div class="badge-destaque">Destaque</div>` : ""}
       </div>
       <div class="card-body">
         <div class="card-title">${c.Marca} ${c.Modelo}</div>
@@ -125,19 +152,29 @@ function render(carros) {
   `).join("");
 }
 
-// Funções de Modal permanecem as mesmas, mas usando a variável 'filtrados'
 function abrirModal(i) {
   const c = filtrados[i];
+  if(!c) return;
   document.getElementById("m-title").textContent = `${c.Marca} ${c.Modelo}`;
   document.getElementById("m-preco").textContent = fPreco(c.Preço);
   document.getElementById("m-km").textContent = fKm(c.KM);
-  document.getElementById("m-cor").textContent = c.Cor;
-  document.getElementById("m-comb").textContent = c.Combustível;
+  document.getElementById("m-cor").textContent = c.Cor || "–";
+  document.getElementById("m-comb").textContent = c.Combustível || "–";
   document.getElementById("m-wpp").href = wppLink(c, VIA);
+  
+  const opWrap = document.getElementById("m-op-wrap");
+  if(c.Opcionais) {
+    opWrap.style.display = "block";
+    document.getElementById("m-op").textContent = c.Opcionais;
+  } else {
+    opWrap.style.display = "none";
+  }
+  
   document.getElementById("overlay").classList.add("open");
 }
 
 function fecharModal() { document.getElementById("overlay").classList.remove("open"); }
+function setText(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
 
 init();
 </script>
