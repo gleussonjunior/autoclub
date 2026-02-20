@@ -35,20 +35,31 @@ header {
   border-radius: 8px; padding: 5px 10px; cursor: pointer; outline: none; margin-left: auto;
 }
 
-/* PERFIL DO GARAJEIRO */
+/* NOVO PERFIL DO GARAJEIRO */
 .profile-wrap { display: none; padding: 24px 24px 0; max-width: 1200px; margin: 0 auto; animation: up .4s ease; }
 .profile-card {
-  background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 24px; display: flex; gap: 24px; align-items: center;
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 0 24px 0; display: flex; flex-direction: column; gap: 16px;
 }
-.profile-img {
-  width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-  background: var(--bg); border: 2px solid var(--border); flex-shrink: 0;
+.profile-header { display: flex; gap: 20px; align-items: center; }
+.profile-avatar-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
+.profile-initials { 
+  position: absolute; inset: 0; background: var(--bg); color: var(--blue); border: 1px solid var(--border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+  font-size: 2rem; font-weight: 600; text-transform: uppercase;
 }
-.profile-info { flex: 1; }
-.profile-info h1 { font-size: 1.4rem; letter-spacing: -.4px; margin-bottom: 4px; }
-.profile-info p { font-size: .88rem; color: var(--muted); margin-bottom: 14px; line-height: 1.4; max-width: 600px; }
-.profile-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.profile-info-top { flex: 1; }
+.p-name { font-size: 1.4rem; font-weight: 700; letter-spacing: -.4px; margin-bottom: 2px; }
+.p-loc { font-size: .8rem; color: var(--muted); margin-bottom: 12px; }
+.p-stats { display: flex; gap: 24px; }
+.stat-item { display: flex; flex-direction: column; align-items: flex-start; }
+.stat-val { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.1; }
+.stat-lbl { font-size: .75rem; color: var(--muted); }
+
+.profile-desc { font-size: .88rem; color: var(--text); line-height: 1.4; max-width: 600px; }
+.profile-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
 .btn-social {
   display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px;
   border-radius: 99px; font-size: .8rem; font-weight: 600; text-decoration: none;
@@ -143,8 +154,6 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
 @media(max-width:600px) {
   header, .filters, .main { padding-left:16px; padding-right:16px; }
   .profile-wrap { padding-left:16px; padding-right:16px; }
-  .profile-card { flex-direction: column; text-align: center; gap: 16px; padding: 20px 16px; }
-  .profile-links { justify-content: center; }
   .grid, .m-grid { grid-template-columns:1fr; }
   .search-wrap, .search-wrap input { width:100%; margin-left:0; }
 }
@@ -160,23 +169,34 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
 
 <div class="profile-wrap" id="profile-wrap">
   <div class="profile-card">
-    <img src="" alt="Perfil" class="profile-img" id="p-img" onerror="this.src='https://ui-avatars.com/api/?name=Loja&background=random'">
-    <div class="profile-info">
-      <h1 id="p-nome">Nome do Garajeiro</h1>
-      <p id="p-desc">Descrição não informada.</p>
-      <div class="profile-links">
-        
-        <a href="#" target="_blank" class="btn-social wpp" id="p-wpp">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          WhatsApp
-        </a>
-
-        <a href="#" target="_blank" class="btn-social insta" id="p-insta" style="display:none">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-          Instagram
-        </a>
-
+    <div class="profile-header">
+      <div class="profile-avatar-wrap">
+        <div class="profile-initials" id="p-initials">J</div>
+        <img src="" alt="Perfil" class="profile-img" id="p-img" style="display:none;" onload="this.style.display='block'; document.getElementById('p-initials').style.display='none';">
       </div>
+      <div class="profile-info-top">
+        <h1 class="p-name" id="p-nome">Nome do Garajeiro</h1>
+        <div class="p-loc" id="p-loc-wrap"><span id="p-loc">São Paulo — SP</span></div>
+        <div class="p-stats">
+          <div class="stat-item">
+            <span class="stat-val" id="p-disp">0</span>
+            <span class="stat-lbl">Disponíveis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <p class="profile-desc" id="p-desc"></p>
+    
+    <div class="profile-links">
+      <a href="#" target="_blank" class="btn-social wpp" id="p-wpp">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="#" target="_blank" class="btn-social insta" id="p-insta" style="display:none">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        Instagram
+      </a>
     </div>
   </div>
 </div>
@@ -223,11 +243,10 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
 <footer>AutoClub</footer>
 
 <script>
-// SEU SHEET ID JÁ CONFIGURADO
 var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
 var garajeiros = [];
 var todosCarros = [];
-var slugAtual = ""; // Vazio significa HOME (Todos os carros)
+var slugAtual = "";
 var filtrados = [];
 var marcaAtiva = "todos";
 var buscaAtiva = "";
@@ -253,12 +272,13 @@ function init() {
     todosCarros = resultados[1];
 
     var sel = document.getElementById("sel-garagem");
-    sel.innerHTML = '<option value="">🏠 Todos os Veículos (Home)</option>';
+    sel.innerHTML = '<option value="">Todos os Veículos (Home)</option>';
     
-    garajeiros.forEach(g => {
+    // FILTRO IMPORTANTE: Remove garajeiros em branco/sem nome
+    garajeiros.filter(g => g.Slug && g.Nome).forEach(g => {
       var opt = document.createElement("option");
-      opt.value = g.Slug || "";
-      opt.textContent = "🏪 " + (g.Nome || "Sem Nome");
+      opt.value = g.Slug;
+      opt.textContent = g.Nome;
       sel.appendChild(opt);
     });
 
@@ -282,7 +302,6 @@ function irParaHome(e) {
 
 function trocarGaragem(slug) {
   slugAtual = slug;
-  // Muda a URL no navegador sem recarregar a página
   var novaUrl = slug ? window.location.pathname + "?garajeiro=" + slug : window.location.pathname;
   window.history.pushState({}, '', novaUrl);
   
@@ -297,15 +316,39 @@ function carregarEstadoPagina() {
   var wrapPerfil = document.getElementById("profile-wrap");
   
   if (slugAtual === "") {
-    // Modo HOME: Esconde perfil, mostra todos os carros
     wrapPerfil.style.display = "none";
   } else {
-    // Modo GARAJEIRO: Mostra perfil do vendedor
     var g = garajeiros.find(x => x.Slug === slugAtual);
-    document.getElementById("p-img").src = fotoUrl(g.FotoPerfil) || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(g.Nome) + '&background=random');
-    document.getElementById("p-nome").textContent = g.Nome;
-    document.getElementById("p-desc").textContent = g.Descricao || "Bem-vindo à nossa vitrine digital!";
     
+    // Dados de texto básicos
+    document.getElementById("p-nome").textContent = g.Nome || "Vendedor";
+    document.getElementById("p-initials").textContent = (g.Nome || "V")[0].toUpperCase();
+    
+    // Reseta imagem para testar carregamento
+    var imgEl = document.getElementById("p-img");
+    imgEl.style.display = "none";
+    document.getElementById("p-initials").style.display = "flex";
+    if (g.FotoPerfil) { imgEl.src = fotoUrl(g.FotoPerfil); }
+    
+    // Localização (Esconde se não existir)
+    if (g.Localizacao) {
+      document.getElementById("p-loc").textContent = g.Localizacao;
+      document.getElementById("p-loc-wrap").style.display = "block";
+    } else {
+      document.getElementById("p-loc-wrap").style.display = "none";
+    }
+
+    // Descrição
+    var descEl = document.getElementById("p-desc");
+    if(g.Descricao) { descEl.textContent = g.Descricao; descEl.style.display = "block"; } 
+    else { descEl.style.display = "none"; }
+    
+    // Contadores Dinâmicos Apenas para "Disponíveis"
+    var dispCount = todosCarros.filter(c => c.Garajeiro === slugAtual && ((c.Status || "").toLowerCase().trim() === "disponível" || (c.Status || "").toLowerCase().trim() === "disponivel")).length;
+    
+    document.getElementById("p-disp").textContent = dispCount;
+    
+    // Redes Sociais
     var linkWpp = document.getElementById("p-wpp");
     var tel = String(g.WhatsApp || "").replace(/\D/g, "");
     linkWpp.href = "https://wa.me/55" + tel;
@@ -317,10 +360,11 @@ function carregarEstadoPagina() {
     } else {
       linkInsta.style.display = "none";
     }
+    
     wrapPerfil.style.display = "block";
   }
 
-  // Filtra carros (Se tiver slug, puxa do garajeiro. Se não, puxa todos)
+  // Filtro
   var carros = todosCarros.filter(c => {
     var st = (c.Status || "").toLowerCase().trim();
     var disp = (st === "disponivel" || st === "disponível");
@@ -385,7 +429,6 @@ function fotoUrl(url) {
 }
 
 function wppLink(c) {
-  // Puxa o número do garajeiro dono DESTE carro específico (importante para a Home)
   var g = garajeiros.find(x => x.Slug === c.Garajeiro) || {};
   var tel = String(g.WhatsApp || "").replace(/\D/g, "");
   var msg = "Olá! Vi no AutoClub e tenho interesse no " + (c.Marca||"") + " " + (c.Modelo||"") + " " + (c.Ano||"") + ". Ainda está disponível?";
