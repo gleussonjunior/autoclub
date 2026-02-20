@@ -1,149 +1,143 @@
 <script>
-
-const CONFIG = {
-  SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q",
-  ABA_GARAJEIROS: "Garajeiros",
-  ABA_CARROS: "Carros"
+// Substitua o SHEET_ID pelo ID da sua planilha (encontrado na URL dela)
+const CONFIG = { 
+  SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q", 
+  ABA_CARROS: "Carros" 
 };
 
-const params = new URLSearchParams(window.location.search);
-const SLUG = params.get("garajeiro");
+const urlParams = new URLSearchParams(window.location.search);
+const VIA = urlParams.get("via") || "";
+let todosCarros = [], filtrados = [], garajeiro = { Nome: "AutoClub", Cidade: "Brasil", WhatsApp: "5511999999999" };
 
-let garajeiro = null;
-let carros = [];
+// Funções Utilitárias
+function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
+function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
+function fKm(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/\D/g,"")); return isNaN(n)?v:n.toLocaleString("pt-BR")+" km"; }
 
-function slugify(text){
-  return text?.toString().toLowerCase().trim();
+function wppLink(c, via="") {
+  const tel = garajeiro.WhatsApp.replace(/\D/g,"");
+  const cod = c.Codigo?` (Cód. ${c.Codigo})`:"";
+  const ind = via?`\n🤝 Indicado por: ${via}`:"";
+  return `https://wa.me/${tel}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}*${cod}.${ind}`)}`;
 }
 
-function convertDriveLink(url){
-
-  if(!url) return "";
-
-  if(url.includes("drive.google.com")){
-    const match = url.match(/\/d\/([^/]+)/);
-    if(match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+// BUSCA DE DADOS DA PLANILHA
+async function fetchSheetData() {
+  try {
+    // URL para exportar a aba específica como CSV
+    const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.ABA_CARROS}`;
+    const response = await fetch(url);
+    const csvText = await response.text();
+    
+    // Converte CSV para Array de Objetos
+    const lines = csvText.split('\n');
+    const headers = lines[0].replace(/"/g, '').split(',');
+    
+    return lines.slice(1).map(line => {
+      const data = line.replace(/"/g, '').split(',');
+      return headers.reduce((obj, header, i) => {
+        obj[header.trim()] = data[i]?.trim();
+        return obj;
+      }, {});
+    });
+  } catch (e) {
+    console.error("Erro ao buscar dados:", e);
+    return [];
   }
-
-  return url;
 }
 
-function formatPrice(price){
+async function init() {
+  const data = await fetchSheetData();
+  
+  // Filtra apenas carros disponíveis
+  todosCarros = data.filter(c => c.Marca && (c.Status || "Disponível").toLowerCase() !== "vendido");
+  
+  // Atualiza Interface
+  document.getElementById("hero-nome").textContent = garajeiro.Nome;
+  document.getElementById("hero-city").textContent = garajeiro.Cidade;
+  document.getElementById("avatar").textContent = garajeiro.Nome.charAt(0);
+  document.getElementById("stat-total").textContent = todosCarros.length;
+  document.getElementById("stat-vendidos").textContent = data.length - todosCarros.length;
 
-  const n = Number(price);
-
-  if(isNaN(n)) return price;
-
-  return n.toLocaleString("pt-BR", {
-    style:"currency",
-    currency:"BRL"
+  // Gerar Filtros Dinâmicos por Marca
+  const marcas = [...new Set(todosCarros.map(c => c.Marca))];
+  const filterContainer = document.getElementById("filters");
+  marcas.forEach(m => {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.dataset.filter = slugify(m);
+    b.textContent = m;
+    b.onclick = function() { filtrar(this); };
+    filterContainer.insertBefore(b, filterContainer.querySelector(".search-wrap"));
   });
 
+  filtrados = [...todosCarros];
+  render(filtrados);
 }
 
-async function carregarGarajeiro(){
-
-  const res = await fetch(
-    `https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_GARAJEIROS}`
-  );
-
-  const lista = await res.json();
-
-  return lista.find(g =>
-    slugify(g.Slug) === slugify(SLUG)
-  );
-
+// Lógica de Filtro e Busca
+let filtroAtivo = "todos", buscaAtiva = "";
+function filtrar(btn) { 
+  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  filtroAtivo = btn.dataset.filter;
+  aplicar();
 }
 
-async function carregarCarros(){
-
-  const res = await fetch(
-    `https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_CARROS}`
-  );
-
-  const lista = await res.json();
-
-  return lista.filter(c =>
-    slugify(c.Garajeiro) === slugify(SLUG)
-    && c.Status === "Disponível"
-  );
-
+function buscar(v) { 
+  buscaAtiva = v.toLowerCase(); 
+  aplicar(); 
 }
 
-function renderGarajeiro(){
-
-  document.getElementById("header").innerText =
-    garajeiro.Nome;
-
+function aplicar() {
+  filtrados = todosCarros.filter(c => {
+    const marcaOk = filtroAtivo === "todos" || slugify(c.Marca) === filtroAtivo;
+    const txtOk = !buscaAtiva || `${c.Marca} ${c.Modelo} ${c.Cor}`.toLowerCase().includes(buscaAtiva);
+    return marcaOk && txtOk;
+  });
+  render(filtrados);
 }
 
-function renderCarros(){
-
+function render(carros) {
   const grid = document.getElementById("grid");
-
-  if(carros.length === 0){
-    grid.innerHTML = "Nenhum carro disponível";
+  document.getElementById("grid-count").textContent = `${carros.length} veículo(s)`;
+  
+  if (!carros.length) {
+    grid.innerHTML = `<div class="empty"><p>Nenhum veículo encontrado.</p></div>`;
     return;
   }
 
-  grid.innerHTML = carros.map(c => `
-
-    <div class="card">
-
-      <img src="${convertDriveLink(c.Foto)}">
-
-      <div class="card-body">
-
-        <div class="title">
-          ${c.Marca} ${c.Modelo}
-        </div>
-
-        <div>
-          ${c.Ano} • ${c.KM} km
-        </div>
-
-        <div class="price">
-          ${formatPrice(c.Preço)}
-        </div>
-
+  grid.innerHTML = carros.map((c, i) => `
+    <div class="card" onclick="abrirModal(${i})">
+      <div class="card-img-wrap">
+        ${c.Foto ? `<img class="card-img" src="${c.Foto}">` : `<div class="card-img-placeholder">🚗</div>`}
+        ${c.Destaque === "SIM" ? `<div class="badge-destaque">Destaque</div>` : ""}
       </div>
-
+      <div class="card-body">
+        <div class="card-title">${c.Marca} ${c.Modelo}</div>
+        <div class="card-year">${c.Ano}</div>
+        <div class="card-footer">
+          <span class="price">${fPreco(c.Preço)}</span>
+          <span class="btn-wpp">Ver mais</span>
+        </div>
+      </div>
     </div>
-
   `).join("");
-
 }
 
-async function init(){
-
-  try{
-
-    garajeiro = await carregarGarajeiro();
-
-    if(!garajeiro){
-      document.getElementById("grid").innerHTML =
-        "Garajeiro não encontrado";
-      return;
-    }
-
-    carros = await carregarCarros();
-
-    renderGarajeiro();
-
-    renderCarros();
-
-  }
-  catch(e){
-
-    console.error(e);
-
-    document.getElementById("grid").innerHTML =
-      "Erro ao carregar dados";
-
-  }
-
+// Funções de Modal permanecem as mesmas, mas usando a variável 'filtrados'
+function abrirModal(i) {
+  const c = filtrados[i];
+  document.getElementById("m-title").textContent = `${c.Marca} ${c.Modelo}`;
+  document.getElementById("m-preco").textContent = fPreco(c.Preço);
+  document.getElementById("m-km").textContent = fKm(c.KM);
+  document.getElementById("m-cor").textContent = c.Cor;
+  document.getElementById("m-comb").textContent = c.Combustível;
+  document.getElementById("m-wpp").href = wppLink(c, VIA);
+  document.getElementById("overlay").classList.add("open");
 }
+
+function fecharModal() { document.getElementById("overlay").classList.remove("open"); }
 
 init();
-
 </script>
