@@ -11,46 +11,39 @@
     --blue:    #0071e3;
     --blue-dk: #0058b0;
     --text:    #1d1d1f;
-    --text-2:  #424245;
     --muted:   #6e6e73;
     --border:  #d2d2d7;
     --radius:  18px;
   }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     font-size: 17px;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
 
-  /* HEADER */
   header {
     position: sticky; top: 0; z-index: 100;
     height: 52px;
-    background: rgba(255,255,255,.85);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(0,0,0,.08);
     display: flex; align-items: center;
     padding: 0 28px;
     justify-content: space-between;
   }
+  .logo { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.5px; }
+  .header-sub { font-size: 0.82rem; color: var(--muted); }
 
-  .logo { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.5px; color: var(--text); }
-  .header-garage { font-size: 0.82rem; color: var(--muted); }
-
-  /* HERO */
   .hero {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 40px 28px 36px;
+    padding: 36px 28px 30px;
     display: flex; align-items: center; gap: 20px;
   }
 
@@ -61,24 +54,14 @@
     font-size: 1.6rem; font-weight: 600; color: var(--blue);
     flex-shrink: 0; overflow: hidden;
   }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar img { width:100%; height:100%; object-fit:cover; }
 
-  .hero-info h1 {
-    font-size: 1.75rem; font-weight: 700;
-    letter-spacing: -0.8px; line-height: 1.1;
-  }
-
+  .hero h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.8px; line-height: 1.1; }
   .hero-city { font-size: 0.88rem; color: var(--muted); margin-top: 3px; }
-
   .hero-stats { display: flex; gap: 24px; margin-top: 14px; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.8px; display: block; }
+  .stat-label { font-size: 0.72rem; color: var(--muted); }
 
-  .stat-num {
-    font-size: 1.5rem; font-weight: 700;
-    letter-spacing: -0.8px; color: var(--text); display: block;
-  }
-  .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
-
-  /* FILTERS */
   .filters {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -91,37 +74,29 @@
   .chip {
     padding: 5px 14px; border-radius: 99px;
     border: 1px solid var(--border); background: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 0.82rem;
-    font-weight: 500; cursor: pointer; white-space: nowrap;
-    color: var(--text-2); transition: all .15s; flex-shrink: 0;
+    font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    white-space: nowrap; color: var(--text);
+    transition: all .15s; flex-shrink: 0;
+    font-family: inherit;
   }
-  .chip:hover { border-color: #aaa; }
   .chip.active { background: var(--text); border-color: var(--text); color: #fff; }
+  .chip:hover:not(.active) { border-color: #aaa; }
 
   .search-wrap { margin-left: auto; position: relative; flex-shrink: 0; }
-  .search-wrap svg {
-    position: absolute; left: 10px; top: 50%;
-    transform: translateY(-50%); color: var(--muted); pointer-events: none;
-  }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
   .search-wrap input {
     padding: 7px 14px 7px 32px; border: 1px solid var(--border);
-    border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    font-size: 0.84rem; background: var(--bg); color: var(--text);
-    width: 200px; outline: none; transition: all .15s;
+    border-radius: 8px; font-size: 0.84rem; background: var(--bg);
+    color: var(--text); width: 200px; outline: none;
+    transition: all .15s; font-family: inherit;
   }
-  .search-wrap input::placeholder { color: var(--muted); }
-  .search-wrap input:focus {
-    border-color: var(--blue); background: #fff;
-    box-shadow: 0 0 0 3px rgba(0,113,227,.12);
-  }
+  .search-wrap input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,.12); }
 
-  /* GRID */
   .grid-section { padding: 24px 28px 56px; max-width: 1200px; margin: 0 auto; }
   .grid-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .grid-count { font-size: 0.8rem; color: var(--muted); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
 
-  /* CARD */
   .card {
     background: var(--surface); border-radius: var(--radius);
     border: 1px solid var(--border); overflow: hidden; cursor: pointer;
@@ -131,25 +106,14 @@
   .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.1); transform: translateY(-2px); }
 
   .card-img-wrap { position: relative; overflow: hidden; }
-
-  .card-img {
-    width: 100%; height: 195px; object-fit: cover; display: block;
-    background: var(--bg); transition: transform .4s;
-  }
+  .card-img { width: 100%; height: 195px; object-fit: cover; display: block; transition: transform .4s; }
   .card:hover .card-img { transform: scale(1.03); }
-
   .card-img-placeholder {
     width: 100%; height: 195px; background: var(--bg);
     display: flex; align-items: center; justify-content: center;
-    font-size: 2.8rem; color: var(--border);
+    font-size: 2.8rem;
   }
 
-  .badge-destaque {
-    position: absolute; top: 10px; left: 10px;
-    background: var(--blue); color: #fff;
-    font-size: 0.67rem; font-weight: 600;
-    padding: 3px 9px; border-radius: 99px;
-  }
   .badge-code {
     position: absolute; bottom: 10px; right: 10px;
     background: rgba(0,0,0,.45); color: #fff;
@@ -164,43 +128,36 @@
 
   .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
   .tag {
-    font-size: 0.75rem; color: var(--text-2); background: var(--bg);
-    padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border);
+    font-size: 0.75rem; color: var(--muted);
+    background: var(--bg); padding: 3px 9px;
+    border-radius: 6px; border: 1px solid var(--border);
   }
 
   .card-footer {
     display: flex; align-items: center; justify-content: space-between;
     border-top: 1px solid var(--border); padding-top: 11px;
   }
-
-  .price { font-size: 1.22rem; font-weight: 700; letter-spacing: -0.6px; }
+  .price { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.4px; }
 
   .btn-wpp {
     display: inline-flex; align-items: center; gap: 5px;
     background: var(--blue); color: #fff; border: none;
-    padding: 8px 18px; border-radius: 99px;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: 0.82rem; font-weight: 500;
-    cursor: pointer; text-decoration: none; transition: background .15s; white-space: nowrap;
-    letter-spacing: -0.1px;
+    padding: 8px 16px; border-radius: 99px;
+    font-size: 0.82rem; font-weight: 500; font-family: inherit;
+    cursor: pointer; text-decoration: none;
+    transition: background .15s; white-space: nowrap;
   }
   .btn-wpp:hover { background: var(--blue-dk); }
 
-  /* LOADING / EMPTY */
-  .loading { text-align: center; padding: 80px 32px; color: var(--muted); font-size: 0.9rem; }
-  .spinner {
-    width: 24px; height: 24px; border: 2px solid var(--border);
-    border-top-color: var(--blue); border-radius: 50%;
-    animation: spin .7s linear infinite; margin: 0 auto 14px;
-  }
+  .loading { text-align: center; padding: 80px 32px; color: var(--muted); }
+  .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
   .empty { text-align: center; padding: 80px 32px; color: var(--muted); }
   .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-  .empty p { font-size: 0.9rem; }
 
-  /* MODAL */
   .overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.4);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    z-index: 200; display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px); z-index: 200;
+    display: flex; align-items: center; justify-content: center;
     padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s;
   }
   .overlay.open { opacity: 1; pointer-events: all; }
@@ -214,64 +171,30 @@
   .overlay.open .modal { transform: scale(1) translateY(0); }
 
   .modal-img { width: 100%; height: 250px; object-fit: cover; border-radius: 20px 20px 0 0; display: block; }
-  .modal-img-placeholder {
-    width: 100%; height: 250px; background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 4rem; color: var(--border); border-radius: 20px 20px 0 0;
-  }
+  .modal-img-placeholder { width: 100%; height: 250px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 4rem; border-radius: 20px 20px 0 0; }
 
   .modal-body { padding: 22px 24px 26px; }
   .modal-code { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-  .modal-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.7px; margin-bottom: 2px; }
+  .modal-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 2px; }
   .modal-year { color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; }
 
-  .modal-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1px; background: var(--border);
-    border: 1px solid var(--border); border-radius: 12px;
-    overflow: hidden; margin-bottom: 14px;
-  }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
   .modal-field { background: var(--surface); padding: 11px 14px; }
-  .modal-field label {
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px;
-    color: var(--muted); font-weight: 500; display: block; margin-bottom: 2px;
-  }
+  .modal-field label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); font-weight: 500; display: block; margin-bottom: 2px; }
   .modal-field span { font-size: 0.92rem; font-weight: 500; }
 
-  .modal-opcionais {
-    background: var(--bg); border-radius: 10px;
-    padding: 11px 14px; margin-bottom: 18px; border: 1px solid var(--border);
-  }
-  .modal-opcionais strong {
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px;
-    color: var(--muted); display: block; margin-bottom: 4px; font-weight: 500;
-  }
-  .modal-opcionais span { font-size: 0.88rem; color: var(--text-2); line-height: 1.5; }
+  .modal-op { background: var(--bg); border-radius: 10px; padding: 11px 14px; margin-bottom: 18px; border: 1px solid var(--border); }
+  .modal-op strong { font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 500; }
+  .modal-op span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
 
   .modal-btns { display: flex; gap: 8px; }
-
-  .btn-modal-wpp {
-    flex: 1; background: var(--blue); color: #fff; border: none;
-    padding: 12px; border-radius: 99px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none;
-    text-align: center; display: flex; align-items: center;
-    justify-content: center; gap: 6px; transition: background .15s;
-  }
+  .btn-modal-wpp { flex: 1; background: var(--blue); color: #fff; border: none; padding: 12px; border-radius: 99px; font-size: 0.9rem; font-weight: 500; font-family: inherit; cursor: pointer; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
   .btn-modal-wpp:hover { background: var(--blue-dk); }
+  .btn-close { padding: 12px 20px; border: 1px solid var(--border); border-radius: 99px; background: transparent; font-family: inherit; cursor: pointer; font-size: 0.88rem; color: var(--muted); }
+  .btn-close:hover { background: var(--bg); }
 
-  .btn-modal-close {
-    padding: 12px 20px; border: 1px solid var(--border); border-radius: 99px;
-    background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    cursor: pointer; font-size: 0.88rem; color: var(--text-2); transition: background .15s;
-  }
-  .btn-modal-close:hover { background: var(--bg); }
-
-  /* FOOTER */
-  footer {
-    text-align: center; padding: 24px; border-top: 1px solid var(--border);
-    color: var(--muted); font-size: 0.76rem; margin-top: 10px;
-  }
-  footer a { color: var(--blue); text-decoration: none; font-weight: 500; }
+  footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.76rem; }
+  footer span { color: var(--blue); font-weight: 500; }
 
   @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -280,9 +203,8 @@
     header, .hero, .filters, .grid-section { padding-left: 16px; padding-right: 16px; }
     .grid { grid-template-columns: 1fr; }
     .modal-grid { grid-template-columns: 1fr; }
-    .search-wrap { margin-left: 0; }
+    .search-wrap { margin-left: 0; width: 100%; }
     .search-wrap input { width: 100%; }
-    .hero-info h1 { font-size: 1.3rem; }
   }
 </style>
 </head>
@@ -290,50 +212,48 @@
 
 <header>
   <div class="logo">AutoClub</div>
-  <div class="header-garage" id="header-garage"></div>
+  <div class="header-sub" id="header-sub"></div>
 </header>
 
 <div class="hero">
   <div class="avatar" id="avatar">G</div>
-  <div class="hero-info">
+  <div>
     <h1 id="hero-nome">Carregando...</h1>
     <div class="hero-city" id="hero-city"></div>
     <div class="hero-stats">
-      <div><span class="stat-num" id="stat-total">–</span><span class="stat-label">Disponíveis</span></div>
-      <div><span class="stat-num" id="stat-vendidos">–</span><span class="stat-label">Vendidos</span></div>
+      <div><span class="stat-num" id="stat-disp">–</span><span class="stat-label">Disponíveis</span></div>
+      <div><span class="stat-num" id="stat-vend">–</span><span class="stat-label">Vendidos</span></div>
     </div>
   </div>
 </div>
 
 <div class="filters" id="filters">
-  <button class="chip active" data-filter="todos" onclick="filtrar(this)">Todos</button>
+  <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
   <div class="search-wrap">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Buscar..." oninput="buscar(this.value)" id="search-input">
+    <input type="text" placeholder="Buscar..." oninput="buscar(this.value)">
   </div>
 </div>
 
 <div class="grid-section">
   <div class="grid-meta"><span class="grid-count" id="grid-count"></span></div>
-  <div class="grid" id="grid">
-    <div class="loading"><div class="spinner"></div>Carregando veículos...</div>
-  </div>
+  <div class="grid" id="grid"><div class="loading"><div class="spinner"></div>Carregando veículos...</div></div>
 </div>
 
 <div class="overlay" id="overlay" onclick="fecharModal(event)">
   <div class="modal">
-    <div id="modal-img-wrap"></div>
+    <div id="modal-img"></div>
     <div class="modal-body">
-      <div class="modal-code" id="m-code"></div>
-      <div class="modal-title" id="m-title"></div>
-      <div class="modal-year" id="m-year"></div>
+      <div class="modal-code" id="m-cod"></div>
+      <div class="modal-title" id="m-titulo"></div>
+      <div class="modal-year" id="m-ano"></div>
       <div class="modal-grid">
         <div class="modal-field"><label>Preço</label><span id="m-preco"></span></div>
         <div class="modal-field"><label>Cor</label><span id="m-cor"></span></div>
         <div class="modal-field"><label>Quilometragem</label><span id="m-km"></span></div>
         <div class="modal-field"><label>Combustível</label><span id="m-comb"></span></div>
       </div>
-      <div class="modal-opcionais" id="m-op-wrap" style="display:none">
+      <div class="modal-op" id="m-op-wrap" style="display:none">
         <strong>Opcionais</strong><span id="m-op"></span>
       </div>
       <div class="modal-btns">
@@ -341,206 +261,223 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
           Falar com vendedor
         </a>
-        <button class="btn-modal-close" onclick="fecharModal()">Fechar</button>
+        <button class="btn-close" onclick="fecharModal()">Fechar</button>
       </div>
     </div>
   </div>
 </div>
 
-<footer>Catálogo digital por <a href="#">AutoClub</a></footer>
+<footer>Catálogo digital por <span>AutoClub</span></footer>
 
 <script>
-const SHEET_ID = "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q";
-const urlParams = new URLSearchParams(window.location.search);
-const SLUG = urlParams.get("garajeiro") || "";
-const VIA  = urlParams.get("via") || "";
-let todosCarros = [], filtrados = [], garajeiro = null;
+// ── CONFIG ────────────────────────────────────────────────
+const SHEET_ID = "1osCn_ocRQu1Kq-LfBYjJ3XlKXCOF8A41";
+const params   = new URLSearchParams(window.location.search);
+const SLUG     = (params.get("garajeiro") || "").trim().toLowerCase();
+const VIA      = params.get("via") || "";
 
-async function fetchSheet(aba) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(aba)}&headers=2&range=A2:Z10000`;
-  const res  = await fetch(url);
-  if (!res.ok) throw new Error(`Erro HTTP ${res.status}`);
-  const text = await res.text();
-  const start = text.indexOf('{');
-  const end   = text.lastIndexOf('}');
-  if (start === -1) throw new Error('Planilha nao encontrada. Esta publica?');
-  const data = JSON.parse(text.slice(start, end + 1));
-  const cols = data.table.cols.map(c => (c.label || '').trim());
-  const rows = data.table.rows.map(row => {
-    const obj = {};
-    cols.forEach((col, i) => {
-      const cell = row.c ? row.c[i] : null;
-      if (cell && cell.v !== null && cell.v !== undefined) {
-        // Sempre usar cell.v (valor bruto) — cell.f pode retornar formatação errada
-        obj[col] = String(cell.v).trim();
-      } else {
-        obj[col] = '';
-      }
+let todos = [], filtrados = [], garagem = {};
+let filtroMarca = "todos", busca = "";
+
+// ── FETCH ─────────────────────────────────────────────────
+async function lerAba(nome) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(nome)}`;
+  const r = await fetch(url);
+  const t = await r.text();
+  const i = t.indexOf('{'), j = t.lastIndexOf('}');
+  const d = JSON.parse(t.slice(i, j + 1));
+  const cols = d.table.cols.map(c => c.label.trim());
+  return d.table.rows
+    .filter(row => row.c && row.c.some(c => c && c.v !== null && c.v !== undefined))
+    .map(row => {
+      const obj = {};
+      cols.forEach((col, idx) => {
+        const cell = row.c[idx];
+        obj[col] = (cell && cell.v !== null && cell.v !== undefined) ? String(cell.v).trim() : '';
+      });
+      return obj;
     });
-    return obj;
-  });
-  // Filtra linha de legenda (row 0) e linhas vazias
-  return rows.filter((row, idx) => {
-    if (idx === 0) {
-      const first = Object.values(row).find(v => v.length > 0) || '';
-      const lower = first.toLowerCase();
-      return !['ex:', 'somente', 'nome da', 'url da', 'separar', 'slug do', 'flex/gas'].some(kw => lower.includes(kw));
-    }
-    return Object.values(row).some(v => v.length > 0);
-  });
 }
 
-function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
-
-function fixImgUrl(url) {
-  if (!url || String(url).trim() === '') return '';
-  const s = String(url).trim();
-  // Convert Google Drive share link to direct image link
-  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing -> https://drive.google.com/uc?export=view&id=FILE_ID
-  const driveMatch = s.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (driveMatch) {
-    return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
-  }
-  return s;
+// ── HELPERS ───────────────────────────────────────────────
+function slugify(s) {
+  return String(s).toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
 }
+
 function fPreco(v) {
-  if (v === '' || v === null || v === undefined) return '–';
-  // Sheets may send as number or as "R$ 115.000" string
-  const s = String(v).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.');
-  const n = parseFloat(s);
-  return isNaN(n) ? String(v) : 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+  if (!v) return '–';
+  const n = parseFloat(String(v).replace(/[^\d]/g, ''));
+  return isNaN(n) ? String(v) : 'R$ ' + n.toLocaleString('pt-BR');
 }
+
 function fKm(v) {
-  if (v === '' || v === null || v === undefined) return '–';
-  const n = parseFloat(String(v).replace(/[^\d]/g,''));
-  return isNaN(n) ? String(v) : Math.round(n).toLocaleString('pt-BR') + ' km';
+  if (!v) return '–';
+  const n = parseFloat(String(v).replace(/[^\d]/g, ''));
+  return isNaN(n) ? String(v) : n.toLocaleString('pt-BR') + ' km';
 }
 
-function wppLink(c, via="") {
-  const tel = (garajeiro?.WhatsApp||"").replace(/\D/g,"");
-  const cod = c.Codigo?` (Cód. ${c.Codigo})`:"";
-  const ind = via?`\n🤝 Indicado por: ${via} — AutoClub`:"";
-  return `https://wa.me/55${tel}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}* na cor *${c.Cor}*${cod}. Ainda está disponível?${ind}`)}`;
+function wppLink(c) {
+  const tel = String(garagem.WhatsApp || c.WhatsApp || '').replace(/\D/g, '');
+  const cod = c.Codigo ? ` (Cód. ${c.Codigo})` : '';
+  const via = VIA ? `\n🤝 Indicado por: ${VIA} — AutoClub` : '';
+  const msg = `Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}* na cor *${c.Cor}*${cod}. Ainda está disponível?${via}`;
+  return `https://wa.me/55${tel}?text=${encodeURIComponent(msg)}`;
 }
 
+function imgUrl(url) {
+  if (!url) return '';
+  const m = String(url).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? `https://drive.google.com/uc?export=view&id=${m[1]}` : url;
+}
+
+// ── INIT ──────────────────────────────────────────────────
 async function init() {
   try {
-    // Buscar garajeiros e carros do Google Sheets
     const [garajeiros, carros] = await Promise.all([
-      fetchSheet("Garajeiros"),
-      fetchSheet("Carros")
+      lerAba("Garajeiros"),
+      lerAba("Carros")
     ]);
 
+    // Encontra o garajeiro pelo slug
+    garagem = garajeiros.find(g => slugify(g.Slug || g.Nome) === SLUG) || garajeiros[0] || {};
 
-
-    // Identificar garajeiro pelo slug da URL
-    const slugAtual = (SLUG || "").trim().toLowerCase();
-    garajeiro = garajeiros.find(g => String(g.Slug || "").trim().toLowerCase() === slugAtual) || garajeiros[0];
-
-    if (!garajeiro) {
-      document.getElementById("grid").innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Garagem não encontrada.</p></div>`;
-      return;
-    }
-
-    // Filtrar carros dessa garagem — compara slug e nome de forma flexível
-    const slugG = String(garajeiro.Slug || "").trim().toLowerCase();
-    const nomeG = String(garajeiro.Nome || "").trim().toLowerCase();
-    const todosDestaGaragem = carros.filter(c => {
-      const cGar = String(c.Garajeiro || "").trim().toLowerCase();
-      return cGar === slugG || cGar === nomeG;
+    const slugG = slugify(garagem.Slug || garagem.Nome || '');
+    todos = carros.filter(c => {
+      const cSlug = slugify(c.Garajeiro || '');
+      const status = String(c.Status || 'Disponivel').toLowerCase();
+      return cSlug === slugG && status === 'disponivel';
     });
-    todosCarros = todosDestaGaragem.filter(c => {
-      const status = String(c.Status || "Disponível").trim();
-      return status === "Disponível";
+    const vendidos = carros.filter(c => {
+      const cSlug = slugify(c.Garajeiro || '');
+      return cSlug === slugG && String(c.Status || '').toLowerCase() === 'vendido';
     });
 
-    const vendidos = todosDestaGaragem.filter(c => String(c.Status || "").trim() === "Vendido");
-
-    const nome = garajeiro.Nome || "Garagem";
+    // Hero
+    const nome = garagem.Nome || 'Garagem';
     document.title = `${nome} — AutoClub`;
-    document.getElementById("hero-nome").textContent     = nome;
-    document.getElementById("hero-city").textContent     = garajeiro.Cidade || "";
-    document.getElementById("header-garage").textContent = nome;
-    document.getElementById("avatar").textContent        = nome.charAt(0).toUpperCase();
+    document.getElementById('hero-nome').textContent = nome;
+    document.getElementById('hero-city').textContent = garagem.Cidade || '';
+    document.getElementById('header-sub').textContent = nome;
+    document.getElementById('avatar').textContent = nome.charAt(0).toUpperCase();
+    if (garagem.Foto) {
+      document.getElementById('avatar').innerHTML = `<img src="${imgUrl(garagem.Foto)}" alt="${nome}">`;
+    }
+    document.getElementById('stat-disp').textContent = todos.length;
+    document.getElementById('stat-vend').textContent = vendidos.length;
 
-    const foto = garajeiro["Foto Perfil"] || garajeiro["Foto"];
-    if (foto) document.getElementById("avatar").innerHTML = `<img src="${foto}" alt="${nome}">`;
-
-    document.getElementById("stat-total").textContent    = todosCarros.length;
-    document.getElementById("stat-vendidos").textContent = vendidos.length;
-
-    // Filtros de marca
-    const marcas = [...new Set(todosCarros.map(c => c.Marca).filter(Boolean))];
-    const bar = document.getElementById("filters");
+    // Chips de marca
+    const marcas = [...new Set(todos.map(c => c.Marca).filter(Boolean))];
+    const bar = document.getElementById('filters');
     marcas.forEach(m => {
-      const b = document.createElement("button");
-      b.className = "chip"; b.dataset.filter = slugify(m); b.textContent = m;
-      b.onclick = function(){ filtrar(this); };
-      bar.insertBefore(b, bar.querySelector(".search-wrap"));
+      const b = document.createElement('button');
+      b.className = 'chip'; b.dataset.marca = slugify(m); b.textContent = m;
+      b.onclick = function() { filtrar(this); };
+      bar.insertBefore(b, bar.querySelector('.search-wrap'));
     });
 
-    filtrados = [...todosCarros];
-    render(filtrados);
-
-  } catch (err) {
-    console.error("Erro ao carregar planilha:", err);
-    document.getElementById("grid").innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Erro ao carregar dados. Verifique se a planilha está pública.</p></div>`;
+    filtrados = [...todos];
+    render();
+  } catch (e) {
+    console.error(e);
+    document.getElementById('grid').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><p>Erro ao carregar. Verifique se a planilha está pública.</p></div>`;
   }
 }
 
-let filtroAtivo="todos", buscaAtiva="";
-function filtrar(btn) { document.querySelectorAll(".chip").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); filtroAtivo=btn.dataset.filter; aplicar(); }
-function buscar(v) { buscaAtiva=v.toLowerCase(); aplicar(); }
+// ── FILTROS ───────────────────────────────────────────────
+function filtrar(btn) {
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filtroMarca = btn.dataset.marca;
+  aplicar();
+}
+
+function buscar(v) { busca = v.toLowerCase(); aplicar(); }
+
 function aplicar() {
-  filtrados = todosCarros.filter(c => {
-    const marcaOk = filtroAtivo==="todos" || slugify(c.Marca||"")=== filtroAtivo;
-    const txtOk = !buscaAtiva || [c.Modelo,c.Marca,c.Cor,c.Opcionais].some(f=>(f||"").toLowerCase().includes(buscaAtiva));
-    return marcaOk && txtOk;
-  }); render(filtrados);
+  filtrados = todos.filter(c => {
+    const marcaOk = filtroMarca === 'todos' || slugify(c.Marca || '') === filtroMarca;
+    const buscaOk = !busca || [c.Modelo, c.Marca, c.Cor, c.Opcionais].some(f => (f || '').toLowerCase().includes(busca));
+    return marcaOk && buscaOk;
+  });
+  render();
 }
 
-function render(carros) {
-  const grid = document.getElementById("grid");
-  document.getElementById("grid-count").textContent = `${carros.length} veículo${carros.length!==1?"s":""} encontrado${carros.length!==1?"s":""}`;
-  if (!carros.length) { grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum veículo encontrado.</p></div>`; return; }
-  grid.innerHTML = carros.map((c,i) => {
-    const imgTag = fixImgUrl(c.Foto) ? `<img class="card-img" src="${fixImgUrl(c.Foto)}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : "";
-    const ph = `<div class="card-img-placeholder" ${fixImgUrl(c.Foto)?"style='display:none'":""}>🚗</div>`;
-    return `<div class="card" style="animation-delay:${i*.04}s" onclick="abrirModal(${i})">
-      <div class="card-img-wrap">${imgTag}${ph}${c.Destaque?`<div class="badge-destaque">Destaque</div>`:""}${c.Codigo?`<div class="badge-code">${c.Codigo}</div>`:""}</div>
+// ── RENDER ────────────────────────────────────────────────
+function render() {
+  const grid = document.getElementById('grid');
+  document.getElementById('grid-count').textContent =
+    `${filtrados.length} veículo${filtrados.length !== 1 ? 's' : ''} encontrado${filtrados.length !== 1 ? 's' : ''}`;
+
+  if (!filtrados.length) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum veículo encontrado.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtrados.map((c, i) => {
+    const foto = imgUrl(c.Foto);
+    const img  = foto
+      ? `<img class="card-img" src="${foto}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const ph = `<div class="card-img-placeholder" ${foto ? "style='display:none'" : ''}>🚗</div>`;
+
+    return `
+    <div class="card" style="animation-delay:${i * .04}s" onclick="abrirModal(${i})">
+      <div class="card-img-wrap">
+        ${img}${ph}
+        ${c.Codigo ? `<div class="badge-code">${c.Codigo}</div>` : ''}
+      </div>
       <div class="card-body">
-        <div class="card-title">${c.Marca||""} ${c.Modelo||""}</div>
-        <div class="card-year">${c.Ano||""}</div>
-        <div class="card-tags">${c.Cor?`<span class="tag">${c.Cor}</span>`:""}${c.KM?`<span class="tag">${fKm(c.KM)}</span>`:""}${c.Combustível?`<span class="tag">${c.Combustível}</span>`:""}</div>
-        <div class="card-footer"><span class="price">${fPreco(c.Preço)}</span><a class="btn-wpp" href="${wppLink(c,VIA)}" target="_blank" onclick="event.stopPropagation()">Ver mais</a></div>
-      </div></div>`;
-  }).join("");
+        <div class="card-title">${c.Marca || ''} ${c.Modelo || ''}</div>
+        <div class="card-year">${c.Ano || ''}</div>
+        <div class="card-tags">
+          ${c.Cor       ? `<span class="tag">${c.Cor}</span>` : ''}
+          ${c.KM        ? `<span class="tag">${fKm(c.KM)}</span>` : ''}
+          ${c.Combustivel ? `<span class="tag">${c.Combustivel}</span>` : ''}
+        </div>
+        <div class="card-footer">
+          <span class="price">${fPreco(c.Preco)}</span>
+          <a class="btn-wpp" href="${wppLink(c)}" target="_blank" onclick="event.stopPropagation()">Ver mais</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
+// ── MODAL ─────────────────────────────────────────────────
 function abrirModal(i) {
   const c = filtrados[i];
-  document.getElementById("m-code").textContent  = c.Codigo?`Cód. ${c.Codigo}`:"";
-  document.getElementById("m-title").textContent = `${c.Marca||""} ${c.Modelo||""}`;
-  document.getElementById("m-year").textContent  = c.Ano?`Ano ${c.Ano}`:"";
-  document.getElementById("m-preco").textContent = fPreco(c.Preço);
-  document.getElementById("m-cor").textContent   = c.Cor||"–";
-  document.getElementById("m-km").textContent    = fKm(c.KM);
-  document.getElementById("m-comb").textContent  = c.Combustível||"–";
-  const op = document.getElementById("m-op-wrap");
-  if (c.Opcionais) { op.style.display="block"; document.getElementById("m-op").textContent=c.Opcionais; } else op.style.display="none";
-  document.getElementById("modal-img-wrap").innerHTML = fixImgUrl(c.Foto)?`<img class="modal-img" src="${fixImgUrl(c.Foto)}" alt="${c.Modelo}">`:`<div class="modal-img-placeholder">🚗</div>`;
-  document.getElementById("m-wpp").href = wppLink(c,VIA);
-  document.getElementById("overlay").classList.add("open");
-  document.body.style.overflow="hidden";
+  document.getElementById('m-cod').textContent   = c.Codigo ? `Cód. ${c.Codigo}` : '';
+  document.getElementById('m-titulo').textContent = `${c.Marca || ''} ${c.Modelo || ''}`;
+  document.getElementById('m-ano').textContent   = c.Ano ? `Ano ${c.Ano}` : '';
+  document.getElementById('m-preco').textContent = fPreco(c.Preco);
+  document.getElementById('m-cor').textContent   = c.Cor || '–';
+  document.getElementById('m-km').textContent    = fKm(c.KM);
+  document.getElementById('m-comb').textContent  = c.Combustivel || '–';
+
+  const opWrap = document.getElementById('m-op-wrap');
+  if (c.Opcionais) { opWrap.style.display = 'block'; document.getElementById('m-op').textContent = c.Opcionais; }
+  else opWrap.style.display = 'none';
+
+  const foto = imgUrl(c.Foto);
+  document.getElementById('modal-img').innerHTML = foto
+    ? `<img class="modal-img" src="${foto}" alt="${c.Modelo}">`
+    : `<div class="modal-img-placeholder">🚗</div>`;
+
+  document.getElementById('m-wpp').href = wppLink(c);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 function fecharModal(e) {
-  if (e && e.target!==document.getElementById("overlay")) return;
-  document.getElementById("overlay").classList.remove("open");
-  document.body.style.overflow="";
+  if (e && e.target !== document.getElementById('overlay')) return;
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecharModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
+
 init();
 </script>
 </body>
