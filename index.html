@@ -20,59 +20,74 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
-}/* HEADER */
+}
+/* HEADER */
 header {
-position: sticky; top:0; z-index:100;
-height: 52px;
-background: rgba(255,255,255,.88);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(0,0,0,.08);
-display: flex; align-items: center;
-padding: 0 24px;
-gap: 16px;
+  position: sticky; top:0; z-index:100; height: 52px;
+  background: rgba(255,255,255,.88); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  display: flex; align-items: center; padding: 0 24px; gap: 16px;
 }
-.logo { font-size: 1rem; font-weight: 700; letter-spacing: -.4px; flex-shrink:0; }
+.logo { font-size: 1.1rem; font-weight: 700; letter-spacing: -.4px; flex-shrink:0; cursor: pointer; text-decoration: none; color: var(--text); }
 .garagem-select {
-font-family: inherit; font-size: .84rem; font-weight: 500;
-color: var(--text); background: var(--bg);
-border: 1px solid var(--border); border-radius: 8px;
-padding: 5px 10px; cursor: pointer; outline: none;
-transition: border-color .15s;
+  font-family: inherit; font-size: .84rem; font-weight: 500;
+  color: var(--text); background: var(--bg); border: 1px solid var(--border); 
+  border-radius: 8px; padding: 5px 10px; cursor: pointer; outline: none; margin-left: auto;
 }
-.garagem-select:focus { border-color: var(--blue); }
+
+/* PERFIL DO GARAJEIRO */
+.profile-wrap { display: none; padding: 24px 24px 0; max-width: 1200px; margin: 0 auto; animation: up .4s ease; }
+.profile-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; display: flex; gap: 24px; align-items: center;
+}
+.profile-img {
+  width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+  background: var(--bg); border: 2px solid var(--border); flex-shrink: 0;
+}
+.profile-info { flex: 1; }
+.profile-info h1 { font-size: 1.4rem; letter-spacing: -.4px; margin-bottom: 4px; }
+.profile-info p { font-size: .88rem; color: var(--muted); margin-bottom: 14px; line-height: 1.4; max-width: 600px; }
+.profile-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-social {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px;
+  border-radius: 99px; font-size: .8rem; font-weight: 600; text-decoration: none;
+  transition: opacity .15s; color: #fff;
+}
+.btn-social.wpp { background: #25D366; }
+.btn-social.insta { background: #E1306C; }
+.btn-social:hover { opacity: .85; }
+
 /* FILTROS */
 .filters {
-background: var(--white); border-bottom: 1px solid var(--border);
-padding: 0 24px; display: flex; align-items: center; gap: 6px;
-height: 48px; overflow-x: auto; scrollbar-width: none;
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 24px; display: flex; align-items: center; gap: 6px;
+  height: 48px; overflow-x: auto; scrollbar-width: none;
 }
 .filters::-webkit-scrollbar { display:none; }
 .chip {
-padding: 4px 14px; border-radius: 99px;
-border: 1px solid var(--border); background: transparent;
-font-family: inherit; font-size: .81rem; font-weight: 500;
-cursor: pointer; white-space: nowrap; color: var(--muted);
-transition: all .15s; flex-shrink:0;
+  padding: 4px 14px; border-radius: 99px; border: 1px solid var(--border); background: transparent;
+  font-family: inherit; font-size: .81rem; font-weight: 500; cursor: pointer; 
+  white-space: nowrap; color: var(--muted); transition: all .15s; flex-shrink:0;
 }
 .chip.active { background: var(--text); border-color: var(--text); color: #fff; }
 .chip:hover:not(.active) { border-color: #999; color: var(--text); }
 .search-wrap { margin-left:auto; position:relative; flex-shrink:0; }
 .search-wrap input {
-padding: 6px 12px 6px 30px; border: 1px solid var(--border); border-radius: 8px;
-font-family: inherit; font-size: .83rem; background: var(--bg);
-color: var(--text); width: 190px; outline: none; transition: all .15s;
+  padding: 6px 12px 6px 30px; border: 1px solid var(--border); border-radius: 8px;
+  font-family: inherit; font-size: .83rem; background: var(--bg);
+  color: var(--text); width: 190px; outline: none; transition: all .15s;
 }
 .search-wrap input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,.1); }
 .search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
-/* GRID */
+
+/* GRID E CARDS */
 .main { padding: 20px 24px 60px; max-width: 1200px; margin: 0 auto; }
-.grid-meta { font-size: .78rem; color: var(--muted); margin-bottom: 14px; }
+.grid-meta { font-size: .85rem; font-weight: 500; margin-bottom: 14px; color: var(--text); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-/* CARD */
 .card {
-background: var(--white); border-radius: var(--radius);
-border: 1px solid var(--border); overflow: hidden; cursor: pointer;
-transition: transform .2s, box-shadow .2s; animation: up .3s ease both;
+  background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); 
+  overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s; animation: up .3s ease both;
 }
 .card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.09); }
 .card-img-wrap { position:relative; overflow:hidden; }
@@ -81,6 +96,7 @@ transition: transform .2s, box-shadow .2s; animation: up .3s ease both;
 .card-ph { width:100%; height:190px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
 .badge { position:absolute; bottom:9px; right:9px; background:rgba(0,0,0,.42); color:#fff; font-size:.62rem; font-weight:500; padding:2px 7px; border-radius:5px; backdrop-filter:blur(6px); }
 .card-body { padding: 14px 16px 16px; }
+.vendedor-tag { font-size: .65rem; text-transform: uppercase; color: var(--blue); font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; display: block;}
 .card-name { font-size: 1rem; font-weight: 600; letter-spacing: -.3px; }
 .card-year { font-size: .8rem; color: var(--muted); margin: 2px 0 9px; }
 .tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:11px; }
@@ -88,30 +104,20 @@ transition: transform .2s, box-shadow .2s; animation: up .3s ease both;
 .card-footer { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border); padding-top:10px; }
 .price { font-size:1.12rem; font-weight:700; letter-spacing:-.4px; }
 .btn {
-display:inline-flex; align-items:center; gap:4px;
-background: var(--blue); color:#fff; border:none; padding: 7px 15px; border-radius:99px;
-font-family:inherit; font-size:.8rem; font-weight:500; cursor:pointer; text-decoration:none; transition:background .15s;
+  display:inline-flex; align-items:center; gap:6px; background: var(--blue); color:#fff; border:none; 
+  padding: 7px 15px; border-radius:99px; font-family:inherit; font-size:.8rem; font-weight:500; 
+  cursor:pointer; text-decoration:none; transition:background .15s;
 }
 .btn:hover { background: var(--blue2); }
-/* ESTADO */
+
+/* ESTADO E MODAL */
 .state { text-align:center; padding:70px 24px; color:var(--muted); }
 .state .icon { font-size:2.2rem; margin-bottom:10px; }
-.state p { font-size:.9rem; }
+.state p { font-size:.9rem; line-height: 1.5; }
 .spinner { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 12px; }
-/* MODAL */
-.overlay {
-position:fixed; inset:0; z-index:200;
-background:rgba(0,0,0,.38); backdrop-filter:blur(8px);
-display:flex; align-items:center; justify-content:center;
-padding:20px; opacity:0; pointer-events:none; transition:opacity .2s;
-}
+.overlay { position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.38); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s; }
 .overlay.on { opacity:1; pointer-events:all; }
-.modal {
-background:var(--white); border-radius:20px; max-width:540px; width:100%;
-max-height:90vh; overflow-y:auto;
-transform:scale(.96) translateY(8px); transition:transform .22s ease;
-box-shadow:0 20px 70px rgba(0,0,0,.18);
-}
+.modal { background:var(--white); border-radius:20px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto; transform:scale(.96) translateY(8px); transition:transform .22s ease; box-shadow:0 20px 70px rgba(0,0,0,.18); }
 .overlay.on .modal { transform:scale(1) translateY(0); }
 .modal-img { width:100%; height:240px; object-fit:cover; border-radius:20px 20px 0 0; display:block; }
 .modal-ph { width:100%; height:240px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:3.5rem; border-radius:20px 20px 0 0; }
@@ -127,7 +133,7 @@ box-shadow:0 20px 70px rgba(0,0,0,.18);
 .m-op strong { font-size:.68rem; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); display:block; margin-bottom:3px; }
 .m-op span { font-size:.86rem; color:var(--muted); line-height:1.5; }
 .m-btns { display:flex; gap:8px; }
-.btn-wpp { flex:1; background:var(--blue); color:#fff; border:none; padding:11px; border-radius:99px; font-family:inherit; font-size:.88rem; font-weight:500; cursor:pointer; text-decoration:none; text-align:center; display:flex; align-items:center; justify-content:center; gap:5px; transition:background .15s; }
+.btn-wpp { flex:1; background:var(--blue); color:#fff; border:none; padding:11px; border-radius:99px; font-family:inherit; font-size:.88rem; font-weight:500; cursor:pointer; text-decoration:none; text-align:center; display:flex; align-items:center; justify-content:center; gap:6px; transition:background .15s; }
 .btn-wpp:hover { background:var(--blue2); }
 .btn-fechar { padding:11px 18px; border:1px solid var(--border); border-radius:99px; background:transparent; font-family:inherit; cursor:pointer; font-size:.86rem; color:var(--muted); }
 .btn-fechar:hover { background:var(--bg); }
@@ -135,31 +141,62 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
 @keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 @keyframes spin { to { transform:rotate(360deg); } }
 @media(max-width:600px) {
-header, .filters, .main { padding-left:16px; padding-right:16px; }
-.grid { grid-template-columns:1fr; }
-.m-grid { grid-template-columns:1fr; }
-.search-wrap { margin-left:0; width:100%; }
-.search-wrap input { width:100%; }
+  header, .filters, .main { padding-left:16px; padding-right:16px; }
+  .profile-wrap { padding-left:16px; padding-right:16px; }
+  .profile-card { flex-direction: column; text-align: center; gap: 16px; padding: 20px 16px; }
+  .profile-links { justify-content: center; }
+  .grid, .m-grid { grid-template-columns:1fr; }
+  .search-wrap, .search-wrap input { width:100%; margin-left:0; }
 }
 </style>
 </head>
-<body><header>
-  <div class="logo">AutoClub</div>
+<body>
+<header>
+  <a href="/" class="logo" onclick="irParaHome(event)">AutoClub</a>
   <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
     <option value="">Carregando...</option>
   </select>
-</header><div class="filters" id="filters">
+</header>
+
+<div class="profile-wrap" id="profile-wrap">
+  <div class="profile-card">
+    <img src="" alt="Perfil" class="profile-img" id="p-img" onerror="this.src='https://ui-avatars.com/api/?name=Loja&background=random'">
+    <div class="profile-info">
+      <h1 id="p-nome">Nome do Garajeiro</h1>
+      <p id="p-desc">Descrição não informada.</p>
+      <div class="profile-links">
+        
+        <a href="#" target="_blank" class="btn-social wpp" id="p-wpp">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          WhatsApp
+        </a>
+
+        <a href="#" target="_blank" class="btn-social insta" id="p-insta" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          Instagram
+        </a>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="filters" id="filters">
   <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
   <div class="search-wrap">
     <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Buscar..." oninput="buscar(this.value)" id="inp-busca">
+    <input type="text" placeholder="Buscar carro..." oninput="buscar(this.value)" id="inp-busca">
   </div>
-</div><div class="main">
+</div>
+
+<div class="main">
   <div class="grid-meta" id="meta"></div>
   <div class="grid" id="grid">
-    <div class="state"><div class="spinner"></div><p>Carregando...</p></div>
+    <div class="state"><div class="spinner"></div><p>Carregando veículos...</p></div>
   </div>
-</div><div class="overlay" id="overlay" onclick="fechar(event)">
+</div>
+
+<div class="overlay" id="overlay" onclick="fechar(event)">
   <div class="modal">
     <div id="m-img"></div>
     <div class="modal-body">
@@ -172,137 +209,133 @@ header, .filters, .main { padding-left:16px; padding-right:16px; }
         <div class="m-field"><label>Quilometragem</label><span id="m-km"></span></div>
         <div class="m-field"><label>Combustível</label><span id="m-comb"></span></div>
       </div>
-      <div class="m-op" id="m-op" style="display:none">
-        <strong>Opcionais</strong><span id="m-op-txt"></span>
-      </div>
+      <div class="m-op" id="m-op" style="display:none"><strong>Opcionais</strong><span id="m-op-txt"></span></div>
       <div class="m-btns">
         <a class="btn-wpp" id="m-wpp" href="#" target="_blank">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          Falar com vendedor
+          Saiba mais
         </a>
         <button class="btn-fechar" onclick="fechar()">Fechar</button>
       </div>
     </div>
   </div>
-</div><footer>AutoClub</footer><script>
-// ─────────────────────────────────────────────
-// Edite apenas esta linha com seu Sheet ID
-// ─────────────────────────────────────────────
-var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
+</div>
+<footer>AutoClub</footer>
 
+<script>
+// SEU SHEET ID JÁ CONFIGURADO
+var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
 var garajeiros = [];
 var todosCarros = [];
-var slugAtual = "";
+var slugAtual = ""; // Vazio significa HOME (Todos os carros)
 var filtrados = [];
 var marcaAtiva = "todos";
 var buscaAtiva = "";
 
-// Lê uma aba do Google Sheets - Atualizado para forçar cabeçalhos
 function lerAba(nomeAba) {
-  var url = "https://docs.google.com/spreadsheets/d/"
-    + SHEET_ID + "/gviz/tq?tqx=out:json&headers=1&sheet="
-    + encodeURIComponent(nomeAba);
-
-  return fetch(url)
-    .then(function(r) { return r.text(); })
-    .then(function(texto) {
-      var i = texto.indexOf("{");
-      var j = texto.lastIndexOf("}");
-      var dados = JSON.parse(texto.slice(i, j + 1));
-      
-      var cols = dados.table.cols.map(function(c) { 
-        return (c && c.label) ? c.label.trim() : ""; 
+  var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq?tqx=out:json&headers=1&sheet=" + encodeURIComponent(nomeAba);
+  return fetch(url).then(r => r.text()).then(texto => {
+    var dados = JSON.parse(texto.slice(texto.indexOf("{"), texto.lastIndexOf("}") + 1));
+    var cols = dados.table.cols.map(c => (c && c.label) ? c.label.trim() : "");
+    return dados.table.rows.filter(row => row.c && row.c.some(c => c && c.v != null)).map(row => {
+      var obj = {};
+      cols.forEach((col, idx) => {
+        if (col !== "") obj[col] = (row.c[idx] && row.c[idx].v != null) ? String(row.c[idx].v).trim() : "";
       });
-
-      return dados.table.rows
-        .filter(function(row) {
-          return row.c && row.c.some(function(c) { return c && c.v != null; });
-        })
-        .map(function(row) {
-          var obj = {};
-          cols.forEach(function(col, idx) {
-            if (col !== "") {
-              var cell = row.c[idx];
-              obj[col] = (cell && cell.v != null) ? String(cell.v).trim() : "";
-            }
-          });
-          return obj;
-        });
+      return obj;
     });
+  });
 }
 
 function init() {
-  Promise.all([lerAba("Garajeiros"), lerAba("Carros")])
-    .then(function(resultados) {
-      garajeiros = resultados[0];
-      todosCarros = resultados[1];
+  Promise.all([lerAba("Garajeiros"), lerAba("Carros")]).then(resultados => {
+    garajeiros = resultados[0];
+    todosCarros = resultados[1];
 
-      // Monta o select de garajeiros
-      var sel = document.getElementById("sel-garagem");
-      sel.innerHTML = "";
-      
-      if(garajeiros.length === 0) {
-        var opt = document.createElement("option");
-        opt.value = "";
-        opt.textContent = "Nenhum vendedor encontrado";
-        sel.appendChild(opt);
-        return;
-      }
-
-      garajeiros.forEach(function(g) {
-        var opt = document.createElement("option");
-        opt.value = g.Slug || "";
-        opt.textContent = g.Nome || "Sem Nome";
-        sel.appendChild(opt);
-      });
-
-      // Respeita ?garajeiro=slug na URL
-      var params = new URLSearchParams(window.location.search);
-      var slugUrl = params.get("garajeiro") || "";
-      var existe = garajeiros.some(function(g) { return g.Slug === slugUrl; });
-      slugAtual = (existe ? slugUrl : (garajeiros[0] ? garajeiros[0].Slug : ""));
-      sel.value = slugAtual;
-
-      // Log para debug
-      console.log("Garajeiros:", JSON.stringify(garajeiros));
-      console.log("Carros (primeiros 2):", JSON.stringify(todosCarros.slice(0,2)));
-      console.log("Slug atual:", slugAtual);
-
-      carregarGaragem(slugAtual);
-    })
-    .catch(function(err) {
-      console.error(err);
-      document.getElementById("grid").innerHTML =
-        '<div class="state"><div class="icon">⚠️</div><p>Não foi possível carregar a planilha.<br>Verifique se ela está <strong>pública</strong> no Google Sheets e se as colunas estão corretas.</p></div>';
+    var sel = document.getElementById("sel-garagem");
+    sel.innerHTML = '<option value="">🏠 Todos os Veículos (Home)</option>';
+    
+    garajeiros.forEach(g => {
+      var opt = document.createElement("option");
+      opt.value = g.Slug || "";
+      opt.textContent = "🏪 " + (g.Nome || "Sem Nome");
+      sel.appendChild(opt);
     });
+
+    var params = new URLSearchParams(window.location.search);
+    var slugUrl = params.get("garajeiro") || "";
+    var existe = garajeiros.some(g => g.Slug === slugUrl);
+    slugAtual = existe ? slugUrl : ""; 
+    sel.value = slugAtual;
+
+    carregarEstadoPagina();
+  }).catch(err => {
+    console.error(err);
+    document.getElementById("grid").innerHTML = '<div class="state"><div class="icon">⚠️</div><p>Não foi possível conectar à base de dados.</p></div>';
+  });
+}
+
+function irParaHome(e) {
+  e.preventDefault();
+  trocarGaragem("");
 }
 
 function trocarGaragem(slug) {
   slugAtual = slug;
+  // Muda a URL no navegador sem recarregar a página
+  var novaUrl = slug ? window.location.pathname + "?garajeiro=" + slug : window.location.pathname;
+  window.history.pushState({}, '', novaUrl);
+  
+  document.getElementById("sel-garagem").value = slug;
   marcaAtiva = "todos";
   buscaAtiva = "";
   document.getElementById("inp-busca").value = "";
-  carregarGaragem(slug);
+  carregarEstadoPagina();
 }
 
-function carregarGaragem(slug) {
-  var carros = todosCarros.filter(function(c) {
+function carregarEstadoPagina() {
+  var wrapPerfil = document.getElementById("profile-wrap");
+  
+  if (slugAtual === "") {
+    // Modo HOME: Esconde perfil, mostra todos os carros
+    wrapPerfil.style.display = "none";
+  } else {
+    // Modo GARAJEIRO: Mostra perfil do vendedor
+    var g = garajeiros.find(x => x.Slug === slugAtual);
+    document.getElementById("p-img").src = fotoUrl(g.FotoPerfil) || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(g.Nome) + '&background=random');
+    document.getElementById("p-nome").textContent = g.Nome;
+    document.getElementById("p-desc").textContent = g.Descricao || "Bem-vindo à nossa vitrine digital!";
+    
+    var linkWpp = document.getElementById("p-wpp");
+    var tel = String(g.WhatsApp || "").replace(/\D/g, "");
+    linkWpp.href = "https://wa.me/55" + tel;
+    
+    var linkInsta = document.getElementById("p-insta");
+    if(g.Instagram) {
+      linkInsta.href = g.Instagram;
+      linkInsta.style.display = "inline-flex";
+    } else {
+      linkInsta.style.display = "none";
+    }
+    wrapPerfil.style.display = "block";
+  }
+
+  // Filtra carros (Se tiver slug, puxa do garajeiro. Se não, puxa todos)
+  var carros = todosCarros.filter(c => {
     var st = (c.Status || "").toLowerCase().trim();
-    return c.Garajeiro === slug && (st === "disponivel" || st === "disponível");
+    var disp = (st === "disponivel" || st === "disponível");
+    return slugAtual === "" ? disp : (c.Garajeiro === slugAtual && disp);
   });
 
-  // Reconstrói chips de marca
   var marcas = [];
-  carros.forEach(function(c) {
-    if (c.Marca && marcas.indexOf(c.Marca) === -1) marcas.push(c.Marca);
-  });
+  carros.forEach(c => { if (c.Marca && !marcas.includes(c.Marca)) marcas.push(c.Marca); });
 
   var bar = document.getElementById("filters");
-  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b) { b.remove(); });
+  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(b => b.remove());
   bar.querySelector("[data-marca='todos']").classList.add("active");
 
   var searchWrap = bar.querySelector(".search-wrap");
-  marcas.forEach(function(m) {
+  marcas.sort().forEach(m => {
     var b = document.createElement("button");
     b.className = "chip"; b.dataset.marca = m; b.textContent = m;
     b.onclick = function() { filtrar(this); };
@@ -314,44 +347,37 @@ function carregarGaragem(slug) {
 }
 
 function filtrar(btn) {
-  document.querySelectorAll(".chip").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
   marcaAtiva = btn.dataset.marca;
   aplicarFiltros();
 }
 
-function buscar(val) {
-  buscaAtiva = val.toLowerCase();
-  aplicarFiltros();
-}
+function buscar(val) { buscaAtiva = val.toLowerCase(); aplicarFiltros(); }
 
 function aplicarFiltros() {
-  var base = todosCarros.filter(function(c) {
-    var st2 = (c.Status || "").toLowerCase().trim();
-    return c.Garajeiro === slugAtual && (st2 === "disponivel" || st2 === "disponível");
+  var base = todosCarros.filter(c => {
+    var st = (c.Status || "").toLowerCase().trim();
+    var disp = (st === "disponivel" || st === "disponível");
+    return slugAtual === "" ? disp : (c.Garajeiro === slugAtual && disp);
   });
-  filtrados = base.filter(function(c) {
+  
+  filtrados = base.filter(c => {
     var mOk = marcaAtiva === "todos" || c.Marca === marcaAtiva;
-    var bOk = !buscaAtiva || [c.Marca, c.Modelo, c.Cor, c.Opcionais].some(function(f) {
-      return (f || "").toLowerCase().indexOf(buscaAtiva) !== -1;
-    });
+    var bOk = !buscaAtiva || [c.Marca, c.Modelo, c.Cor, c.Garajeiro].some(f => (f || "").toLowerCase().includes(buscaAtiva));
     return mOk && bOk;
   });
   renderizar();
 }
 
 function fPreco(v) {
-  if (!v) return "–";
-  var n = parseInt(String(v).replace(/\D/g, ""), 10);
-  return isNaN(n) ? String(v) : "R$ " + n.toLocaleString("pt-BR");
+  var n = parseInt(String(v||"").replace(/\D/g, ""), 10);
+  return isNaN(n) ? "Consulte" : "R$ " + n.toLocaleString("pt-BR");
 }
-
 function fKm(v) {
-  if (!v) return "–";
-  var n = parseInt(String(v).replace(/\D/g, ""), 10);
-  return isNaN(n) ? String(v) : n.toLocaleString("pt-BR") + " km";
+  var n = parseInt(String(v||"").replace(/\D/g, ""), 10);
+  return isNaN(n) ? "0 km" : n.toLocaleString("pt-BR") + " km";
 }
-
 function fotoUrl(url) {
   if (!url) return "";
   var m = String(url).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
@@ -359,65 +385,76 @@ function fotoUrl(url) {
 }
 
 function wppLink(c) {
-  var g = garajeiros.find(function(g) { return g.Slug === slugAtual; }) || {};
-  var tel = String(g.WhatsApp || c.WhatsApp || "").replace(/\D/g, "");
-  var cod = c.Codigo ? " (Cód. " + c.Codigo + ")" : "";
-  var msg = "Olá! Tenho interesse no " + (c.Marca||"") + " " + (c.Modelo||"") + " " + (c.Ano||"") + " na cor " + (c.Cor||"") + cod + ". Ainda disponível?";
+  // Puxa o número do garajeiro dono DESTE carro específico (importante para a Home)
+  var g = garajeiros.find(x => x.Slug === c.Garajeiro) || {};
+  var tel = String(g.WhatsApp || "").replace(/\D/g, "");
+  var msg = "Olá! Vi no AutoClub e tenho interesse no " + (c.Marca||"") + " " + (c.Modelo||"") + " " + (c.Ano||"") + ". Ainda está disponível?";
   return "https://wa.me/55" + tel + "?text=" + encodeURIComponent(msg);
 }
 
 function renderizar() {
   var meta = document.getElementById("meta");
   var grid = document.getElementById("grid");
-  var n = filtrados.length;
-  meta.textContent = n + " veículo" + (n !== 1 ? "s" : "") + " encontrado" + (n !== 1 ? "s" : "");
+  
+  if (slugAtual === "") {
+    meta.textContent = "Vitrine Geral - " + filtrados.length + " veículos de parceiros";
+  } else {
+    meta.textContent = filtrados.length + " veículo(s) encontrado(s) nesta loja";
+  }
 
-  if (!n) {
+  if (!filtrados.length) {
     grid.innerHTML = '<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';
     return;
   }
 
-  grid.innerHTML = filtrados.map(function(c, i) {
+  grid.innerHTML = filtrados.map((c, i) => {
     var foto = fotoUrl(c.Foto);
-    var imgTag = foto
-      ? '<img class="card-img" src="' + foto + '" alt="' + (c.Modelo||"") + '" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
-      : "";
-    var ph = '<div class="card-ph"' + (foto ? ' style="display:none"' : '') + '>🚗</div>';
-    return '<div class="card" style="animation-delay:' + (i * 0.04) + 's" onclick="abrirModal(' + i + ')">'
-      + '<div class="card-img-wrap">' + imgTag + ph
-      + (c.Codigo ? '<div class="badge">' + c.Codigo + '</div>' : '')
-      + '</div>'
-      + '<div class="card-body">'
-      + '<div class="card-name">' + (c.Marca||"") + " " + (c.Modelo||"") + '</div>'
-      + '<div class="card-year">' + (c.Ano||"") + '</div>'
-      + '<div class="tags">'
-      + (c.Cor         ? '<span class="tag">' + c.Cor + '</span>' : '')
-      + (c.KM          ? '<span class="tag">' + fKm(c.KM) + '</span>' : '')
-      + (c.Combustivel ? '<span class="tag">' + c.Combustivel + '</span>' : '')
-      + '</div>'
-      + '<div class="card-footer">'
-      + '<span class="price">' + fPreco(c.Preco) + '</span>'
-      + '<a class="btn" href="' + wppLink(c) + '" target="_blank" onclick="event.stopPropagation()">Ver mais</a>'
-      + '</div></div></div>';
+    var imgTag = foto ? '<img class="card-img" src="' + foto + '" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">' : "";
+    var gNome = (garajeiros.find(x => x.Slug === c.Garajeiro) || {}).Nome || "";
+    
+    return `<div class="card" style="animation-delay:${i * 0.04}s" onclick="abrirModal(${i})">
+      <div class="card-img-wrap">
+        ${imgTag}<div class="card-ph" ${foto ? 'style="display:none"' : ''}>🚗</div>
+      </div>
+      <div class="card-body">
+        ${slugAtual === "" ? `<span class="vendedor-tag">📍 ${gNome}</span>` : ""}
+        <div class="card-name">${c.Marca||""} ${c.Modelo||""}</div>
+        <div class="card-year">${c.Ano||""}</div>
+        <div class="tags">
+          ${c.Cor ? `<span class="tag">${c.Cor}</span>` : ''}
+          ${c.KM ? `<span class="tag">${fKm(c.KM)}</span>` : ''}
+          ${c.Combustivel ? `<span class="tag">${c.Combustivel}</span>` : ''}
+        </div>
+        <div class="card-footer">
+          <span class="price">${fPreco(c.Preco)}</span>
+          <a class="btn" href="${wppLink(c)}" target="_blank" onclick="event.stopPropagation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Saiba mais
+          </a>
+        </div>
+      </div>
+    </div>`;
   }).join("");
 }
 
 function abrirModal(i) {
   var c = filtrados[i];
-  document.getElementById("m-cod").textContent   = c.Codigo ? "Cód. " + c.Codigo : "";
+  var g = garajeiros.find(x => x.Slug === c.Garajeiro) || {};
+  
+  document.getElementById("m-cod").textContent = slugAtual === "" ? "Vendido por: " + (g.Nome || "Parceiro") : (c.Codigo ? "Cód. " + c.Codigo : "");
   document.getElementById("m-title").textContent = (c.Marca||"") + " " + (c.Modelo||"");
   document.getElementById("m-year").textContent  = c.Ano ? "Ano " + c.Ano : "";
   document.getElementById("m-preco").textContent = fPreco(c.Preco);
   document.getElementById("m-cor").textContent   = c.Cor || "–";
   document.getElementById("m-km").textContent    = fKm(c.KM);
   document.getElementById("m-comb").textContent  = c.Combustivel || "–";
+  
   var mOp = document.getElementById("m-op");
   if (c.Opcionais) { mOp.style.display = "block"; document.getElementById("m-op-txt").textContent = c.Opcionais; }
   else mOp.style.display = "none";
+  
   var foto = fotoUrl(c.Foto);
-  document.getElementById("m-img").innerHTML = foto
-    ? '<img class="modal-img" src="' + foto + '" alt="' + (c.Modelo||"") + '">'
-    : '<div class="modal-ph">🚗</div>';
+  document.getElementById("m-img").innerHTML = foto ? '<img class="modal-img" src="' + foto + '">' : '<div class="modal-ph">🚗</div>';
   document.getElementById("m-wpp").href = wppLink(c);
   document.getElementById("overlay").classList.add("on");
   document.body.style.overflow = "hidden";
@@ -428,9 +465,9 @@ function fechar(e) {
   document.getElementById("overlay").classList.remove("on");
   document.body.style.overflow = "";
 }
-
-document.addEventListener("keydown", function(e) { if (e.key === "Escape") fechar(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") fechar(); });
 
 init();
-</script></body>
+</script>
+</body>
 </html>
