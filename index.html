@@ -5,235 +5,454 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoClub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-body{
-font-family:Inter,sans-serif;
-background:#f5f5f7;
-margin:0;
-padding:0;
-}
+  :root {
+    --bg:      #f5f5f7;
+    --surface: #ffffff;
+    --blue:    #0071e3;
+    --blue-dk: #0058b0;
+    --text:    #1d1d1f;
+    --text-2:  #424245;
+    --muted:   #6e6e73;
+    --border:  #d2d2d7;
+    --radius:  18px;
+  }
 
-header{
-background:#fff;
-padding:15px 20px;
-border-bottom:1px solid #ddd;
-font-weight:600;
-}
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-gap:15px;
-padding:20px;
-}
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 17px;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
 
-.card{
-background:#fff;
-border-radius:12px;
-overflow:hidden;
-border:1px solid #ddd;
-}
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    height: 52px;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,.08);
+    display: flex; align-items: center;
+    padding: 0 22px;
+    justify-content: space-between;
+  }
 
-.card img{
-width:100%;
-height:200px;
-object-fit:cover;
-}
+  .logo { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.3px; color: var(--text); }
+  .header-garage { font-size: 0.82rem; color: var(--muted); }
 
-.card-body{
-padding:15px;
-}
+  /* HERO */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 22px 28px;
+    display: flex; align-items: center; gap: 18px;
+  }
 
-.title{
-font-weight:600;
-font-size:18px;
-}
+  .avatar {
+    width: 68px; height: 68px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-weight: 600; color: var(--blue);
+    flex-shrink: 0; overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-.price{
-color:#0071e3;
-font-weight:600;
-margin-top:8px;
-}
+  .hero-info h1 {
+    font-size: 1.5rem; font-weight: 700;
+    letter-spacing: -0.4px; line-height: 1.2;
+  }
 
-.loading{
-padding:40px;
-text-align:center;
-}
+  .hero-city { font-size: 0.88rem; color: var(--muted); margin-top: 3px; }
 
+  .hero-stats { display: flex; gap: 24px; margin-top: 14px; }
+
+  .stat-num {
+    font-size: 1.35rem; font-weight: 700;
+    letter-spacing: -0.5px; color: var(--text); display: block;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+
+  /* FILTERS */
+  .filters {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 22px;
+    display: flex; align-items: center; gap: 6px;
+    height: 52px; overflow-x: auto; scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+
+  .chip {
+    padding: 5px 14px; border-radius: 99px;
+    border: 1px solid var(--border); background: transparent;
+    font-family: 'Inter', sans-serif; font-size: 0.82rem;
+    font-weight: 500; cursor: pointer; white-space: nowrap;
+    color: var(--text-2); transition: all .15s; flex-shrink: 0;
+  }
+  .chip:hover { border-color: #aaa; }
+  .chip.active { background: var(--text); border-color: var(--text); color: #fff; }
+
+  .search-wrap { margin-left: auto; position: relative; flex-shrink: 0; }
+  .search-wrap svg {
+    position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); pointer-events: none;
+  }
+  .search-wrap input {
+    padding: 7px 14px 7px 32px; border: 1px solid var(--border);
+    border-radius: 8px; font-family: 'Inter', sans-serif;
+    font-size: 0.84rem; background: var(--bg); color: var(--text);
+    width: 200px; outline: none; transition: all .15s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus {
+    border-color: var(--blue); background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,113,227,.12);
+  }
+
+  /* GRID */
+  .grid-section { padding: 20px 22px 40px; max-width: 1200px; margin: 0 auto; }
+  .grid-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .grid-count { font-size: 0.8rem; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+
+  /* CARD */
+  .card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); overflow: hidden; cursor: pointer;
+    transition: box-shadow .2s, transform .2s;
+    animation: fadeIn .3s ease both;
+  }
+  .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,.1); transform: translateY(-2px); }
+
+  .card-img-wrap { position: relative; overflow: hidden; }
+
+  .card-img {
+    width: 100%; height: 195px; object-fit: cover; display: block;
+    background: var(--bg); transition: transform .4s;
+  }
+  .card:hover .card-img { transform: scale(1.03); }
+
+  .card-img-placeholder {
+    width: 100%; height: 195px; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.8rem; color: var(--border);
+  }
+
+  .badge-destaque {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--blue); color: #fff;
+    font-size: 0.67rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 99px;
+  }
+  .badge-code {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(0,0,0,.45); color: #fff;
+    font-size: 0.64rem; font-weight: 500;
+    padding: 2px 7px; border-radius: 5px;
+    backdrop-filter: blur(6px);
+  }
+
+  .card-body { padding: 14px 16px 16px; }
+  .card-title { font-size: 1.02rem; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; }
+  .card-year { font-size: 0.82rem; color: var(--muted); margin-top: 2px; margin-bottom: 10px; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .tag {
+    font-size: 0.75rem; color: var(--text-2); background: var(--bg);
+    padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border);
+  }
+
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border); padding-top: 11px;
+  }
+
+  .price { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.4px; }
+
+  .btn-wpp {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--blue); color: #fff; border: none;
+    padding: 7px 15px; border-radius: 99px;
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; text-decoration: none; transition: background .15s; white-space: nowrap;
+  }
+  .btn-wpp:hover { background: var(--blue-dk); }
+
+  /* LOADING / EMPTY */
+  .loading { text-align: center; padding: 80px 32px; color: var(--muted); font-size: 0.9rem; }
+  .spinner {
+    width: 24px; height: 24px; border: 2px solid var(--border);
+    border-top-color: var(--blue); border-radius: 50%;
+    animation: spin .7s linear infinite; margin: 0 auto 14px;
+  }
+  .empty { text-align: center; padding: 80px 32px; color: var(--muted); }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty p { font-size: 0.9rem; }
+
+  /* MODAL */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.4);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+    padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s;
+  }
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface); border-radius: 20px;
+    max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto;
+    transform: scale(.97) translateY(10px); transition: transform .25s ease;
+    box-shadow: 0 24px 80px rgba(0,0,0,.2);
+  }
+  .overlay.open .modal { transform: scale(1) translateY(0); }
+
+  .modal-img { width: 100%; height: 250px; object-fit: cover; border-radius: 20px 20px 0 0; display: block; }
+  .modal-img-placeholder {
+    width: 100%; height: 250px; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: var(--border); border-radius: 20px 20px 0 0;
+  }
+
+  .modal-body { padding: 22px 24px 26px; }
+  .modal-code { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .modal-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 2px; }
+  .modal-year { color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; }
+
+  .modal-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 14px;
+  }
+  .modal-field { background: var(--surface); padding: 11px 14px; }
+  .modal-field label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--muted); font-weight: 500; display: block; margin-bottom: 2px;
+  }
+  .modal-field span { font-size: 0.92rem; font-weight: 500; }
+
+  .modal-opcionais {
+    background: var(--bg); border-radius: 10px;
+    padding: 11px 14px; margin-bottom: 18px; border: 1px solid var(--border);
+  }
+  .modal-opcionais strong {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--muted); display: block; margin-bottom: 4px; font-weight: 500;
+  }
+  .modal-opcionais span { font-size: 0.88rem; color: var(--text-2); line-height: 1.5; }
+
+  .modal-btns { display: flex; gap: 8px; }
+
+  .btn-modal-wpp {
+    flex: 1; background: var(--blue); color: #fff; border: none;
+    padding: 12px; border-radius: 99px; font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none;
+    text-align: center; display: flex; align-items: center;
+    justify-content: center; gap: 6px; transition: background .15s;
+  }
+  .btn-modal-wpp:hover { background: var(--blue-dk); }
+
+  .btn-modal-close {
+    padding: 12px 20px; border: 1px solid var(--border); border-radius: 99px;
+    background: transparent; font-family: 'Inter', sans-serif;
+    cursor: pointer; font-size: 0.88rem; color: var(--text-2); transition: background .15s;
+  }
+  .btn-modal-close:hover { background: var(--bg); }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 24px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 0.76rem; margin-top: 10px;
+  }
+  footer a { color: var(--blue); text-decoration: none; font-weight: 500; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    header, .hero, .filters, .grid-section { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .modal-grid { grid-template-columns: 1fr; }
+    .search-wrap { margin-left: 0; }
+    .search-wrap input { width: 100%; }
+    .hero-info h1 { font-size: 1.3rem; }
+  }
 </style>
 </head>
 <body>
 
-<header id="header">Carregando...</header>
+<header>
+  <div class="logo">AutoClub</div>
+  <div class="header-garage" id="header-garage"></div>
+</header>
 
-<div id="grid" class="grid">
-<div class="loading">Carregando veículos...</div>
+<div class="hero">
+  <div class="avatar" id="avatar">G</div>
+  <div class="hero-info">
+    <h1 id="hero-nome">Carregando...</h1>
+    <div class="hero-city" id="hero-city"></div>
+    <div class="hero-stats">
+      <div><span class="stat-num" id="stat-total">–</span><span class="stat-label">Disponíveis</span></div>
+      <div><span class="stat-num" id="stat-vendidos">–</span><span class="stat-label">Vendidos</span></div>
+    </div>
+  </div>
 </div>
 
-<script>
+<div class="filters" id="filters">
+  <button class="chip active" data-filter="todos" onclick="filtrar(this)">Todos</button>
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Buscar..." oninput="buscar(this.value)" id="search-input">
+  </div>
+</div>
 
-const CONFIG = {
-  SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q",
-  ABA_GARAJEIROS: "Garajeiros",
-  ABA_CARROS: "Carros"
+<div class="grid-section">
+  <div class="grid-meta"><span class="grid-count" id="grid-count"></span></div>
+  <div class="grid" id="grid">
+    <div class="loading"><div class="spinner"></div>Carregando veículos...</div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="fecharModal(event)">
+  <div class="modal">
+    <div id="modal-img-wrap"></div>
+    <div class="modal-body">
+      <div class="modal-code" id="m-code"></div>
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-year" id="m-year"></div>
+      <div class="modal-grid">
+        <div class="modal-field"><label>Preço</label><span id="m-preco"></span></div>
+        <div class="modal-field"><label>Cor</label><span id="m-cor"></span></div>
+        <div class="modal-field"><label>Quilometragem</label><span id="m-km"></span></div>
+        <div class="modal-field"><label>Combustível</label><span id="m-comb"></span></div>
+      </div>
+      <div class="modal-opcionais" id="m-op-wrap" style="display:none">
+        <strong>Opcionais</strong><span id="m-op"></span>
+      </div>
+      <div class="modal-btns">
+        <a class="btn-modal-wpp" id="m-wpp" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Falar com vendedor
+        </a>
+        <button class="btn-modal-close" onclick="fecharModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Catálogo digital por <a href="#">AutoClub</a></footer>
+
+<script>
+const CONFIG = { SHEET_ID: "12kpq3U5hq2ZO1HMpyOdY_T2z1L2avq-Q", ABA_GARAJEIROS: "Garajeiros", ABA_CARROS: "Carros" };
+const urlParams = new URLSearchParams(window.location.search);
+const SLUG = urlParams.get("garajeiro") || "";
+const VIA  = urlParams.get("via") || "";
+let todosCarros = [], filtrados = [], garajeiro = null;
+
+const EXEMPLO = {
+  garajeiro: { Nome:"João Silva", Slug:"joao-silva", Cidade:"São Paulo — SP", WhatsApp:"11999999999", "Foto Perfil":"" },
+  carros: [
+    { Codigo:"AG-001", Marca:"Honda",      Modelo:"Civic EXL",        Ano:"2021", Preço:115000, Cor:"Prata",           KM:38000, Combustível:"Flex",    Opcionais:"Couro, Teto Solar, Câmera de Ré, Sensor de Estacionamento", Foto:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80", Destaque:"SIM", Status:"Disponível" },
+    { Codigo:"AG-002", Marca:"Toyota",     Modelo:"Corolla XEi",      Ano:"2022", Preço:138000, Cor:"Branco Perolado", KM:22000, Combustível:"Flex",    Opcionais:"Central Multimídia, Apple CarPlay, Android Auto",            Foto:"https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80", Destaque:"",    Status:"Disponível" },
+    { Codigo:"AG-003", Marca:"Volkswagen", Modelo:"Golf GTI",         Ano:"2020", Preço:142000, Cor:"Cinza Carbono",  KM:51000, Combustível:"Gasolina", Opcionais:"Bancos em Couro, Freios Brembo, Faróis de LED",             Foto:"https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80", Destaque:"",    Status:"Disponível" },
+    { Codigo:"AG-004", Marca:"Toyota",     Modelo:"Hilux SRX",        Ano:"2023", Preço:289000, Cor:"Preto",          KM:8000,  Combustível:"Diesel",   Opcionais:"4x4, Couro, Multimídia 8\", Controle de Tração",           Foto:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", Destaque:"SIM", Status:"Disponível" },
+    { Codigo:"AG-005", Marca:"Honda",      Modelo:"HR-V EXL",         Ano:"2022", Preço:128000, Cor:"Vermelho",       KM:31000, Combustível:"Flex",    Opcionais:"Teto Solar Panorâmico, Câmera 360°, Bancos em Couro",       Foto:"https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80", Destaque:"",    Status:"Disponível" },
+    { Codigo:"AG-006", Marca:"Volkswagen", Modelo:"T-Cross Highline", Ano:"2023", Preço:118000, Cor:"Azul",           KM:15000, Combustível:"Flex",    Opcionais:"Teto Solar, Apple CarPlay, Assistente de Faixa",            Foto:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&q=80", Destaque:"",    Status:"Disponível" },
+  ]
 };
 
-const params = new URLSearchParams(window.location.search);
-const SLUG = params.get("garajeiro") || "";
+function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
+function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
+function fKm(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/\D/g,"")); return isNaN(n)?v:n.toLocaleString("pt-BR")+" km"; }
 
-let garajeiro = null;
-let carros = [];
-
-function slugify(text){
-return text
-.toString()
-.toLowerCase()
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.replace(/\s+/g,"-");
+function wppLink(c, via="") {
+  const tel = (garajeiro?.WhatsApp||"").replace(/\D/g,"");
+  const cod = c.Codigo?` (Cód. ${c.Codigo})`:"";
+  const ind = via?`\n🤝 Indicado por: ${via} — AutoClub`:"";
+  return `https://wa.me/55${tel}?text=${encodeURIComponent(`Olá! Gostaria de saber mais sobre o *${c.Marca} ${c.Modelo} ${c.Ano}* na cor *${c.Cor}*${cod}. Ainda está disponível?${ind}`)}`;
 }
 
-function formatPrice(price){
-
-if(!price) return "";
-
-// remove R$, pontos e espaços
-const clean = price
-.toString()
-.replace("R$","")
-.replace(/\./g,"")
-.replace(/,/g,"")
-.trim();
-
-const n = parseFloat(clean);
-
-if(isNaN(n)) return price;
-
-return "R$ " + n.toLocaleString("pt-BR");
-
+async function init() {
+  garajeiro   = EXEMPLO.garajeiro;
+  todosCarros = EXEMPLO.carros.filter(c => (c.Status||"Disponível") !== "Vendido");
+  const nome  = garajeiro.Nome;
+  document.title = `${nome} — AutoClub`;
+  document.getElementById("hero-nome").textContent     = nome;
+  document.getElementById("hero-city").textContent     = garajeiro.Cidade||"";
+  document.getElementById("header-garage").textContent = nome;
+  document.getElementById("avatar").textContent        = nome.charAt(0).toUpperCase();
+  if (garajeiro["Foto Perfil"]) document.getElementById("avatar").innerHTML = `<img src="${garajeiro["Foto Perfil"]}" alt="${nome}">`;
+  document.getElementById("stat-total").textContent    = todosCarros.length;
+  document.getElementById("stat-vendidos").textContent = EXEMPLO.carros.filter(c=>c.Status==="Vendido").length;
+  const marcas = [...new Set(todosCarros.map(c=>c.Marca).filter(Boolean))];
+  const bar = document.getElementById("filters");
+  marcas.forEach(m => {
+    const b = document.createElement("button");
+    b.className="chip"; b.dataset.filter=slugify(m); b.textContent=m;
+    b.onclick=function(){filtrar(this);}; bar.insertBefore(b,bar.querySelector(".search-wrap"));
+  });
+  filtrados = [...todosCarros]; render(filtrados);
 }
 
-async function carregarGarajeiro(){
-
-const res = await fetch(
-`https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_GARAJEIROS}`
-);
-
-const lista = await res.json();
-
-return lista.find(g => slugify(g.Slug) === slugify(SLUG));
-
+let filtroAtivo="todos", buscaAtiva="";
+function filtrar(btn) { document.querySelectorAll(".chip").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); filtroAtivo=btn.dataset.filter; aplicar(); }
+function buscar(v) { buscaAtiva=v.toLowerCase(); aplicar(); }
+function aplicar() {
+  filtrados = todosCarros.filter(c => {
+    const marcaOk = filtroAtivo==="todos" || slugify(c.Marca||"")=== filtroAtivo;
+    const txtOk = !buscaAtiva || [c.Modelo,c.Marca,c.Cor,c.Opcionais].some(f=>(f||"").toLowerCase().includes(buscaAtiva));
+    return marcaOk && txtOk;
+  }); render(filtrados);
 }
 
-async function carregarCarros(){
-
-const res = await fetch(
-`https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.ABA_CARROS}`
-);
-
-const lista = await res.json();
-
-return lista.filter(c =>
-slugify(c.Garajeiro) === slugify(SLUG)
-&& c.Status !== "Vendido"
-);
-
+function render(carros) {
+  const grid = document.getElementById("grid");
+  document.getElementById("grid-count").textContent = `${carros.length} veículo${carros.length!==1?"s":""} encontrado${carros.length!==1?"s":""}`;
+  if (!carros.length) { grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><p>Nenhum veículo encontrado.</p></div>`; return; }
+  grid.innerHTML = carros.map((c,i) => {
+    const imgTag = c.Foto ? `<img class="card-img" src="${c.Foto}" alt="${c.Modelo}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : "";
+    const ph = `<div class="card-img-placeholder" ${c.Foto?"style='display:none'":""}>🚗</div>`;
+    return `<div class="card" style="animation-delay:${i*.04}s" onclick="abrirModal(${i})">
+      <div class="card-img-wrap">${imgTag}${ph}${c.Destaque?`<div class="badge-destaque">Destaque</div>`:""}${c.Codigo?`<div class="badge-code">${c.Codigo}</div>`:""}</div>
+      <div class="card-body">
+        <div class="card-title">${c.Marca||""} ${c.Modelo||""}</div>
+        <div class="card-year">${c.Ano||""}</div>
+        <div class="card-tags">${c.Cor?`<span class="tag">${c.Cor}</span>`:""}${c.KM?`<span class="tag">${fKm(c.KM)}</span>`:""}${c.Combustível?`<span class="tag">${c.Combustível}</span>`:""}</div>
+        <div class="card-footer"><span class="price">${fPreco(c.Preço)}</span><a class="btn-wpp" href="${wppLink(c,VIA)}" target="_blank" onclick="event.stopPropagation()">Ver mais</a></div>
+      </div></div>`;
+  }).join("");
 }
 
-function renderCarros(){
-
-const grid = document.getElementById("grid");
-
-if(carros.length === 0){
-
- grid.innerHTML = "Nenhum carro encontrado";
- return;
-
+function abrirModal(i) {
+  const c = filtrados[i];
+  document.getElementById("m-code").textContent  = c.Codigo?`Cód. ${c.Codigo}`:"";
+  document.getElementById("m-title").textContent = `${c.Marca||""} ${c.Modelo||""}`;
+  document.getElementById("m-year").textContent  = c.Ano?`Ano ${c.Ano}`:"";
+  document.getElementById("m-preco").textContent = fPreco(c.Preço);
+  document.getElementById("m-cor").textContent   = c.Cor||"–";
+  document.getElementById("m-km").textContent    = fKm(c.KM);
+  document.getElementById("m-comb").textContent  = c.Combustível||"–";
+  const op = document.getElementById("m-op-wrap");
+  if (c.Opcionais) { op.style.display="block"; document.getElementById("m-op").textContent=c.Opcionais; } else op.style.display="none";
+  document.getElementById("modal-img-wrap").innerHTML = c.Foto?`<img class="modal-img" src="${c.Foto}" alt="${c.Modelo}">`:`<div class="modal-img-placeholder">🚗</div>`;
+  document.getElementById("m-wpp").href = wppLink(c,VIA);
+  document.getElementById("overlay").classList.add("open");
+  document.body.style.overflow="hidden";
 }
 
- grid.innerHTML = carros.map(c => `
- 
- <div class="card">
- 
- <img src="${convertDriveLink(c.Foto)}" />
- 
- <div class="card-body">
- 
- <div class="title">
- ${c.Marca} ${c.Modelo}
- </div>
- 
- <div>${c.Ano}</div>
- 
- <div class="price">
- ${formatPrice(c.Preço)}
- </div>
- 
- </div>
- 
- </div>
- 
- `).join("");
-
+function fecharModal(e) {
+  if (e && e.target!==document.getElementById("overlay")) return;
+  document.getElementById("overlay").classList.remove("open");
+  document.body.style.overflow="";
 }
 
-function renderGarajeiro(){
-
- document.getElementById("header").innerText = garajeiro.Nome;
-
-}
-
-async function init(){
-
- try{
-
- garajeiro = await carregarGarajeiro();
-
- if(!garajeiro){
- document.getElementById("grid").innerHTML = "Garajeiro não encontrado";
- return;
- }
-
- carros = await carregarCarros();
-
- renderGarajeiro();
- renderCarros();
-
- }
-
- catch(e){
-
- console.error(e);
- document.getElementById("grid").innerHTML = "Erro ao carregar";
-
- }
-
-}
-
-function convertDriveLink(url){
-
-if(!url) return "";
-
-if(url.includes("drive.google.com")){
-
-const match = url.match(/\/d\/([^/]+)/);
-
-if(match && match[1]){
-
-return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-
-}
-
-}
-
-return url;
-
-}
-
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") fecharModal(); });
 init();
-
 </script>
-
 </body>
 </html>
