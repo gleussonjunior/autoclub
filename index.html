@@ -1,180 +1,441 @@
-<script>
-// CONFIGURAÇÃO - Substitua pelo ID da sua planilha
-const CONFIG = { 
-  SHEET_ID: "1Rclez44eRndO7S6PsN7zY3bhF_iH8SbT5s8qgw24ero", 
-  ABA_CARROS: "Carros",
-  ABA_GARAJEIROS: "Garajeiros"
-};
+<!DOCTYPE html>
 
-const urlParams = new URLSearchParams(window.location.search);
-const SLUG = urlParams.get("garajeiro") || "joao-silva"; // Default se não houver na URL
-const VIA  = urlParams.get("via") || "";
-
-let todosCarros = [], filtrados = [], garajeiro = null;
-
-// Funções de Formatação
-function slugify(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-"); }
-function fPreco(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/[^\d.]/g,"")); return isNaN(n)?v:"R$ "+n.toLocaleString("pt-BR",{minimumFractionDigits:0}); }
-function fKm(v) { if (!v) return "–"; const n = parseFloat(String(v).replace(/\D/g,"")); return isNaN(n)?v:n.toLocaleString("pt-BR")+" km"; }
-
-// Converte link do Google Drive para link direto de imagem
-function fixDriveUrl(url) {
-  if (url && url.includes("drive.google.com")) {
-    const id = url.split("/d/")[1]?.split("/")[0];
-    return `https://drive.google.com/uc?export=view&id=${id}`;
-  }
-  return url;
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoClub</title>
+<style>
+:root {
+  --bg:      #f5f5f7;
+  --white:   #ffffff;
+  --blue:    #0071e3;
+  --blue2:   #0058b0;
+  --text:    #1d1d1f;
+  --muted:   #6e6e73;
+  --border:  #d2d2d7;
+  --radius:  16px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
-function wppLink(c, via="") {
-  const tel = (garajeiro?.WhatsApp || "").replace(/\D/g,"");
-  const cod = c.Codigo ? ` (Cód. ${c.Codigo})` : "";
-  const ind = via ? `\n🤝 Indicado por: ${via}` : "";
-  return `https://wa.me/55${tel}?text=${encodeURIComponent(`Olá! Vi o *${c.Marca} ${c.Modelo}* no site. Ainda está disponível?${cod}${ind}`)}`;
+/* HEADER */
+header {
+position: sticky; top:0; z-index:100;
+height: 52px;
+background: rgba(255,255,255,.88);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid rgba(0,0,0,.08);
+display: flex; align-items: center;
+padding: 0 24px;
+gap: 16px;
 }
-
-// BUSCA DE DADOS (CSV do Google Sheets)
-async function fetchCSV(aba) {
-  const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${aba}`;
-  const resp = await fetch(url);
-  const text = await resp.text();
-  const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)); // Regex para não quebrar vírgulas dentro de aspas
-  const headers = rows[0].map(h => h.replace(/"/g, '').trim());
-  return rows.slice(1).map(row => {
-    return headers.reduce((obj, h, i) => {
-      obj[h] = row[i] ? row[i].replace(/"/g, '').trim() : "";
-      return obj;
-    }, {});
-  });
+.logo { font-size: 1rem; font-weight: 700; letter-spacing: -.4px; flex-shrink:0; }
+.garagem-select {
+font-family: inherit; font-size: .84rem; font-weight: 500;
+color: var(–text); background: var(–bg);
+border: 1px solid var(–border); border-radius: 8px;
+padding: 5px 10px; cursor: pointer; outline: none;
+transition: border-color .15s;
 }
+.garagem-select:focus { border-color: var(–blue); }
 
-async function init() {
-  try {
-    const [dadosCarros, dadosGarajeiros] = await Promise.all([
-      fetchCSV(CONFIG.ABA_CARROS),
-      fetchCSV(CONFIG.ABA_GARAJEIROS)
-    ]);
-
-    // 1. Encontrar o Garajeiro atual
-    garajeiro = dadosGarajeiros.find(g => g.Slug === SLUG) || dadosGarajeiros[0];
-
-    // 2. Filtrar carros deste garajeiro que não estão vendidos
-    todosCarros = dadosCarros.filter(c => 
-      c.Garajeiro === SLUG && 
-      (c.Status || "Disponível").toLowerCase() !== "vendido" &&
-      c.Marca
-    );
-
-    // 3. Atualizar Interface (com proteção contra elementos nulos)
-    const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
-    
-    document.title = `${garajeiro.Nome} — AutoClub`;
-    setText("hero-nome", garajeiro.Nome);
-    setText("header-garage", garajeiro.Nome);
-    setText("hero-city", garajeiro.Cidade || "Brasil");
-    setText("stat-total", todosCarros.length);
-    setText("stat-vendidos", dadosCarros.filter(c => c.Garajeiro === SLUG && c.Status === "Vendido").length);
-
-    const av = document.getElementById("avatar");
-    if(av) {
-      if(garajeiro["Foto Perfil"]) av.innerHTML = `<img src="${garajeiro["Foto Perfil"]}">`;
-      else av.textContent = garajeiro.Nome.charAt(0).toUpperCase();
-    }
-
-    // 4. Filtros de Marcas
-    const marcas = [...new Set(todosCarros.map(c => c.Marca).filter(Boolean))];
-    const bar = document.getElementById("filters");
-    if(bar) {
-      marcas.forEach(m => {
-        const b = document.createElement("button");
-        b.className="chip"; b.dataset.filter=slugify(m); b.textContent=m;
-        b.onclick=function(){filtrar(this);}; 
-        bar.insertBefore(b, bar.querySelector(".search-wrap"));
-      });
-    }
-
-    filtrados = [...todosCarros];
-    render(filtrados);
-
-  } catch (err) {
-    console.error("Erro ao carregar dados:", err);
-    const grid = document.getElementById("grid");
-    if(grid) grid.innerHTML = `<p style="padding:20px">Erro ao carregar planilha. Verifique se ela foi "Publicada na Web".</p>`;
-  }
+/* FILTROS */
+.filters {
+background: var(–white); border-bottom: 1px solid var(–border);
+padding: 0 24px; display: flex; align-items: center; gap: 6px;
+height: 48px; overflow-x: auto; scrollbar-width: none;
 }
-
-// Funções de Filtro e Render seguem a mesma lógica do seu código original
-function filtrar(btn) { 
-  document.querySelectorAll(".chip").forEach(b=>b.classList.remove("active")); 
-  btn.classList.add("active"); 
-  filtroAtivo = btn.dataset.filter; 
-  aplicar(); 
+.filters::-webkit-scrollbar { display:none; }
+.chip {
+padding: 4px 14px; border-radius: 99px;
+border: 1px solid var(–border); background: transparent;
+font-family: inherit; font-size: .81rem; font-weight: 500;
+cursor: pointer; white-space: nowrap; color: var(–muted);
+transition: all .15s; flex-shrink:0;
 }
-
-let filtroAtivo="todos", buscaAtiva="";
-function buscar(v) { buscaAtiva=v.toLowerCase(); aplicar(); }
-
-function aplicar() {
-  filtrados = todosCarros.filter(c => {
-    const marcaOk = filtroAtivo==="todos" || slugify(c.Marca||"")=== filtroAtivo;
-    const txtOk = !buscaAtiva || [c.Modelo,c.Marca,c.Cor].some(f=>(f||"").toLowerCase().includes(buscaAtiva));
-    return marcaOk && txtOk;
-  }); 
-  render(filtrados);
+.chip.active { background: var(–text); border-color: var(–text); color: #fff; }
+.chip:hover:not(.active) { border-color: #999; color: var(–text); }
+.search-wrap { margin-left:auto; position:relative; flex-shrink:0; }
+.search-wrap input {
+padding: 6px 12px 6px 30px; border: 1px solid var(–border); border-radius: 8px;
+font-family: inherit; font-size: .83rem; background: var(–bg);
+color: var(–text); width: 190px; outline: none; transition: all .15s;
 }
+.search-wrap input:focus { border-color: var(–blue); background: #fff; box-shadow: 0 0 0 3px rgba(0,113,227,.1); }
+.search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(–muted); pointer-events:none; }
 
-function render(carros) {
-  const grid = document.getElementById("grid");
-  if(!grid) return;
-  
-  setText("grid-count", `${carros.length} veículo(s)`);
-  
-  if (!carros.length) { 
-    grid.innerHTML=`<div class="empty"><p>Nenhum veículo encontrado.</p></div>`; 
-    return; 
-  }
-  
-  grid.innerHTML = carros.map((c,i) => `
-    <div class="card" onclick="abrirModal(${i})">
-      <div class="card-img-wrap">
-        <img class="card-img" src="${fixDriveUrl(c.Foto)}" onerror="this.src='https://via.placeholder.com/400x300?text=Sem+Foto'">
-        ${c.Destaque==="SIM" ? `<div class="badge-destaque">Destaque</div>` : ""}
+/* GRID */
+.main { padding: 20px 24px 60px; max-width: 1200px; margin: 0 auto; }
+.grid-meta { font-size: .78rem; color: var(–muted); margin-bottom: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+
+/* CARD */
+.card {
+background: var(–white); border-radius: var(–radius);
+border: 1px solid var(–border); overflow: hidden; cursor: pointer;
+transition: transform .2s, box-shadow .2s; animation: up .3s ease both;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.09); }
+.card-img-wrap { position:relative; overflow:hidden; }
+.card-img { width:100%; height:190px; object-fit:cover; display:block; transition: transform .35s; }
+.card:hover .card-img { transform: scale(1.03); }
+.card-ph { width:100%; height:190px; background:var(–bg); display:flex; align-items:center; justify-content:center; font-size:2.5rem; }
+.badge { position:absolute; bottom:9px; right:9px; background:rgba(0,0,0,.42); color:#fff; font-size:.62rem; font-weight:500; padding:2px 7px; border-radius:5px; backdrop-filter:blur(6px); }
+.card-body { padding: 14px 16px 16px; }
+.card-name { font-size: 1rem; font-weight: 600; letter-spacing: -.3px; }
+.card-year { font-size: .8rem; color: var(–muted); margin: 2px 0 9px; }
+.tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:11px; }
+.tag { font-size:.73rem; color:var(–muted); background:var(–bg); padding:2px 8px; border-radius:5px; border:1px solid var(–border); }
+.card-footer { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(–border); padding-top:10px; }
+.price { font-size:1.12rem; font-weight:700; letter-spacing:-.4px; }
+.btn {
+display:inline-flex; align-items:center; gap:4px;
+background: var(–blue); color:#fff; border:none; padding: 7px 15px; border-radius:99px;
+font-family:inherit; font-size:.8rem; font-weight:500; cursor:pointer; text-decoration:none; transition:background .15s;
+}
+.btn:hover { background: var(–blue2); }
+
+/* ESTADO */
+.state { text-align:center; padding:70px 24px; color:var(–muted); }
+.state .icon { font-size:2.2rem; margin-bottom:10px; }
+.state p { font-size:.9rem; }
+.spinner { width:22px; height:22px; border:2px solid var(–border); border-top-color:var(–blue); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 12px; }
+
+/* MODAL */
+.overlay {
+position:fixed; inset:0; z-index:200;
+background:rgba(0,0,0,.38); backdrop-filter:blur(8px);
+display:flex; align-items:center; justify-content:center;
+padding:20px; opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.overlay.on { opacity:1; pointer-events:all; }
+.modal {
+background:var(–white); border-radius:20px; max-width:540px; width:100%;
+max-height:90vh; overflow-y:auto;
+transform:scale(.96) translateY(8px); transition:transform .22s ease;
+box-shadow:0 20px 70px rgba(0,0,0,.18);
+}
+.overlay.on .modal { transform:scale(1) translateY(0); }
+.modal-img { width:100%; height:240px; object-fit:cover; border-radius:20px 20px 0 0; display:block; }
+.modal-ph { width:100%; height:240px; background:var(–bg); display:flex; align-items:center; justify-content:center; font-size:3.5rem; border-radius:20px 20px 0 0; }
+.modal-body { padding:20px 22px 24px; }
+.m-cod { font-size:.7rem; font-weight:500; color:var(–muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px; }
+.m-title { font-size:1.45rem; font-weight:700; letter-spacing:-.4px; margin-bottom:1px; }
+.m-year { color:var(–muted); font-size:.86rem; margin-bottom:18px; }
+.m-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(–border); border:1px solid var(–border); border-radius:11px; overflow:hidden; margin-bottom:12px; }
+.m-field { background:var(–white); padding:10px 13px; }
+.m-field label { font-size:.68rem; text-transform:uppercase; letter-spacing:.4px; color:var(–muted); font-weight:500; display:block; margin-bottom:2px; }
+.m-field span { font-size:.9rem; font-weight:500; }
+.m-op { background:var(–bg); border-radius:9px; padding:10px 13px; margin-bottom:16px; border:1px solid var(–border); }
+.m-op strong { font-size:.68rem; text-transform:uppercase; letter-spacing:.4px; color:var(–muted); display:block; margin-bottom:3px; }
+.m-op span { font-size:.86rem; color:var(–muted); line-height:1.5; }
+.m-btns { display:flex; gap:8px; }
+.btn-wpp { flex:1; background:var(–blue); color:#fff; border:none; padding:11px; border-radius:99px; font-family:inherit; font-size:.88rem; font-weight:500; cursor:pointer; text-decoration:none; text-align:center; display:flex; align-items:center; justify-content:center; gap:5px; transition:background .15s; }
+.btn-wpp:hover { background:var(–blue2); }
+.btn-fechar { padding:11px 18px; border:1px solid var(–border); border-radius:99px; background:transparent; font-family:inherit; cursor:pointer; font-size:.86rem; color:var(–muted); }
+.btn-fechar:hover { background:var(–bg); }
+
+footer { text-align:center; padding:22px; border-top:1px solid var(–border); font-size:.74rem; color:var(–muted); }
+
+@keyframes up { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+@media(max-width:600px) {
+header, .filters, .main { padding-left:16px; padding-right:16px; }
+.grid { grid-template-columns:1fr; }
+.m-grid { grid-template-columns:1fr; }
+.search-wrap { margin-left:0; width:100%; }
+.search-wrap input { width:100%; }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="logo">AutoClub</div>
+  <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
+    <option value="">Carregando...</option>
+  </select>
+</header>
+
+<div class="filters" id="filters">
+  <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
+  <div class="search-wrap">
+    <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Buscar..." oninput="buscar(this.value)" id="inp-busca">
+  </div>
+</div>
+
+<div class="main">
+  <div class="grid-meta" id="meta"></div>
+  <div class="grid" id="grid">
+    <div class="state"><div class="spinner"></div><p>Carregando...</p></div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="fechar(event)">
+  <div class="modal">
+    <div id="m-img"></div>
+    <div class="modal-body">
+      <div class="m-cod" id="m-cod"></div>
+      <div class="m-title" id="m-title"></div>
+      <div class="m-year" id="m-year"></div>
+      <div class="m-grid">
+        <div class="m-field"><label>Preço</label><span id="m-preco"></span></div>
+        <div class="m-field"><label>Cor</label><span id="m-cor"></span></div>
+        <div class="m-field"><label>Quilometragem</label><span id="m-km"></span></div>
+        <div class="m-field"><label>Combustível</label><span id="m-comb"></span></div>
       </div>
-      <div class="card-body">
-        <div class="card-title">${c.Marca} ${c.Modelo}</div>
-        <div class="card-year">${c.Ano}</div>
-        <div class="card-footer">
-          <span class="price">${fPreco(c.Preço)}</span>
-          <span class="btn-wpp">Ver mais</span>
-        </div>
+      <div class="m-op" id="m-op" style="display:none">
+        <strong>Opcionais</strong><span id="m-op-txt"></span>
+      </div>
+      <div class="m-btns">
+        <a class="btn-wpp" id="m-wpp" href="#" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Falar com vendedor
+        </a>
+        <button class="btn-fechar" onclick="fechar()">Fechar</button>
       </div>
     </div>
-  `).join("");
+  </div>
+</div>
+
+<footer>AutoClub</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// Edite apenas esta linha com seu Sheet ID
+// ─────────────────────────────────────────────
+var SHEET_ID = "SEU_SHEET_ID_AQUI";
+
+var garajeiros = [];
+var todosCarros = [];
+var slugAtual = "";
+var filtrados = [];
+var marcaAtiva = "todos";
+var buscaAtiva = "";
+
+// Lê uma aba do Google Sheets
+function lerAba(nomeAba) {
+  var url = "https://docs.google.com/spreadsheets/d/"
+    + SHEET_ID + "/gviz/tq?tqx=out:json&sheet="
+    + encodeURIComponent(nomeAba);
+
+  return fetch(url)
+    .then(function(r) { return r.text(); })
+    .then(function(texto) {
+      var i = texto.indexOf("{");
+      var j = texto.lastIndexOf("}");
+      var dados = JSON.parse(texto.slice(i, j + 1));
+      var cols = dados.table.cols.map(function(c) { return c.label.trim(); });
+      return dados.table.rows
+        .filter(function(row) {
+          return row.c && row.c.some(function(c) { return c && c.v != null; });
+        })
+        .map(function(row) {
+          var obj = {};
+          cols.forEach(function(col, idx) {
+            var cell = row.c[idx];
+            obj[col] = (cell && cell.v != null) ? String(cell.v).trim() : "";
+          });
+          return obj;
+        });
+    });
+}
+
+function init() {
+  Promise.all([lerAba("Garajeiros"), lerAba("Carros")])
+    .then(function(resultados) {
+      garajeiros = resultados[0];
+      todosCarros = resultados[1];
+
+      // Monta o select de garajeiros
+      var sel = document.getElementById("sel-garagem");
+      sel.innerHTML = "";
+      garajeiros.forEach(function(g) {
+        var opt = document.createElement("option");
+        opt.value = g.Slug;
+        opt.textContent = g.Nome;
+        sel.appendChild(opt);
+      });
+
+      // Respeita ?garajeiro=slug na URL
+      var params = new URLSearchParams(window.location.search);
+      var slugUrl = params.get("garajeiro") || "";
+      var existe = garajeiros.some(function(g) { return g.Slug === slugUrl; });
+      slugAtual = (existe ? slugUrl : (garajeiros[0] ? garajeiros[0].Slug : ""));
+      sel.value = slugAtual;
+
+      carregarGaragem(slugAtual);
+    })
+    .catch(function(err) {
+      console.error(err);
+      document.getElementById("grid").innerHTML =
+        '<div class="state"><div class="icon">⚠️</div><p>Não foi possível carregar a planilha.<br>Verifique se ela está <strong>pública</strong> no Google Sheets.</p></div>';
+    });
+}
+
+function trocarGaragem(slug) {
+  slugAtual = slug;
+  marcaAtiva = "todos";
+  buscaAtiva = "";
+  document.getElementById("inp-busca").value = "";
+  carregarGaragem(slug);
+}
+
+function carregarGaragem(slug) {
+  var carros = todosCarros.filter(function(c) {
+    return c.Garajeiro === slug && c.Status === "Disponivel";
+  });
+
+  // Reconstrói chips de marca
+  var marcas = [];
+  carros.forEach(function(c) {
+    if (c.Marca && marcas.indexOf(c.Marca) === -1) marcas.push(c.Marca);
+  });
+
+  var bar = document.getElementById("filters");
+  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b) { b.remove(); });
+  bar.querySelector("[data-marca='todos']").classList.add("active");
+
+  var searchWrap = bar.querySelector(".search-wrap");
+  marcas.forEach(function(m) {
+    var b = document.createElement("button");
+    b.className = "chip"; b.dataset.marca = m; b.textContent = m;
+    b.onclick = function() { filtrar(this); };
+    bar.insertBefore(b, searchWrap);
+  });
+
+  filtrados = carros;
+  renderizar();
+}
+
+function filtrar(btn) {
+  document.querySelectorAll(".chip").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  marcaAtiva = btn.dataset.marca;
+  aplicarFiltros();
+}
+
+function buscar(val) {
+  buscaAtiva = val.toLowerCase();
+  aplicarFiltros();
+}
+
+function aplicarFiltros() {
+  var base = todosCarros.filter(function(c) {
+    return c.Garajeiro === slugAtual && c.Status === "Disponivel";
+  });
+  filtrados = base.filter(function(c) {
+    var mOk = marcaAtiva === "todos" || c.Marca === marcaAtiva;
+    var bOk = !buscaAtiva || [c.Marca, c.Modelo, c.Cor, c.Opcionais].some(function(f) {
+      return (f || "").toLowerCase().indexOf(buscaAtiva) !== -1;
+    });
+    return mOk && bOk;
+  });
+  renderizar();
+}
+
+function fPreco(v) {
+  if (!v) return "–";
+  var n = parseInt(String(v).replace(/\D/g, ""), 10);
+  return isNaN(n) ? String(v) : "R$ " + n.toLocaleString("pt-BR");
+}
+
+function fKm(v) {
+  if (!v) return "–";
+  var n = parseInt(String(v).replace(/\D/g, ""), 10);
+  return isNaN(n) ? String(v) : n.toLocaleString("pt-BR") + " km";
+}
+
+function fotoUrl(url) {
+  if (!url) return "";
+  var m = String(url).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? "https://drive.google.com/uc?export=view&id=" + m[1] : url;
+}
+
+function wppLink(c) {
+  var g = garajeiros.find(function(g) { return g.Slug === slugAtual; }) || {};
+  var tel = String(g.WhatsApp || c.WhatsApp || "").replace(/\D/g, "");
+  var cod = c.Codigo ? " (Cód. " + c.Codigo + ")" : "";
+  var msg = "Olá! Tenho interesse no " + (c.Marca||"") + " " + (c.Modelo||"") + " " + (c.Ano||"") + " na cor " + (c.Cor||"") + cod + ". Ainda disponível?";
+  return "https://wa.me/55" + tel + "?text=" + encodeURIComponent(msg);
+}
+
+function renderizar() {
+  var meta = document.getElementById("meta");
+  var grid = document.getElementById("grid");
+  var n = filtrados.length;
+  meta.textContent = n + " veículo" + (n !== 1 ? "s" : "") + " encontrado" + (n !== 1 ? "s" : "");
+
+  if (!n) {
+    grid.innerHTML = '<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';
+    return;
+  }
+
+  grid.innerHTML = filtrados.map(function(c, i) {
+    var foto = fotoUrl(c.Foto);
+    var imgTag = foto
+      ? '<img class="card-img" src="' + foto + '" alt="' + (c.Modelo||"") + '" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">'
+      : "";
+    var ph = '<div class="card-ph"' + (foto ? ' style="display:none"' : '') + '>🚗</div>';
+    return '<div class="card" style="animation-delay:' + (i * 0.04) + 's" onclick="abrirModal(' + i + ')">'
+      + '<div class="card-img-wrap">' + imgTag + ph
+      + (c.Codigo ? '<div class="badge">' + c.Codigo + '</div>' : '')
+      + '</div>'
+      + '<div class="card-body">'
+      + '<div class="card-name">' + (c.Marca||"") + " " + (c.Modelo||"") + '</div>'
+      + '<div class="card-year">' + (c.Ano||"") + '</div>'
+      + '<div class="tags">'
+      + (c.Cor         ? '<span class="tag">' + c.Cor + '</span>' : '')
+      + (c.KM          ? '<span class="tag">' + fKm(c.KM) + '</span>' : '')
+      + (c.Combustivel ? '<span class="tag">' + c.Combustivel + '</span>' : '')
+      + '</div>'
+      + '<div class="card-footer">'
+      + '<span class="price">' + fPreco(c.Preco) + '</span>'
+      + '<a class="btn" href="' + wppLink(c) + '" target="_blank" onclick="event.stopPropagation()">Ver mais</a>'
+      + '</div></div></div>';
+  }).join("");
 }
 
 function abrirModal(i) {
-  const c = filtrados[i];
-  if(!c) return;
-  document.getElementById("m-title").textContent = `${c.Marca} ${c.Modelo}`;
-  document.getElementById("m-preco").textContent = fPreco(c.Preço);
-  document.getElementById("m-km").textContent = fKm(c.KM);
-  document.getElementById("m-cor").textContent = c.Cor || "–";
-  document.getElementById("m-comb").textContent = c.Combustível || "–";
-  document.getElementById("m-wpp").href = wppLink(c, VIA);
-  
-  const opWrap = document.getElementById("m-op-wrap");
-  if(c.Opcionais) {
-    opWrap.style.display = "block";
-    document.getElementById("m-op").textContent = c.Opcionais;
-  } else {
-    opWrap.style.display = "none";
-  }
-  
-  document.getElementById("overlay").classList.add("open");
+  var c = filtrados[i];
+  document.getElementById("m-cod").textContent   = c.Codigo ? "Cód. " + c.Codigo : "";
+  document.getElementById("m-title").textContent = (c.Marca||"") + " " + (c.Modelo||"");
+  document.getElementById("m-year").textContent  = c.Ano ? "Ano " + c.Ano : "";
+  document.getElementById("m-preco").textContent = fPreco(c.Preco);
+  document.getElementById("m-cor").textContent   = c.Cor || "–";
+  document.getElementById("m-km").textContent    = fKm(c.KM);
+  document.getElementById("m-comb").textContent  = c.Combustivel || "–";
+  var mOp = document.getElementById("m-op");
+  if (c.Opcionais) { mOp.style.display = "block"; document.getElementById("m-op-txt").textContent = c.Opcionais; }
+  else mOp.style.display = "none";
+  var foto = fotoUrl(c.Foto);
+  document.getElementById("m-img").innerHTML = foto
+    ? '<img class="modal-img" src="' + foto + '" alt="' + (c.Modelo||"") + '">'
+    : '<div class="modal-ph">🚗</div>';
+  document.getElementById("m-wpp").href = wppLink(c);
+  document.getElementById("overlay").classList.add("on");
+  document.body.style.overflow = "hidden";
 }
 
-function fecharModal() { document.getElementById("overlay").classList.remove("open"); }
-function setText(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+function fechar(e) {
+  if (e && e.target !== document.getElementById("overlay")) return;
+  document.getElementById("overlay").classList.remove("on");
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", function(e) { if (e.key === "Escape") fechar(); });
 
 init();
 </script>
+
+</body>
+</html>
