@@ -273,6 +273,11 @@ function init() {
       slugAtual = (existe ? slugUrl : (garajeiros[0] ? garajeiros[0].Slug : ""));
       sel.value = slugAtual;
 
+      // Log para debug
+      console.log("Garajeiros:", JSON.stringify(garajeiros));
+      console.log("Carros (primeiros 2):", JSON.stringify(todosCarros.slice(0,2)));
+      console.log("Slug atual:", slugAtual);
+
       carregarGaragem(slugAtual);
     })
     .catch(function(err) {
@@ -292,7 +297,8 @@ function trocarGaragem(slug) {
 
 function carregarGaragem(slug) {
   var carros = todosCarros.filter(function(c) {
-    return c.Garajeiro === slug && c.Status === "Disponivel";
+    var st = (c.Status || "").toLowerCase().trim();
+    return c.Garajeiro === slug && (st === "disponivel" || st === "disponível");
   });
 
   // Reconstrói chips de marca
@@ -331,7 +337,8 @@ function buscar(val) {
 
 function aplicarFiltros() {
   var base = todosCarros.filter(function(c) {
-    return c.Garajeiro === slugAtual && c.Status === "Disponivel";
+    var st2 = (c.Status || "").toLowerCase().trim();
+    return c.Garajeiro === slugAtual && (st2 === "disponivel" || st2 === "disponível");
   });
   filtrados = base.filter(function(c) {
     var mOk = marcaAtiva === "todos" || c.Marca === marcaAtiva;
