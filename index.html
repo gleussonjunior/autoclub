@@ -182,10 +182,6 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
             <span class="stat-val" id="p-disp">0</span>
             <span class="stat-lbl">Disponíveis</span>
           </div>
-          <div class="stat-item">
-            <span class="stat-val" id="p-vend">0</span>
-            <span class="stat-lbl">Vendidos</span>
-          </div>
         </div>
       </div>
     </div>
@@ -347,12 +343,10 @@ function carregarEstadoPagina() {
     if(g.Descricao) { descEl.textContent = g.Descricao; descEl.style.display = "block"; } 
     else { descEl.style.display = "none"; }
     
-    // Contadores Dinâmicos
+    // Contadores Dinâmicos Apenas para "Disponíveis"
     var dispCount = todosCarros.filter(c => c.Garajeiro === slugAtual && ((c.Status || "").toLowerCase().trim() === "disponível" || (c.Status || "").toLowerCase().trim() === "disponivel")).length;
-    var vendCount = todosCarros.filter(c => c.Garajeiro === slugAtual && (c.Status || "").toLowerCase().trim() === "vendido").length;
     
     document.getElementById("p-disp").textContent = dispCount;
-    document.getElementById("p-vend").textContent = vendCount;
     
     // Redes Sociais
     var linkWpp = document.getElementById("p-wpp");
