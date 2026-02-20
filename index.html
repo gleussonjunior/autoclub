@@ -35,10 +35,10 @@ header {
   border-radius: 8px; padding: 5px 10px; cursor: pointer; outline: none; margin-left: auto;
 }
 
-/* PERFIL DO GARAJEIRO - CLEAN & CENTRALIZADO */
+/* PERFIL DO GARAJEIRO - SUPER CLEAN */
 .profile-wrap { display: none; padding: 40px 24px 10px; max-width: 800px; margin: 0 auto; animation: up .4s ease; }
 .profile-card {
-  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
 }
 .profile-avatar-wrap { position: relative; width: 110px; height: 110px; flex-shrink: 0; margin-bottom: 4px; }
 .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--white); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
@@ -49,15 +49,10 @@ header {
 }
 .profile-info-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
 .p-name { font-size: 1.6rem; font-weight: 700; letter-spacing: -.5px; margin-bottom: 4px; color: var(--text); }
-.p-loc { font-size: .85rem; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 5px; }
-
-.p-stats { display: flex; gap: 32px; justify-content: center; margin-bottom: 4px; }
-.stat-item { display: flex; flex-direction: column; align-items: center; }
-.stat-val { font-size: 1.3rem; font-weight: 700; color: var(--text); line-height: 1.1; }
-.stat-lbl { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; }
+.p-loc { font-size: .85rem; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
 
 .profile-desc { font-size: .95rem; color: var(--text); line-height: 1.5; max-width: 500px; margin: 0 auto; }
-.profile-links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.profile-links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
 
 .btn-social {
   display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
@@ -180,12 +175,6 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
         <span id="p-loc">São Paulo — SP</span>
       </div>
-      <div class="p-stats">
-        <div class="stat-item">
-          <span class="stat-val" id="p-disp">0</span>
-          <span class="stat-lbl">Disponíveis</span>
-        </div>
-      </div>
     </div>
     
     <p class="profile-desc" id="p-desc"></p>
@@ -236,245 +225,6 @@ footer { text-align:center; padding:22px; border-top:1px solid var(--border); fo
       <div class="m-btns">
         <a class="btn-wpp" id="m-wpp" href="#" target="_blank">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          Saiba mais
-        </a>
-        <button class="btn-fechar" onclick="fechar()">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<footer>AutoClub</footer>
-
-<script>
-var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
-var garajeiros = [];
-var todosCarros = [];
-var slugAtual = "";
-var filtrados = [];
-var marcaAtiva = "todos";
-var buscaAtiva = "";
-
-function lerAba(nomeAba) {
-  var url = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq?tqx=out:json&headers=1&sheet=" + encodeURIComponent(nomeAba);
-  return fetch(url).then(r => r.text()).then(texto => {
-    var dados = JSON.parse(texto.slice(texto.indexOf("{"), texto.lastIndexOf("}") + 1));
-    var cols = dados.table.cols.map(c => (c && c.label) ? c.label.trim() : "");
-    return dados.table.rows.filter(row => row.c && row.c.some(c => c && c.v != null)).map(row => {
-      var obj = {};
-      cols.forEach((col, idx) => {
-        if (col !== "") obj[col] = (row.c[idx] && row.c[idx].v != null) ? String(row.c[idx].v).trim() : "";
-      });
-      return obj;
-    });
-  });
-}
-
-function init() {
-  Promise.all([lerAba("Garajeiros"), lerAba("Carros")]).then(resultados => {
-    garajeiros = resultados[0];
-    todosCarros = resultados[1];
-
-    var sel = document.getElementById("sel-garagem");
-    sel.innerHTML = '<option value="">Todos os Veículos (Home)</option>';
-    
-    // FILTRO IMPORTANTE: Remove garajeiros em branco/sem nome
-    garajeiros.filter(g => g.Slug && g.Nome).forEach(g => {
-      var opt = document.createElement("option");
-      opt.value = g.Slug;
-      opt.textContent = g.Nome;
-      sel.appendChild(opt);
-    });
-
-    var params = new URLSearchParams(window.location.search);
-    var slugUrl = params.get("garajeiro") || "";
-    var existe = garajeiros.some(g => g.Slug === slugUrl);
-    slugAtual = existe ? slugUrl : ""; 
-    sel.value = slugAtual;
-
-    carregarEstadoPagina();
-  }).catch(err => {
-    console.error(err);
-    document.getElementById("grid").innerHTML = '<div class="state"><div class="icon">⚠️</div><p>Não foi possível conectar à base de dados.</p></div>';
-  });
-}
-
-function irParaHome(e) {
-  e.preventDefault();
-  trocarGaragem("");
-}
-
-function trocarGaragem(slug) {
-  slugAtual = slug;
-  var novaUrl = slug ? window.location.pathname + "?garajeiro=" + slug : window.location.pathname;
-  window.history.pushState({}, '', novaUrl);
-  
-  document.getElementById("sel-garagem").value = slug;
-  marcaAtiva = "todos";
-  buscaAtiva = "";
-  document.getElementById("inp-busca").value = "";
-  carregarEstadoPagina();
-}
-
-function carregarEstadoPagina() {
-  var wrapPerfil = document.getElementById("profile-wrap");
-  
-  if (slugAtual === "") {
-    wrapPerfil.style.display = "none";
-  } else {
-    var g = garajeiros.find(x => x.Slug === slugAtual);
-    
-    // Dados de texto básicos
-    document.getElementById("p-nome").textContent = g.Nome || "Vendedor";
-    document.getElementById("p-initials").textContent = (g.Nome || "V")[0].toUpperCase();
-    
-    // Reseta imagem para testar carregamento
-    var imgEl = document.getElementById("p-img");
-    imgEl.style.display = "none";
-    document.getElementById("p-initials").style.display = "flex";
-    if (g.FotoPerfil) { imgEl.src = fotoUrl(g.FotoPerfil); }
-    
-    // Localização (Esconde se não existir)
-    if (g.Localizacao) {
-      document.getElementById("p-loc").textContent = g.Localizacao;
-      document.getElementById("p-loc-wrap").style.display = "flex";
-    } else {
-      document.getElementById("p-loc-wrap").style.display = "none";
-    }
-
-    // Descrição
-    var descEl = document.getElementById("p-desc");
-    if(g.Descricao) { descEl.textContent = g.Descricao; descEl.style.display = "block"; } 
-    else { descEl.style.display = "none"; }
-    
-    // Contadores Dinâmicos Apenas para "Disponíveis"
-    var dispCount = todosCarros.filter(c => c.Garajeiro === slugAtual && ((c.Status || "").toLowerCase().trim() === "disponível" || (c.Status || "").toLowerCase().trim() === "disponivel")).length;
-    
-    document.getElementById("p-disp").textContent = dispCount;
-    
-    // Redes Sociais
-    var linkWpp = document.getElementById("p-wpp");
-    var tel = String(g.WhatsApp || "").replace(/\D/g, "");
-    linkWpp.href = "https://wa.me/55" + tel;
-    
-    var linkInsta = document.getElementById("p-insta");
-    if(g.Instagram) {
-      linkInsta.href = g.Instagram;
-      linkInsta.style.display = "inline-flex";
-    } else {
-      linkInsta.style.display = "none";
-    }
-    
-    wrapPerfil.style.display = "block";
-  }
-
-  // Filtro
-  var carros = todosCarros.filter(c => {
-    var st = (c.Status || "").toLowerCase().trim();
-    var disp = (st === "disponivel" || st === "disponível");
-    return slugAtual === "" ? disp : (c.Garajeiro === slugAtual && disp);
-  });
-
-  var marcas = [];
-  carros.forEach(c => { if (c.Marca && !marcas.includes(c.Marca)) marcas.push(c.Marca); });
-
-  var bar = document.getElementById("filters");
-  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(b => b.remove());
-  bar.querySelector("[data-marca='todos']").classList.add("active");
-
-  var searchWrap = bar.querySelector(".search-wrap");
-  marcas.sort().forEach(m => {
-    var b = document.createElement("button");
-    b.className = "chip"; b.dataset.marca = m; b.textContent = m;
-    b.onclick = function() { filtrar(this); };
-    bar.insertBefore(b, searchWrap);
-  });
-
-  filtrados = carros;
-  renderizar();
-}
-
-function filtrar(btn) {
-  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  marcaAtiva = btn.dataset.marca;
-  aplicarFiltros();
-}
-
-function buscar(val) { buscaAtiva = val.toLowerCase(); aplicarFiltros(); }
-
-function aplicarFiltros() {
-  var base = todosCarros.filter(c => {
-    var st = (c.Status || "").toLowerCase().trim();
-    var disp = (st === "disponivel" || st === "disponível");
-    return slugAtual === "" ? disp : (c.Garajeiro === slugAtual && disp);
-  });
-  
-  filtrados = base.filter(c => {
-    var mOk = marcaAtiva === "todos" || c.Marca === marcaAtiva;
-    var bOk = !buscaAtiva || [c.Marca, c.Modelo, c.Cor, c.Garajeiro].some(f => (f || "").toLowerCase().includes(buscaAtiva));
-    return mOk && bOk;
-  });
-  renderizar();
-}
-
-function fPreco(v) {
-  var n = parseInt(String(v||"").replace(/\D/g, ""), 10);
-  return isNaN(n) ? "Consulte" : "R$ " + n.toLocaleString("pt-BR");
-}
-function fKm(v) {
-  var n = parseInt(String(v||"").replace(/\D/g, ""), 10);
-  return isNaN(n) ? "0 km" : n.toLocaleString("pt-BR") + " km";
-}
-function fotoUrl(url) {
-  if (!url) return "";
-  var m = String(url).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? "https://drive.google.com/uc?export=view&id=" + m[1] : url;
-}
-
-function wppLink(c) {
-  var g = garajeiros.find(x => x.Slug === c.Garajeiro) || {};
-  var tel = String(g.WhatsApp || "").replace(/\D/g, "");
-  var msg = "Olá! Vi no AutoClub e tenho interesse no " + (c.Marca||"") + " " + (c.Modelo||"") + " " + (c.Ano||"") + ". Ainda está disponível?";
-  return "https://wa.me/55" + tel + "?text=" + encodeURIComponent(msg);
-}
-
-function renderizar() {
-  var meta = document.getElementById("meta");
-  var grid = document.getElementById("grid");
-  
-  if (slugAtual === "") {
-    meta.textContent = "Vitrine Geral - " + filtrados.length + " veículos de parceiros";
-  } else {
-    meta.textContent = filtrados.length + " veículo(s) encontrado(s) nesta loja";
-  }
-
-  if (!filtrados.length) {
-    grid.innerHTML = '<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';
-    return;
-  }
-
-  grid.innerHTML = filtrados.map((c, i) => {
-    var foto = fotoUrl(c.Foto);
-    var imgTag = foto ? '<img class="card-img" src="' + foto + '" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">' : "";
-    var gNome = (garajeiros.find(x => x.Slug === c.Garajeiro) || {}).Nome || "";
-    
-    return `<div class="card" style="animation-delay:${i * 0.04}s" onclick="abrirModal(${i})">
-      <div class="card-img-wrap">
-        ${imgTag}<div class="card-ph" ${foto ? 'style="display:none"' : ''}>🚗</div>
-      </div>
-      <div class="card-body">
-        ${slugAtual === "" ? `<span class="vendedor-tag">📍 ${gNome}</span>` : ""}
-        <div class="card-name">${c.Marca||""} ${c.Modelo||""}</div>
-        <div class="card-year">${c.Ano||""}</div>
-        <div class="tags">
-          ${c.Cor ? `<span class="tag">${c.Cor}</span>` : ''}
-          ${c.KM ? `<span class="tag">${fKm(c.KM)}</span>` : ''}
-          ${c.Combustivel ? `<span class="tag">${c.Combustivel}</span>` : ''}
-        </div>
-        <div class="card-footer">
-          <span class="price">${fPreco(c.Preco)}</span>
-          <a class="btn" href="${wppLink(c)}" target="_blank" onclick="event.stopPropagation()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
             Saiba mais
           </a>
         </div>
