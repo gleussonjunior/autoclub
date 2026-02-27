@@ -5,83 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoClub - Oficial</title>
     <style>
-        :root { --max-width: 1200px; --primary: #007bff; }
-        body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
+        :root { --max-width: 1200px; --primary: #007bff; --bg: #121212; --card: #1e1e1e; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; }
         
-        /* ALINHAMENTO HORIZONTAL PERFEITO */
+        /* ALINHAMENTO GERAL */
         .container { max-width: var(--max-width); margin: 0 auto; width: 100%; box-sizing: border-box; }
         
-        .profile-card { background: #1e1e1e; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
-        .filter-box { width: 100%; margin-bottom: 20px; }
-        .filter-box input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; box-sizing: border-box; }
+        /* PERFIL E FILTRO ALINHADOS */
+        .header-box { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; width: 100%; box-sizing: border-box; }
+        .filter-box { width: 100%; margin-bottom: 25px; box-sizing: border-box; }
+        .filter-box input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 16px; box-sizing: border-box; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #1e1e1e; border-radius: 10px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
+        /* GRID DE CARROS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card img.main-img { width: 100%; height: 220px; object-fit: cover; }
+        
         .card-body { padding: 15px; flex-grow: 1; }
-        .price { color: #2ecc71; font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
+        .price { color: #2ecc71; font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
         
-        .btn-detalhes { display: block; width: 100%; padding: 12px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; }
+        /* MINI FOTOS EXTRAS */
+        .mini-fotos { display: flex; gap: 8px; margin: 10px 0; overflow-x: auto; padding-bottom: 5px; }
+        .mini-fotos img { width: 60px; height: 45px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #444; }
+
+        /* BOTÃO MAIS CLARO */
+        .btn-detalhes { display: block; width: 100%; padding: 14px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; text-transform: uppercase; font-size: 0.9rem; }
         
-        .mini-fotos { display: flex; gap: 5px; margin-top: 10px; overflow-x: auto; }
-        .mini-fotos img { width: 50px; height: 40px; border-radius: 4px; border: 1px solid #555; }
+        .loading { text-align: center; padding: 50px; font-size: 1.2rem; color: #888; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <header id="perfil-vendedor" class="profile-card">
-            <h1 id="nome-garajeiro">Carregando...</h1>
-            <p id="info-garajeiro"></p>
+        <header id="perfil-vendedor" class="header-box">
+            <h1 id="nome-garajeiro">AutoClub</h1>
+            <p id="info-garajeiro">Carregando informações do vendedor...</p>
         </header>
 
         <div class="filter-box">
-            <input type="text" placeholder="Pesquisar modelo ou marca...">
+            <input type="text" id="inputBusca" placeholder="Pesquisar por modelo, marca ou ano..." onkeyup="filtrarCarros()">
         </div>
 
-        <div id="vitrine" class="grid"></div>
+        <div id="vitrine" class="grid">
+            <div class="loading">Buscando veículos na planilha...</div>
+        </div>
     </div>
 
     <script>
-        // Função que você deve chamar ao receber os dados da planilha
-        function renderizarPagina(dadosCarros, dadosVendedor) {
-            // 1. Atualiza Perfil
-            if(dadosVendedor) {
-                document.getElementById('nome-garajeiro').innerText = dadosVendedor.Nome || "Vendedor";
-                document.getElementById('info-garajeiro').innerText = (dadosVendedor.Cidade || "") + " | " + (dadosVendedor.Localizacao || "");
+        // URL DA SUA API (Substitua pelo seu link do Make ou Google Apps Script)
+        const API_URL = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM"; 
+
+        async function carregarDados() {
+            try {
+                const response = await fetch(API_URL);
+                const dados = await response.json();
+                
+                // Supondo que a API retorne { carros: [], vendedor: {} }
+                exibirDados(dados.carros, dados.vendedor);
+            } catch (erro) {
+                console.error("Erro ao carregar planilha:", erro);
+                document.getElementById('vitrine').innerHTML = "<div class='loading'>Erro ao conectar com a planilha. Verifique o link da API.</div>";
+            }
+        }
+
+        function exibirDados(carros, vendedor) {
+            // Atualiza Vendedor
+            if(vendedor) {
+                document.getElementById('nome-garajeiro').innerText = vendedor.Nome || "Vendedor AutoClub";
+                document.getElementById('info-garajeiro').innerText = (vendedor.Cidade || "Brasil");
             }
 
-            // 2. Atualiza Vitrine
+            // Atualiza Vitrine
             const vitrine = document.getElementById('vitrine');
             vitrine.innerHTML = '';
 
-            dadosCarros.forEach(carro => {
+            carros.forEach(carro => {
                 const fotosExtras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
                 const precoFormatado = Number(carro.Preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                
-                // Aceita KM ou quilometragem
-                const km = carro.KM || carro.quilometragem || "0";
 
                 vitrine.innerHTML += `
-                    <div class="card">
-                        <img src="${carro.foto_principal}" alt="${carro.Modelo}">
+                    <div class="card" data-modelo="${carro.Modelo.toLowerCase()} ${carro.Marca.toLowerCase()}">
+                        <img src="${carro.foto_principal}" class="main-img" alt="${carro.Modelo}">
                         <div class="card-body">
-                            <h3>${carro.Marca} ${carro.Modelo}</h3>
-                            <p>${carro.Ano} | ${km} KM</p>
+                            <small>${carro.Marca}</small>
+                            <h3>${carro.Modelo}</h3>
+                            <p>${carro.Ano} | ${carro.KM} KM</p>
                             <div class="price">${precoFormatado}</div>
                             
                             <div class="mini-fotos">
-                                ${fotosExtras.map(url => `<img src="${url.trim()}">`).join('')}
+                                ${fotosExtras.map(url => `<img src="${url.trim()}" onclick="window.open('${url.trim()}', '_blank')">`).join('')}
                             </div>
 
-                            <button class="btn-detalhes" onclick="alert('WhatsApp: ${carro.WhatsApp}')">
-                                VER DETALHES
+                            <button class="btn-detalhes" onclick="alert('Entre em contato para mais detalhes sobre o ${carro.Modelo}')">
+                                Ver mais informações
                             </button>
                         </div>
                     </div>
                 `;
             });
         }
+
+        function filtrarCarros() {
+            const busca = document.getElementById('inputBusca').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const texto = card.getAttribute('data-modelo');
+                card.style.display = texto.includes(busca) ? "flex" : "none";
+            });
+        }
+
+        // Inicia a busca
+        carregarDados();
     </script>
 </body>
 </html>
