@@ -3,204 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClub - Estoque Digital</title>
+    <title>AutoClub - Gestão de Estoque</title>
     <style>
-        /* CONFIGURAÇÕES GERAIS E ALINHAMENTO */
         :root {
             --primary-color: #007bff;
             --dark-bg: #121212;
             --card-bg: #1e1e1e;
             --text-main: #ffffff;
-            --max-width: 1200px; /* Largura padrão para todos os containers */
+            --max-width: 1200px; 
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--dark-bg);
             color: var(--text-main);
             margin: 0;
             padding: 20px;
         }
 
-        /* CONTAINER MESTRE PARA ALINHAMENTO HORIZONTAL */
-        .container-align {
+        /* ALINHAMENTO HORIZONTAL UNIFICADO */
+        .main-container {
             max-width: var(--max-width);
             margin: 0 auto;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
         }
 
-        /* PERFIL DO GARAJEIRO (CORRIGIDO) */
-        .profile-section {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
+        /* PERFIL DO GARAJEIRO */
+        .profile-header {
+            background: linear-gradient(145deg, #1e1e1e, #252525);
+            padding: 30px;
+            border-radius: 15px;
             border: 1px solid #333;
-            /* Garante que o perfil ocupe a mesma largura do filtro */
+            margin-bottom: 20px;
             width: 100%;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura */
         }
 
-        /* FILTRO (CORRIGIDO) */
-        .filter-section {
+        /* FILTRO ALINHADO */
+        .filter-container {
             width: 100%;
             box-sizing: border-box;
-            background: #2a2a2a;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            width: 100%;
             padding: 15px;
-            border-radius: 8px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: none;
-            background: #444;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: #2a2a2a;
             color: white;
             font-size: 16px;
+            outline: none;
         }
 
-        /* GRID DE CARROS */
-        .inventory-grid {
+        /* GRID DE VEÍCULOS */
+        .cars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            width: 100%;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
 
         /* CARD DO CARRO */
         .car-card {
             background: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid #333;
-            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .car-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .car-img {
+        .main-thumb {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
         }
 
-        .car-info {
-            padding: 15px;
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
         }
 
-        .car-price {
-            font-size: 1.4em;
-            font-weight: bold;
+        .price-tag {
+            font-size: 1.5rem;
             color: #2ecc71;
+            font-weight: 800;
             margin: 10px 0;
         }
 
-        /* NOVO BOTÃO DE DETALHES */
-        .btn-view-details {
-            display: block;
-            width: 100%;
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 12px 0;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            margin-top: 15px;
-            transition: background 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-view-details:hover {
-            background-color: #0056b3;
-        }
-
-        /* GALERIA DE FOTOS (DENTRO DO CARD/MODAL) */
-        .extra-photos-container {
+        /* GALERIA DE MINIATURAS NO CARD */
+        .mini-gallery {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            margin: 10px 0;
             overflow-x: auto;
-            padding: 10px 0;
+            padding-bottom: 5px;
         }
 
-        .thumb-img {
-            width: 80px;
-            height: 60px;
+        .mini-thumb {
+            width: 60px;
+            height: 45px;
             object-fit: cover;
             border-radius: 4px;
+            border: 1px solid #444;
+        }
+
+        /* BOTÃO "VER DETALHES" */
+        .btn-more {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
             cursor: pointer;
-            opacity: 0.7;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .thumb-img:hover {
-            opacity: 1;
+        .btn-more:hover {
+            background: #0056b3;
+            transform: scale(1.02);
         }
 
-        @media (max-width: 768px) {
-            .container-align { padding: 10px; }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .profile-header { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container-align">
+    <div class="main-container">
         
-        <header class="profile-section">
-            <h1 id="garajeiro-nome">Carregando Vendedor...</h1>
-            <p id="garajeiro-info">Localização | WhatsApp</p>
+        <header class="profile-header" id="header-vendedor">
+            <h1 id="nome-vendedor">Carregando estoque...</h1>
+            <p id="cidade-vendedor">Aguardando conexão com a planilha</p>
         </header>
 
-        <section class="filter-section">
-            <input type="text" class="search-input" placeholder="Buscar por modelo, marca ou ano...">
-        </section>
+        <div class="filter-container">
+            <input type="text" class="search-bar" placeholder="Digite o modelo ou marca que procura...">
+        </div>
 
-        <main class="inventory-grid" id="car-list">
-            </main>
+        <div class="cars-grid" id="lista-carros">
+            </div>
 
     </div>
 
     <script>
-        // Lógica de Processamento das Fotos (Simulação do que viria da Planilha)
-        function renderCars(estoque) {
-            const list = document.getElementById('car-list');
-            list.innerHTML = '';
+        // Função para simular o recebimento de dados da Planilha
+        // No seu código real, o Make.com ou o Fetch preenche esta variável
+        function atualizarInterface(dadosEstoque, dadosVendedor) {
+            
+            // Atualiza Perfil (Alinhado)
+            if(dadosVendedor) {
+                document.getElementById('nome-vendedor').innerText = dadosVendedor.nome;
+                document.getElementById('cidade-vendedor').innerText = dadosVendedor.cidade;
+            }
 
-            estoque.forEach(carro => {
-                // Tratamento da coluna "Fotos Extras" (URLs separadas por vírgula)
-                const fotosExtras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
+            const grid = document.getElementById('lista-carros');
+            grid.innerHTML = '';
+
+            dadosEstoque.forEach(carro => {
+                // Processa as fotos extras (coluna nova que você vai criar)
+                const extras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
                 
-                const card = `
-                    <div class="car-card">
-                        <img src="${carro.foto_principal}" class="car-img" alt="${carro.modelo}">
-                        <div class="car-info">
+                const htmlCard = `
+                    <article class="car-card">
+                        <img src="${carro.foto_principal}" class="main-thumb" alt="${carro.modelo}">
+                        <div class="card-content">
                             <h3>${carro.modelo}</h3>
-                            <p>${carro.ano} | ${carro.km} km</p>
-                            <div class="car-price">R$ ${carro.preco}</div>
+                            <p>${carro.ano} • ${carro.quilometragem} km</p>
+                            <div class="price-tag">R$ ${carro.preco}</div>
                             
-                            <div class="extra-photos-container">
-                                ${fotosExtras.map(url => `<img src="${url.trim()}" class="thumb-img">`).join('')}
+                            <div class="mini-gallery">
+                                ${extras.map(url => `<img src="${url.trim()}" class="mini-thumb">`).join('')}
                             </div>
 
-                            <button class="btn-view-details" onclick="verDetalhes('${carro.id}')">
-                                VER DETALHES
+                            <button class="btn-more" onclick="alert('Abrindo detalhes do ${carro.modelo}')">
+                                Ver Detalhes
                             </button>
                         </div>
-                    </div>
+                    </article>
                 `;
-                list.innerHTML += card;
+                grid.innerHTML += htmlCard;
             });
         }
 
-        // Função para simular a abertura do card (pode ser um Modal ou nova página)
-        function verDetalhes(id) {
-            alert("Abrindo detalhes do veículo ID: " + id + ". Aqui você pode carregar a galeria completa da planilha.");
-        }
+        /* IMPORTANTE: 
+           Como você usa a planilha como banco, certifique-se de que o seu script 
+           de conexão (Fetch API) mapeie:
+           'Fotos' -> agora é 'foto_principal'
+           'fotos_extras' -> nova coluna
+        */
     </script>
 </body>
 </html>
