@@ -3,101 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClub - Oficial</title>
+    <title>AutoClub - Estoque</title>
     <style>
-        :root { --max-width: 1200px; --primary: #007bff; --bg: #121212; --card: #1e1e1e; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; }
+        :root { --max-width: 1200px; --primary: #007bff; --bg: #0f0f0f; --card: #1a1a1a; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; line-height: 1.6; }
         
-        /* ALINHAMENTO GERAL */
         .container { max-width: var(--max-width); margin: 0 auto; width: 100%; box-sizing: border-box; }
         
-        /* PERFIL E FILTRO ALINHADOS */
-        .header-box { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; width: 100%; box-sizing: border-box; }
-        .filter-box { width: 100%; margin-bottom: 25px; box-sizing: border-box; }
-        .filter-box input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; font-size: 16px; box-sizing: border-box; }
+        /* ALINHAMENTO DO PERFIL E FILTRO */
+        .profile-header { background: var(--card); padding: 30px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #333; width: 100%; box-sizing: border-box; }
+        .filter-area { width: 100%; margin-bottom: 30px; box-sizing: border-box; }
+        .filter-area input { width: 100%; padding: 18px; border-radius: 12px; border: 1px solid #444; background: #252525; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .filter-area input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,123,255,0.2); }
         
-        /* GRID DE CARROS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card img.main-img { width: 100%; height: 220px; object-fit: cover; }
+        /* GRID E CARDS */
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; width: 100%; }
+        .car-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; transition: transform 0.3s; }
+        .car-card:hover { transform: translateY(-8px); border-color: #555; }
         
-        .card-body { padding: 15px; flex-grow: 1; }
-        .price { color: #2ecc71; font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
+        .img-container { width: 100%; height: 230px; overflow: hidden; position: relative; }
+        .main-img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* MINI FOTOS EXTRAS */
-        .mini-fotos { display: flex; gap: 8px; margin: 10px 0; overflow-x: auto; padding-bottom: 5px; }
-        .mini-fotos img { width: 60px; height: 45px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #444; }
+        .card-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .car-title { font-size: 1.4rem; font-weight: 700; margin: 0; color: #fff; }
+        .car-meta { color: #aaa; font-size: 0.9rem; margin: 5px 0; }
+        .price { font-size: 1.7rem; color: #2ecc71; font-weight: 800; margin: 15px 0; }
+        
+        /* GALERIA DE FOTOS EXTRAS */
+        .extra-photos { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .extra-photos img { width: 65px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #444; flex-shrink: 0; }
 
-        /* BOTÃO MAIS CLARO */
-        .btn-detalhes { display: block; width: 100%; padding: 14px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; text-transform: uppercase; font-size: 0.9rem; }
+        /* BOTÃO DE MAIOR CLAREZA */
+        .btn-details { display: block; width: 100%; padding: 15px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: 0.2s; }
+        .btn-details:hover { background: #0056b3; }
         
-        .loading { text-align: center; padding: 50px; font-size: 1.2rem; color: #888; }
+        .status-msg { text-align: center; padding: 100px; font-size: 1.2rem; color: #666; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <header id="perfil-vendedor" class="header-box">
-            <h1 id="nome-garajeiro">AutoClub</h1>
-            <p id="info-garajeiro">Carregando informações do vendedor...</p>
+        <header id="perfil" class="profile-header">
+            <h1 id="vendedor-nome">AutoClub</h1>
+            <p id="vendedor-cidade">Carregando estoque...</p>
         </header>
 
-        <div class="filter-box">
-            <input type="text" id="inputBusca" placeholder="Pesquisar por modelo, marca ou ano..." onkeyup="filtrarCarros()">
+        <div class="filter-area">
+            <input type="text" id="busca" placeholder="O que você está procurando hoje?" onkeyup="filtrar()">
         </div>
 
-        <div id="vitrine" class="grid">
-            <div class="loading">Buscando veículos na planilha...</div>
+        <div id="grid" class="inventory-grid">
+            <div class="status-msg">Conectando ao banco de dados...</div>
         </div>
     </div>
 
     <script>
-        // URL DA SUA API (Substitua pelo seu link do Make ou Google Apps Script)
-        const API_URL = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM"; 
+        // ID da sua planilha fornecido
+        const SHEET_ID = '1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM';
+        const GID = '1075156073'; // GID da aba de estoque
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
-        async function carregarDados() {
+        async function fetchData() {
             try {
-                const response = await fetch(API_URL);
-                const dados = await response.json();
+                const response = await fetch(CSV_URL);
+                const data = await response.text();
+                const rows = data.split('\n').slice(1); // Remove o cabeçalho
                 
-                // Supondo que a API retorne { carros: [], vendedor: {} }
-                exibirDados(dados.carros, dados.vendedor);
-            } catch (erro) {
-                console.error("Erro ao carregar planilha:", erro);
-                document.getElementById('vitrine').innerHTML = "<div class='loading'>Erro ao conectar com a planilha. Verifique o link da API.</div>";
+                const carros = rows.map(row => {
+                    const columns = row.split(',');
+                    return {
+                        marca: columns[0],
+                        modelo: columns[1],
+                        ano: columns[2],
+                        km: columns[3],
+                        preco: columns[4],
+                        foto_principal: columns[5],
+                        fotos_extras: columns[6] ? columns[6].split(';') : [] // Use ponto e vírgula na planilha para separar fotos extras
+                    };
+                }).filter(c => c.modelo); // Remove linhas vazias
+
+                render(carros);
+            } catch (error) {
+                document.getElementById('grid').innerHTML = '<div class="status-msg">Erro ao carregar dados. Verifique se a planilha está "Publicada na Web".</div>';
             }
         }
 
-        function exibirDados(carros, vendedor) {
-            // Atualiza Vendedor
-            if(vendedor) {
-                document.getElementById('nome-garajeiro').innerText = vendedor.Nome || "Vendedor AutoClub";
-                document.getElementById('info-garajeiro').innerText = (vendedor.Cidade || "Brasil");
-            }
+        function render(carros) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            // Atualiza o perfil com o primeiro vendedor encontrado (exemplo simplificado)
+            document.getElementById('vendedor-cidade').innerText = "Estoque Disponível";
 
-            // Atualiza Vitrine
-            const vitrine = document.getElementById('vitrine');
-            vitrine.innerHTML = '';
-
-            carros.forEach(carro => {
-                const fotosExtras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
-                const precoFormatado = Number(carro.Preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-                vitrine.innerHTML += `
-                    <div class="card" data-modelo="${carro.Modelo.toLowerCase()} ${carro.Marca.toLowerCase()}">
-                        <img src="${carro.foto_principal}" class="main-img" alt="${carro.Modelo}">
-                        <div class="card-body">
-                            <small>${carro.Marca}</small>
-                            <h3>${carro.Modelo}</h3>
-                            <p>${carro.Ano} | ${carro.KM} KM</p>
+            carros.forEach(car => {
+                const precoFormatado = parseFloat(car.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                
+                grid.innerHTML += `
+                    <div class="car-card" data-search="${car.marca} ${car.modelo} ${car.ano}">
+                        <div class="img-container">
+                            <img src="${car.foto_principal}" class="main-img" alt="${car.modelo}">
+                        </div>
+                        <div class="card-info">
+                            <span class="car-meta">${car.marca.toUpperCase()}</span>
+                            <h3 class="car-title">${car.modelo}</h3>
+                            <span class="car-meta">${car.ano} • ${car.km} KM</span>
                             <div class="price">${precoFormatado}</div>
                             
-                            <div class="mini-fotos">
-                                ${fotosExtras.map(url => `<img src="${url.trim()}" onclick="window.open('${url.trim()}', '_blank')">`).join('')}
+                            <div class="extra-photos">
+                                ${car.fotos_extras.map(f => `<img src="${f.trim()}">`).join('')}
                             </div>
 
-                            <button class="btn-detalhes" onclick="alert('Entre em contato para mais detalhes sobre o ${carro.Modelo}')">
+                            <button class="btn-details" onclick="alert('Contatar vendedor para o ${car.modelo}')">
                                 Ver mais informações
                             </button>
                         </div>
@@ -106,17 +122,16 @@
             });
         }
 
-        function filtrarCarros() {
-            const busca = document.getElementById('inputBusca').value.toLowerCase();
-            const cards = document.querySelectorAll('.card');
+        function filtrar() {
+            const termo = document.getElementById('busca').value.toLowerCase();
+            const cards = document.querySelectorAll('.car-card');
             cards.forEach(card => {
-                const texto = card.getAttribute('data-modelo');
-                card.style.display = texto.includes(busca) ? "flex" : "none";
+                const info = card.getAttribute('data-search').toLowerCase();
+                card.style.display = info.includes(termo) ? "flex" : "none";
             });
         }
 
-        // Inicia a busca
-        carregarDados();
+        fetchData();
     </script>
 </body>
 </html>
