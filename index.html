@@ -3,205 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClub - Gestão de Estoque</title>
+    <title>AutoClub - Oficial</title>
     <style>
-        :root {
-            --primary-color: #007bff;
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #ffffff;
-            --max-width: 1200px; 
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-        }
-
-        /* ALINHAMENTO HORIZONTAL UNIFICADO */
-        .main-container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* PERFIL DO GARAJEIRO */
-        .profile-header {
-            background: linear-gradient(145deg, #1e1e1e, #252525);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #333;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box; /* Garante que o padding não aumente a largura */
-        }
-
-        /* FILTRO ALINHADO */
-        .filter-container {
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 30px;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #444;
-            background: #2a2a2a;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        /* GRID DE VEÍCULOS */
-        .cars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        /* CARD DO CARRO */
-        .car-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .main-thumb {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
-
-        .card-content {
-            padding: 20px;
-            flex-grow: 1;
-        }
-
-        .price-tag {
-            font-size: 1.5rem;
-            color: #2ecc71;
-            font-weight: 800;
-            margin: 10px 0;
-        }
-
-        /* GALERIA DE MINIATURAS NO CARD */
-        .mini-gallery {
-            display: flex;
-            gap: 8px;
-            margin: 10px 0;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .mini-thumb {
-            width: 60px;
-            height: 45px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #444;
-        }
-
-        /* BOTÃO "VER DETALHES" */
-        .btn-more {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-more:hover {
-            background: #0056b3;
-            transform: scale(1.02);
-        }
-
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .profile-header { padding: 20px; }
-        }
+        :root { --max-width: 1200px; --primary: #007bff; }
+        body { font-family: sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
+        
+        /* ALINHAMENTO HORIZONTAL PERFEITO */
+        .container { max-width: var(--max-width); margin: 0 auto; width: 100%; box-sizing: border-box; }
+        
+        .profile-card { background: #1e1e1e; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; }
+        .filter-box { width: 100%; margin-bottom: 20px; }
+        .filter-box input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; box-sizing: border-box; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: #1e1e1e; border-radius: 10px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 15px; flex-grow: 1; }
+        .price { color: #2ecc71; font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
+        
+        .btn-detalhes { display: block; width: 100%; padding: 12px; background: var(--primary); color: #fff; text-align: center; text-decoration: none; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; }
+        
+        .mini-fotos { display: flex; gap: 5px; margin-top: 10px; overflow-x: auto; }
+        .mini-fotos img { width: 50px; height: 40px; border-radius: 4px; border: 1px solid #555; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        
-        <header class="profile-header" id="header-vendedor">
-            <h1 id="nome-vendedor">Carregando estoque...</h1>
-            <p id="cidade-vendedor">Aguardando conexão com a planilha</p>
+    <div class="container">
+        <header id="perfil-vendedor" class="profile-card">
+            <h1 id="nome-garajeiro">Carregando...</h1>
+            <p id="info-garajeiro"></p>
         </header>
 
-        <div class="filter-container">
-            <input type="text" class="search-bar" placeholder="Digite o modelo ou marca que procura...">
+        <div class="filter-box">
+            <input type="text" placeholder="Pesquisar modelo ou marca...">
         </div>
 
-        <div class="cars-grid" id="lista-carros">
-            </div>
-
+        <div id="vitrine" class="grid"></div>
     </div>
 
     <script>
-        // Função para simular o recebimento de dados da Planilha
-        // No seu código real, o Make.com ou o Fetch preenche esta variável
-        function atualizarInterface(dadosEstoque, dadosVendedor) {
-            
-            // Atualiza Perfil (Alinhado)
+        // Função que você deve chamar ao receber os dados da planilha
+        function renderizarPagina(dadosCarros, dadosVendedor) {
+            // 1. Atualiza Perfil
             if(dadosVendedor) {
-                document.getElementById('nome-vendedor').innerText = dadosVendedor.nome;
-                document.getElementById('cidade-vendedor').innerText = dadosVendedor.cidade;
+                document.getElementById('nome-garajeiro').innerText = dadosVendedor.Nome || "Vendedor";
+                document.getElementById('info-garajeiro').innerText = (dadosVendedor.Cidade || "") + " | " + (dadosVendedor.Localizacao || "");
             }
 
-            const grid = document.getElementById('lista-carros');
-            grid.innerHTML = '';
+            // 2. Atualiza Vitrine
+            const vitrine = document.getElementById('vitrine');
+            vitrine.innerHTML = '';
 
-            dadosEstoque.forEach(carro => {
-                // Processa as fotos extras (coluna nova que você vai criar)
-                const extras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
+            dadosCarros.forEach(carro => {
+                const fotosExtras = carro.fotos_extras ? carro.fotos_extras.split(',') : [];
+                const precoFormatado = Number(carro.Preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 
-                const htmlCard = `
-                    <article class="car-card">
-                        <img src="${carro.foto_principal}" class="main-thumb" alt="${carro.modelo}">
-                        <div class="card-content">
-                            <h3>${carro.modelo}</h3>
-                            <p>${carro.ano} • ${carro.quilometragem} km</p>
-                            <div class="price-tag">R$ ${carro.preco}</div>
+                // Aceita KM ou quilometragem
+                const km = carro.KM || carro.quilometragem || "0";
+
+                vitrine.innerHTML += `
+                    <div class="card">
+                        <img src="${carro.foto_principal}" alt="${carro.Modelo}">
+                        <div class="card-body">
+                            <h3>${carro.Marca} ${carro.Modelo}</h3>
+                            <p>${carro.Ano} | ${km} KM</p>
+                            <div class="price">${precoFormatado}</div>
                             
-                            <div class="mini-gallery">
-                                ${extras.map(url => `<img src="${url.trim()}" class="mini-thumb">`).join('')}
+                            <div class="mini-fotos">
+                                ${fotosExtras.map(url => `<img src="${url.trim()}">`).join('')}
                             </div>
 
-                            <button class="btn-more" onclick="alert('Abrindo detalhes do ${carro.modelo}')">
-                                Ver Detalhes
+                            <button class="btn-detalhes" onclick="alert('WhatsApp: ${carro.WhatsApp}')">
+                                VER DETALHES
                             </button>
                         </div>
-                    </article>
+                    </div>
                 `;
-                grid.innerHTML += htmlCard;
             });
         }
-
-        /* IMPORTANTE: 
-           Como você usa a planilha como banco, certifique-se de que o seu script 
-           de conexão (Fetch API) mapeie:
-           'Fotos' -> agora é 'foto_principal'
-           'fotos_extras' -> nova coluna
-        */
     </script>
 </body>
 </html>
