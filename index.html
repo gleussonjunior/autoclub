@@ -22,8 +22,8 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .profile-info-top{flex:1;}
 .p-name{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;margin-bottom:2px;}
 .p-loc{font-size:.8rem;color:var(--muted);margin-bottom:12px;}.p-desc{font-size:.88rem;color:#555;line-height:1.55;margin-top:4px;margin-bottom:2px;white-space:pre-wrap;}
-.p-stats{display:flex;gap:24px;}
-.stat-item{display:flex;flex-direction:column;}
+
+
 .stat-val{font-size:1.1rem;font-weight:700;line-height:1.1;}
 .stat-lbl{font-size:.75rem;color:var(--muted);}
 .profile-desc{font-size:.88rem;color:var(--text);line-height:1.4;max-width:600px;}
@@ -139,9 +139,6 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
         <h1 class="p-name" id="p-nome"></h1>
         <p class="p-desc" id="p-desc" style="display:none"></p>
         <div class="p-loc" id="p-loc-wrap"><span id="p-loc"></span></div>
-        <div class="p-stats">
-          <div class="stat-item"><span class="stat-val" id="p-disp">0</span><span class="stat-lbl">Disponíveis</span></div>
-        </div>
       </div>
     </div>
     <p class="profile-desc" id="p-desc"></p>
@@ -299,10 +296,7 @@ function carregar(){
     else document.getElementById("p-loc-wrap").style.display="none";
     var de=document.getElementById("p-desc");
     if(g.Descricao){de.textContent=g.Descricao;de.style.display="block";}else de.style.display="none";
-    document.getElementById("p-disp").textContent=todosCarros.filter(function(c){
-      var s=(c.Status||"").toLowerCase().trim();
-      return c.Garajeiro===slugAtual&&(s==="disponivel"||s==="disponível");
-    }).length;
+
     var tel=String(g.WhatsApp||"").replace(/\D/g,"");
     document.getElementById("p-wpp").href="https://wa.me/55"+tel;
     var li=document.getElementById("p-insta");
@@ -361,7 +355,7 @@ function wpp(c){
 
 function render(){
   var meta=document.getElementById("meta"),grid=document.getElementById("grid");
-  meta.textContent=slugAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":"";
+  meta.textContent=slugAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) disponível(is)";
   if(!filtrados.length){grid.innerHTML='<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';return;}
   grid.innerHTML=filtrados.map(function(c,i){
     var f=fUrl(c.Foto);
