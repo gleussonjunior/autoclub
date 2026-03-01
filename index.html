@@ -361,7 +361,7 @@ function wpp(c){
 
 function render(){
   var meta=document.getElementById("meta"),grid=document.getElementById("grid");
-  meta.textContent=slugAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) encontrado(s) nesta loja";
+  meta.textContent=slugAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":"";
   if(!filtrados.length){grid.innerHTML='<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';return;}
   grid.innerHTML=filtrados.map(function(c,i){
     var f=fUrl(c.Foto);
