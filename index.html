@@ -119,25 +119,28 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   .btn-wpp-card{flex-shrink:0;}
 }
 
+
+.tela-home{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;padding:40px 32px;text-align:center;background:#fff;}
+.tela-home.ativo{display:flex;}
+.th-nome{font-size:3rem;font-weight:700;letter-spacing:-.5px;color:#111;line-height:1;}
+.th-sub{font-size:.85rem;font-weight:300;color:#aaa;letter-spacing:.22em;margin-top:6px;}
+.th-div{width:40px;height:1px;background:#e5e5e5;}
+.th-msg{font-size:1rem;color:#555;line-height:1.75;font-weight:300;}
+.th-msg strong{color:#111;font-weight:600;}
+.th-btn{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;padding:14px 28px;border-radius:99px;font-size:.92rem;font-weight:600;}
+.th-rodape{font-size:.7rem;color:#ccc;}
+#site-wrap{display:none;}
 </style>
-<script>
-(function(){
-  var p=new URLSearchParams(window.location.search);
-  var TOKEN_PRO="ACpro-2026-x7mK",TOKEN_ADMIN="932050Gg";
-  var modo;
-  if(p.get("admin")===TOKEN_ADMIN) modo="admin";
-  else if(p.get("token")===TOKEN_PRO) modo="pro";
-  else if(p.get("garajeiro")) modo="loja";
-  else modo="restrito";
-  if(modo==="restrito"){
-    document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AutoClub</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#fff;font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;padding:32px;text-align:center}.logo-nome{font-size:2.8rem;font-weight:700;letter-spacing:-.5px;color:#111}.logo-sub{font-size:.85rem;font-weight:300;color:#999;letter-spacing:.2em;margin-top:4px}.divider{width:40px;height:1px;background:#ddd}.msg{font-size:1rem;color:#555;line-height:1.7;font-weight:300}.msg strong{color:#111;font-weight:600}.btn{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;padding:13px 26px;border-radius:99px;font-size:.9rem;font-weight:600}.rodape{font-size:.7rem;color:#ccc}</style></head><body><div><div class="logo-nome">AutoClub</div><div class="logo-sub">o clube dos garajeiros</div></div><div class="divider"></div><p class="msg">Se voc&eacute; &eacute; um garajeiro,<br><strong>junte-se a n&oacute;s!</strong></p><a class="btn" href="https://wa.me/5534991396569?text=Ol%C3%A1%21+Vi+o+site+do+AutoClub+e+quero+saber+mais+sobre+como+participar+%F0%9F%9A%97" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar com a gente</a><p class="rodape">Acesso exclusivo para garajeiros parceiros</p></body></html>');
-    document.close();
-  }
-})();
-</script>
 </head>
 <body>
-<header>
+<div class="tela-home" id="tela-home">
+  <div><div class="th-nome">AutoClub</div><div class="th-sub">o clube dos garajeiros</div></div>
+  <div class="th-div"></div>
+  <p class="th-msg">Se você também é um Garajeiro,<br><strong>junte-se a nós!</strong></p>
+  <a class="th-btn" href="https://wa.me/5534991396569?text=Ol%C3%A1%21+Vi+o+site+do+AutoClub+e+quero+saber+mais+sobre+como+participar+%F0%9F%9A%97" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Saiba mais</a>
+  <p class="th-rodape">Acesso exclusivo para garajeiros parceiros</p>
+</div>
+<div id="site-wrap"><header>
   <a href="/" class="logo" id="logo-link" onclick="irParaHome(event)"><span class="logo-nome">AutoClub</span><span class="logo-sub">o clube dos garajeiros</span></a>
   <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
     <option value="">Carregando...</option>
@@ -214,6 +217,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   </div>
 </div>
 <footer>AutoClub</footer>
+</div>
 
 <script>
 var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
@@ -248,7 +252,16 @@ function lerAba(aba){
   });
 }
 
+function mostrarHome(){
+  document.getElementById("tela-home").classList.add("ativo");
+}
+function mostrarSite(){
+  document.getElementById("tela-home").style.display="none";
+  document.getElementById("site-wrap").style.display="block";
+}
 function init(){
+  if(_modo==="restrito"){mostrarHome();return;}
+  mostrarSite();
   Promise.all([lerAba("Garajeiros"),lerAba("Carros")]).then(function(res){
     garajeiros=res[0]; todosCarros=res[1];
     var sel=document.getElementById("sel-garagem");
