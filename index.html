@@ -22,8 +22,6 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .profile-info-top{flex:1;}
 .p-name{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;margin-bottom:2px;}
 .p-loc{font-size:.8rem;color:var(--muted);margin-bottom:12px;}.p-desc{font-size:.88rem;color:#555;line-height:1.55;margin-top:4px;margin-bottom:2px;white-space:pre-wrap;}
-
-
 .stat-val{font-size:1.1rem;font-weight:700;line-height:1.1;}
 .stat-lbl{font-size:.75rem;color:var(--muted);}
 .profile-desc{font-size:.88rem;color:var(--text);line-height:1.4;max-width:600px;}
@@ -51,7 +49,6 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .card-img{width:100%;height:190px;object-fit:cover;display:block;transition:transform .35s;}
 .card:hover .card-img{transform:scale(1.03);}
 .card-ph{width:100%;height:190px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
-.badge{position:absolute;bottom:9px;right:9px;background:rgba(0,0,0,.42);color:#fff;font-size:.62rem;font-weight:500;padding:2px 7px;border-radius:5px;backdrop-filter:blur(6px);}
 .card-body{padding:14px 16px 0;}
 .vendedor-tag{font-size:.65rem;text-transform:uppercase;color:var(--blue);font-weight:700;letter-spacing:.5px;margin-bottom:4px;display:block;}
 .card-name{font-size:1rem;font-weight:600;letter-spacing:-.3px;}
@@ -118,8 +115,6 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   .search-wrap,.search-wrap input{width:100%;margin-left:0;}
   .btn-wpp-card{flex-shrink:0;}
 }
-
-
 .tela-home{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;padding:40px 32px;text-align:center;background:#fff;}
 .tela-home.ativo{display:flex;}
 .th-nome{font-size:3rem;font-weight:700;letter-spacing:-.5px;color:#111;line-height:1;}
@@ -160,7 +155,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
         <p class="p-desc" id="p-desc" style="display:none"></p>
       </div>
     </div>
-    <p class="profile-desc" id="p-desc"></p>
+    <p class="profile-desc" id="p-desc2"></p>
     <div class="profile-links">
       <a href="#" target="_blank" class="btn-social wpp" id="p-wpp">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -221,13 +216,10 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
 
 <script>
 var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
-var garajeiros=[],todosCarros=[],slugAtual="",filtrados=[],marcaAtiva="todos",buscaAtiva="";
+var garajeiros=[],todosCarros=[],slugAtual="",numeroAtual="",filtrados=[],marcaAtiva="todos",buscaAtiva="";
 var fotosModal=[],fotoAtual=0,carroModal=null;
 
 // CONTROLE DE ACESSO
-// LOJA:  ?garajeiro=slug      → só vê aquela loja, sem filtro de garajeiro
-// PRO:   ?token=TOKEN_PRO     → vê tudo, com seletor de garajeiros
-// ADMIN: ?admin=SENHA_ADMIN   → igual Pro (expansível no futuro)
 var TOKEN_PRO="ACpro-2026-x7mK";
 var TOKEN_ADMIN="932050Gg";
 var _p=new URLSearchParams(window.location.search);
@@ -259,28 +251,31 @@ function mostrarSite(){
   document.getElementById("tela-home").style.display="none";
   document.getElementById("site-wrap").style.display="block";
 }
+
 function init(){
   if(_modo==="restrito"){mostrarHome();return;}
   mostrarSite();
   Promise.all([lerAba("Garajeiros"),lerAba("Carros")]).then(function(res){
     garajeiros=res[0]; todosCarros=res[1];
     var sel=document.getElementById("sel-garagem");
-    var header=document.querySelector("header");
 
     if(_modo==="loja"){
-      // Modo loja: esconde seletor e logo clicável, trava no garajeiro
       sel.style.display="none";
       var logo=document.getElementById("logo-link");
       if(logo){logo.style.pointerEvents="none";logo.style.cursor="default";}
-      slugAtual=garajeiros.some(function(g){return g.Slug===_slugLoja;})?_slugLoja:"";
+      // Busca por slug na URL, define slugAtual e numeroAtual correspondente
+      var g=garajeiros.find(function(x){return x.Slug===_slugLoja;});
+      slugAtual=g?_slugLoja:"";
+      numeroAtual=g?g.Numero:"";
     } else {
-      // Modo pro/admin: seletor visível com todos os garajeiros
       sel.innerHTML='<option value="">Todos os Veículos</option>';
       garajeiros.filter(function(g){return g.Slug&&g.Nome;}).forEach(function(g){
         var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
       });
       var su=_p.get("garajeiro")||"";
-      slugAtual=garajeiros.some(function(g){return g.Slug===su;})?su:"";
+      var gAtual=garajeiros.find(function(x){return x.Slug===su;});
+      slugAtual=gAtual?su:"";
+      numeroAtual=gAtual?gAtual.Numero:"";
       sel.value=slugAtual;
     }
     carregar();
@@ -292,17 +287,19 @@ function init(){
 
 function irParaHome(e){
   e.preventDefault();
-  if(_modo==="loja") return; // loja não pode sair da vitrine
+  if(_modo==="loja") return;
   trocar("");
 }
 function trocarGaragem(s){if(_modo!=="loja") trocar(s);}
 function trocar(slug){
-  if(_modo==="loja") return; // trava no slug da loja
+  if(_modo==="loja") return;
+  var g=garajeiros.find(function(x){return x.Slug===slug;});
   slugAtual=slug;
+  numeroAtual=g?g.Numero:"";
   var base=window.location.pathname;
   var extra=_modo==="admin"?"?admin="+TOKEN_ADMIN:(_modo==="pro"?"?token="+TOKEN_PRO:"");
   var qs=slug?"?garajeiro="+slug+(extra?"&"+extra.slice(1):""):extra;
-  window.history.pushState({},'',(qs?base+qs:base));
+  window.history.pushState({},'',( qs?base+qs:base));
   document.getElementById("sel-garagem").value=slug;
   marcaAtiva="todos"; buscaAtiva=""; document.getElementById("inp-busca").value="";
   carregar();
@@ -323,11 +320,9 @@ function carregar(){
     if(g.FotoPerfil){img.src=fUrl(g.FotoPerfil);}
     if(g.Localizacao){document.getElementById("p-loc").textContent=g.Localizacao;document.getElementById("p-loc-wrap").style.display="block";}
     else document.getElementById("p-loc-wrap").style.display="none";
-    var de=document.getElementById("p-desc");
-    if(g.Descricao){de.textContent=g.Descricao;de.style.display="block";}else de.style.display="none";
-
-    var tel=String(g.WhatsApp||"").replace(/\D/g,"");
-    document.getElementById("p-wpp").href="https://wa.me/55"+tel;
+    // WhatsApp usa o Numero diretamente
+    var tel=String(g.Numero||"").replace(/\D/g,"");
+    document.getElementById("p-wpp").href="https://wa.me/"+tel;
     var li=document.getElementById("p-insta");
     if(g.Instagram){li.href=g.Instagram;li.style.display="inline-flex";}else li.style.display="none";
     pw.style.display="block";
@@ -348,7 +343,8 @@ function carregar(){
 function base(){
   return todosCarros.filter(function(c){
     var s=(c.Status||"").toLowerCase().trim(),d=(s==="disponivel"||s==="disponível");
-    return slugAtual===""?d:(c.Garajeiro===slugAtual&&d);
+    // Garajeiro na aba Carros agora é o Numero (telefone)
+    return numeroAtual===""?d:(c.Garajeiro===numeroAtual&&d);
   });
 }
 function filtrar(btn){
@@ -359,7 +355,7 @@ function buscar(v){buscaAtiva=v.toLowerCase();aplicar();}
 function aplicar(){
   filtrados=base().filter(function(c){
     return(marcaAtiva==="todos"||c.Marca===marcaAtiva)&&
-      (!buscaAtiva||[c.Marca,c.Modelo,c.Cor,c.Garajeiro].some(function(f){return(f||"").toLowerCase().includes(buscaAtiva);}));
+      (!buscaAtiva||[c.Marca,c.Modelo,c.Cor].some(function(f){return(f||"").toLowerCase().includes(buscaAtiva);}));
   }); render();
 }
 
@@ -375,28 +371,30 @@ function fotos(c){
   ["Foto","Foto2","Foto3","Foto4"].forEach(function(k){var u=fUrl(c[k]);if(u)f.push(u);});
   return f;
 }
+
+// wpp agora busca garajeiro pelo Numero (campo Garajeiro da aba Carros = Numero do garajeiro)
 function wpp(c){
-  var g=garajeiros.find(function(x){return x.Slug===c.Garajeiro;})||{};
-  var tel=String(g.WhatsApp||"").replace(/\D/g,"");
+  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
+  var tel=String(g.Numero||"").replace(/\D/g,"");
   var msg="Olá! Vi no AutoClub e tenho interesse no "+(c.Marca||"")+" "+(c.Modelo||"")+" "+(c.Ano||"")+". Ainda está disponível?";
-  return"https://wa.me/55"+tel+"?text="+encodeURIComponent(msg);
+  return"https://wa.me/"+tel+"?text="+encodeURIComponent(msg);
 }
 
 function render(){
   var meta=document.getElementById("meta"),grid=document.getElementById("grid");
-  meta.textContent=slugAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) disponível(is)";
+  meta.textContent=numeroAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) disponível(is)";
   if(!filtrados.length){grid.innerHTML='<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';return;}
   grid.innerHTML=filtrados.map(function(c,i){
     var f=fUrl(c.Foto);
-    var gn=(garajeiros.find(function(x){return x.Slug===c.Garajeiro;})||{}).Nome||"";
+    // Busca nome do garajeiro pelo Numero
+    var gn=(garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{}).Nome||"";
     return'<div class="card" style="animation-delay:'+(i*0.04)+'s">'
       +'<div class="card-img-wrap" onclick="abrirModal('+i+')">'
       +(f?'<img class="card-img" src="'+f+'" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">':'')
       +'<div class="card-ph"'+(f?' style="display:none"':'')+'>🚗</div>'
-      +(c.Codigo?'<div class="badge">'+c.Codigo+'</div>':'')
       +'</div>'
       +'<div class="card-body" onclick="abrirModal('+i+')">'
-      +(slugAtual===""?'<span class="vendedor-tag">📍 '+gn+'</span>':"")
+      +(numeroAtual===""?'<span class="vendedor-tag">📍 '+gn+'</span>':"")
       +'<div class="card-name">'+(c.Marca||"")+" "+(c.Modelo||"")+'</div>'
       +'<div class="card-year">'+(c.Ano||"")+'</div>'
       +'<div class="tags">'
@@ -430,8 +428,8 @@ function goFoto(i){if(i>=0&&i<fotosModal.length){fotoAtual=i;galeria(fotosModal,
 
 function abrirModal(i){
   var c=filtrados[i]; carroModal=c;
-  var g=garajeiros.find(function(x){return x.Slug===c.Garajeiro;})||{};
-  document.getElementById("m-cod").textContent=slugAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):(c.Codigo?"Cód. "+c.Codigo:"");
+  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
+  document.getElementById("m-cod").textContent=numeroAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):"";
   document.getElementById("m-title").textContent=(c.Marca||"")+" "+(c.Modelo||"");
   document.getElementById("m-year").textContent=c.Ano?"Ano "+c.Ano:"";
   document.getElementById("m-preco").textContent=fPreco(c.Preco);
@@ -452,7 +450,9 @@ function abrirModal(i){
 function compartilhar(){
   if(!carroModal)return;
   var c=carroModal;
-  var url=window.location.origin+window.location.pathname+"?garajeiro="+c.Garajeiro+(c.Codigo?"&carro="+c.Codigo:"");
+  // URL de compartilhamento usa o Slug do garajeiro (para URL amigável)
+  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
+  var url=window.location.origin+window.location.pathname+"?garajeiro="+(g.Slug||c.Garajeiro);
   if(navigator.share){navigator.share({title:c.Marca+" "+c.Modelo,url:url});}
   else{
     navigator.clipboard.writeText(url).then(function(){
