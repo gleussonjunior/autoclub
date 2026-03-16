@@ -31,13 +31,14 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .btn-social.insta{background:#E1306C;}
 .btn-social:hover{opacity:.85;}
 .filters-wrap{padding:12px 24px 0;max-width:1248px;margin:0 auto;}
-.filters{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:0 16px;height:48px;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;}
-.filters::-webkit-scrollbar{display:none;}
+.filters{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:0 16px;height:48px;display:flex;align-items:center;gap:6px;}
+.tags-scroll{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;}
+.tags-scroll::-webkit-scrollbar{display:none;}
 .chip{padding:4px 14px;border-radius:99px;border:1px solid var(--border);background:transparent;font-family:inherit;font-size:.81rem;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--muted);transition:all .15s;flex-shrink:0;}
 .chip.active{background:var(--text);border-color:var(--text);color:#fff;}
 .chip:hover:not(.active){border-color:#999;color:var(--text);}
 .search-wrap{margin-left:auto;position:relative;flex-shrink:0;}
-.search-wrap input{padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.83rem;background:var(--bg);color:var(--text);width:190px;outline:none;transition:all .15s;}
+.search-wrap input{padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.83rem;background:var(--bg);color:var(--text);width:160px;min-width:160px;max-width:160px;outline:none;transition:all .15s;}
 .search-wrap input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,113,227,.1);}
 .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
 .main{padding:20px 24px 60px;max-width:1200px;margin:0 auto;}
@@ -112,7 +113,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   header,.filters-wrap,.main{padding-left:16px;padding-right:16px;}
   .profile-wrap{padding-left:16px;padding-right:16px;}
   .grid,.m-grid{grid-template-columns:1fr;}
-  .search-wrap,.search-wrap input{width:100%;margin-left:0;}
+  .search-wrap,.search-wrap input{width:140px;min-width:140px;max-width:140px;margin-left:0;}
   .btn-wpp-card{flex-shrink:0;}
 }
 .tela-home{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;padding:40px 32px;text-align:center;background:#fff;}
@@ -151,7 +152,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
       </div>
       <div class="profile-info-top">
         <h1 class="p-name" id="p-nome"></h1>
-        <div class="p-loc" id="p-loc-wrap"><span id="p-loc"></span></div>
+        <a class="p-loc" id="p-loc-wrap" target="_blank" style="display:none; text-decoration:none;"><span id="p-loc"></span></a>
         <p class="p-desc" id="p-desc" style="display:none"></p>
       </div>
     </div>
@@ -171,11 +172,14 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
 
 <div class="filters-wrap">
 <div class="filters" id="filters">
-  <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
+  <div class="tags-scroll" id="tags-scroll">
+    <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
+  </div>
   <div class="search-wrap">
     <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" placeholder="Buscar carro..." oninput="buscar(this.value)" id="inp-busca">
   </div>
+</div>
 </div>
 
 <div class="main">
@@ -263,14 +267,17 @@ function init(){
       sel.style.display="none";
       var logo=document.getElementById("logo-link");
       if(logo){logo.style.pointerEvents="none";logo.style.cursor="default";}
-      // Busca por slug na URL, define slugAtual e numeroAtual correspondente
       var g=garajeiros.find(function(x){return x.Slug===_slugLoja;});
       slugAtual=g?_slugLoja:"";
       numeroAtual=g?g.Numero:"";
     } else {
       sel.innerHTML='<option value="">Todos os Veículos</option>';
+      var unicos = [];
       garajeiros.filter(function(g){return g.Slug&&g.Nome;}).forEach(function(g){
-        var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
+        if(!unicos.find(function(u){return u.Slug === g.Slug;})){
+          unicos.push(g);
+          var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
+        }
       });
       var su=_p.get("garajeiro")||"";
       var gAtual=garajeiros.find(function(x){return x.Slug===su;});
@@ -279,6 +286,14 @@ function init(){
       sel.value=slugAtual;
     }
     carregar();
+    // Abrir modal automaticamente se houver parâmetro de carro
+    var carroShare = _p.get("c");
+    if(carroShare){
+      var idxShare = filtrados.findIndex(function(c){ 
+        return String(c.Codigo) === carroShare; 
+      });
+      if(idxShare !== -1) abrirModal(idxShare);
+    }
   }).catch(function(e){
     console.error(e);
     document.getElementById("grid").innerHTML='<div class="state"><div class="icon">⚠️</div><p>Não foi possível conectar à base de dados.</p></div>';
@@ -318,7 +333,12 @@ function carregar(){
     var img=document.getElementById("p-img"); img.style.display="none";
     document.getElementById("p-initials").style.display="flex";
     if(g.FotoPerfil){img.src=fUrl(g.FotoPerfil);}
-    if(g.Localizacao){document.getElementById("p-loc").textContent=g.Localizacao;document.getElementById("p-loc-wrap").style.display="block";}
+    if(g.Localizacao){
+      document.getElementById("p-loc").textContent=g.Localizacao;
+      var pLocWrap = document.getElementById("p-loc-wrap");
+      pLocWrap.href = "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(g.Localizacao);
+      pLocWrap.style.display="inline-block";
+    }
     else document.getElementById("p-loc-wrap").style.display="none";
     // WhatsApp usa o Numero diretamente
     var tel=String(g.Numero||"").replace(/\D/g,"");
@@ -329,13 +349,12 @@ function carregar(){
   }
   var carros=base();
   var marcas=[]; carros.forEach(function(c){if(c.Marca&&!marcas.includes(c.Marca))marcas.push(c.Marca);});
-  var bar=document.getElementById("filters");
+  var bar=document.getElementById("tags-scroll");
   bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b){b.remove();});
   bar.querySelector("[data-marca='todos']").classList.add("active");
-  var sw=bar.querySelector(".search-wrap");
   marcas.sort().forEach(function(m){
     var b=document.createElement("button");b.className="chip";b.dataset.marca=m;b.textContent=m;
-    b.onclick=function(){filtrar(this);}; bar.insertBefore(b,sw);
+    b.onclick=function(){filtrar(this);}; bar.appendChild(b);
   });
   filtrados=carros; render();
 }
@@ -429,7 +448,7 @@ function goFoto(i){if(i>=0&&i<fotosModal.length){fotoAtual=i;galeria(fotosModal,
 function abrirModal(i){
   var c=filtrados[i]; carroModal=c;
   var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  document.getElementById("m-cod").textContent=numeroAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):"";
+  document.getElementById("m-cod").textContent=numeroAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):(c.Codigo?"Cód: "+c.Codigo:"");
   document.getElementById("m-title").textContent=(c.Marca||"")+" "+(c.Modelo||"");
   document.getElementById("m-year").textContent=c.Ano?"Ano "+c.Ano:"";
   document.getElementById("m-preco").textContent=fPreco(c.Preco);
@@ -450,9 +469,14 @@ function abrirModal(i){
 function compartilhar(){
   if(!carroModal)return;
   var c=carroModal;
-  // URL de compartilhamento usa o Slug do garajeiro (para URL amigável)
   var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  var url=window.location.origin+window.location.pathname+"?garajeiro="+(g.Slug||c.Garajeiro);
+  var slugGarajeiro = g.Slug||c.Garajeiro||"";
+  var carId = c.Codigo || "";
+  var params = [];
+  if (slugGarajeiro) params.push("garajeiro=" + slugGarajeiro);
+  if (carId) params.push("c=" + carId);
+  var url=window.location.origin+window.location.pathname+(params.length ? "?"+params.join("&") : "");
+  
   if(navigator.share){navigator.share({title:c.Marca+" "+c.Modelo,url:url});}
   else{
     navigator.clipboard.writeText(url).then(function(){
