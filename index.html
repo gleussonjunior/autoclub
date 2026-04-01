@@ -4,27 +4,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoClub</title>
 <style>
-:root {
-  --bg:#f5f5f7; --white:#ffffff; --blue:#0071e3; --blue2:#0058b0;
-  --text:#1d1d1f; --muted:#6e6e73; --border:#d2d2d7; --radius:16px;
-}
+:root{--bg:#f5f5f7;--white:#ffffff;--blue:#0071e3;--text:#1d1d1f;--muted:#6e6e73;--border:#d2d2d7;--radius:16px;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
 header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;padding:0 24px;gap:16px;}
-.logo{display:flex;flex-direction:column;flex-shrink:0;cursor:pointer;text-decoration:none;color:var(--text);line-height:1;gap:1px;}.logo-nome{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;}.logo-sub{font-size:.55rem;font-weight:300;color:var(--muted);display:block;}
+.logo{display:flex;flex-direction:column;flex-shrink:0;cursor:pointer;text-decoration:none;color:var(--text);line-height:1;gap:1px;}
+.logo-nome{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;}
+.logo-sub{font-size:.55rem;font-weight:300;color:var(--muted);display:block;}
 .garagem-select{font-family:inherit;font-size:.84rem;font-weight:500;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;outline:none;margin-left:auto;}
 .profile-wrap{display:none;padding:20px 24px 0;max-width:1200px;margin:0 auto;animation:up .4s ease;}
-.profile-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;margin-bottom:0;}
+.profile-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;}
 .profile-header{display:flex;gap:20px;align-items:center;}
 .profile-avatar-wrap{position:relative;width:80px;height:80px;flex-shrink:0;}
 .profile-img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:1px solid var(--border);}
 .profile-initials{position:absolute;inset:0;background:var(--bg);color:var(--blue);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:600;}
 .profile-info-top{flex:1;}
 .p-name{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;margin-bottom:2px;}
-.p-loc{font-size:.8rem;color:var(--muted);margin-bottom:12px;}.p-desc{font-size:.88rem;color:#555;line-height:1.55;margin-top:4px;margin-bottom:2px;white-space:pre-wrap;}
-.stat-val{font-size:1.1rem;font-weight:700;line-height:1.1;}
-.stat-lbl{font-size:.75rem;color:var(--muted);}
-.profile-desc{font-size:.88rem;color:var(--text);line-height:1.4;max-width:600px;}
+.p-loc{font-size:.8rem;color:var(--muted);}
+.p-desc{font-size:.88rem;color:#555;line-height:1.55;margin-top:4px;white-space:pre-wrap;}
 .profile-links{display:flex;gap:8px;flex-wrap:wrap;}
 .btn-social{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:99px;font-size:.8rem;font-weight:600;text-decoration:none;transition:opacity .15s;color:#fff;}
 .btn-social.wpp{background:#25D366;}
@@ -38,7 +35,7 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .chip.active{background:var(--text);border-color:var(--text);color:#fff;}
 .chip:hover:not(.active){border-color:#999;color:var(--text);}
 .search-wrap{margin-left:auto;position:relative;flex-shrink:0;}
-.search-wrap input{padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.83rem;background:var(--bg);color:var(--text);width:160px;min-width:160px;max-width:160px;outline:none;transition:all .15s;}
+.search-wrap input{padding:6px 12px 6px 30px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.83rem;background:var(--bg);color:var(--text);width:160px;outline:none;transition:all .15s;}
 .search-wrap input:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(0,113,227,.1);}
 .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
 .main{padding:20px 24px 60px;max-width:1200px;margin:0 auto;}
@@ -98,8 +95,7 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .m-op strong{font-size:.68rem;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);display:block;margin-bottom:3px;}
 .m-op span{font-size:.86rem;color:var(--muted);line-height:1.5;}
 .m-btns{display:flex;gap:7px;flex-wrap:wrap;}
-.btn-wpp-modal{flex:1;min-width:130px;background:#25D366;color:#fff;border:none;padding:11px 16px;border-radius:99px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;text-align:center;}
-.btn-wpp-modal svg{flex-shrink:0;align-self:center;}
+.btn-wpp-modal{flex:1;min-width:130px;background:#25D366;color:#fff;border:none;padding:11px 16px;border-radius:99px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;}
 .btn-wpp-modal:hover{background:#1ebe5d;}
 .btn-share{padding:11px 14px;border:1px solid var(--border);border-radius:99px;background:transparent;font-family:inherit;cursor:pointer;font-size:.84rem;color:var(--text);display:flex;align-items:center;gap:5px;transition:all .15s;}
 .btn-share:hover{background:var(--bg);}
@@ -110,34 +106,18 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){
-  header,.filters-wrap,.main{padding-left:16px;padding-right:16px;}
-  .profile-wrap{padding-left:16px;padding-right:16px;}
+  header,.filters-wrap,.main,.profile-wrap{padding-left:16px;padding-right:16px;}
   .grid,.m-grid{grid-template-columns:1fr;}
-  .search-wrap,.search-wrap input{width:140px;min-width:140px;max-width:140px;margin-left:0;}
-  .btn-wpp-card{flex-shrink:0;}
+  .search-wrap,.search-wrap input{width:140px;}
 }
-.tela-home{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:28px;padding:40px 32px;text-align:center;background:#fff;}
-.tela-home.ativo{display:flex;}
-.th-nome{font-size:3rem;font-weight:700;letter-spacing:-.5px;color:#111;line-height:1;}
-.th-sub{font-size:.85rem;font-weight:300;color:#aaa;letter-spacing:.22em;margin-top:6px;}
-.th-div{width:40px;height:1px;background:#e5e5e5;}
-.th-msg{font-size:1rem;color:#555;line-height:1.75;font-weight:300;}
-.th-msg strong{color:#111;font-weight:600;}
-.th-btn{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;padding:14px 28px;border-radius:99px;font-size:.92rem;font-weight:600;}
-.th-rodape{font-size:.7rem;color:#ccc;}
-#site-wrap{display:none;}
 </style>
 </head>
 <body>
-<div class="tela-home" id="tela-home">
-  <div><div class="th-nome">AutoClub</div><div class="th-sub">o clube dos garajeiros</div></div>
-  <div class="th-div"></div>
-  <p class="th-msg">Se você também é um Garajeiro,<br><strong>junte-se a nós!</strong></p>
-  <a class="th-btn" href="https://wa.me/5534991396569?text=Ol%C3%A1%21+Vi+o+site+do+AutoClub+e+quero+saber+mais+sobre+como+participar+%F0%9F%9A%97" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Saiba mais</a>
-  <p class="th-rodape">Acesso exclusivo para garajeiros parceiros</p>
-</div>
-<div id="site-wrap"><header>
-  <a href="/" class="logo" id="logo-link" onclick="irParaHome(event)"><span class="logo-nome">AutoClub</span><span class="logo-sub">o clube dos garajeiros</span></a>
+<header>
+  <a href="/" class="logo" onclick="irParaHome(event)">
+    <span class="logo-nome">AutoClub</span>
+    <span class="logo-sub">o clube dos garajeiros</span>
+  </a>
   <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
     <option value="">Carregando...</option>
   </select>
@@ -147,16 +127,16 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   <div class="profile-card">
     <div class="profile-header">
       <div class="profile-avatar-wrap">
-        <div class="profile-initials" id="p-initials">J</div>
-        <img src="" alt="Perfil" class="profile-img" id="p-img" style="display:none" onload="this.style.display='block';document.getElementById('p-initials').style.display='none'">
+        <div class="profile-initials" id="p-initials">A</div>
+        <img src="" alt="Perfil" class="profile-img" id="p-img" style="display:none"
+          onload="this.style.display='block';document.getElementById('p-initials').style.display='none'">
       </div>
       <div class="profile-info-top">
         <h1 class="p-name" id="p-nome"></h1>
-        <a class="p-loc" id="p-loc-wrap" target="_blank" style="display:none; text-decoration:none;"><span id="p-loc"></span></a>
+        <a class="p-loc" id="p-loc-wrap" target="_blank" style="display:none;text-decoration:none;"><span id="p-loc"></span></a>
         <p class="p-desc" id="p-desc" style="display:none"></p>
       </div>
     </div>
-    <p class="profile-desc" id="p-desc2"></p>
     <div class="profile-links">
       <a href="#" target="_blank" class="btn-social wpp" id="p-wpp">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -171,15 +151,15 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
 </div>
 
 <div class="filters-wrap">
-<div class="filters" id="filters">
-  <div class="tags-scroll" id="tags-scroll">
-    <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
+  <div class="filters">
+    <div class="tags-scroll" id="tags-scroll">
+      <button class="chip active" data-marca="todos" onclick="filtrar(this)">Todos</button>
+    </div>
+    <div class="search-wrap">
+      <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Buscar carro..." oninput="buscar(this.value)" id="inp-busca">
+    </div>
   </div>
-  <div class="search-wrap">
-    <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" placeholder="Buscar carro..." oninput="buscar(this.value)" id="inp-busca">
-  </div>
-</div>
 </div>
 
 <div class="main">
@@ -215,25 +195,14 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
     </div>
   </div>
 </div>
+
 <footer>AutoClub</footer>
-</div>
 
 <script>
-var SHEET_ID = "1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
+var SHEET_ID="1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
 var garajeiros=[],todosCarros=[],slugAtual="",numeroAtual="",filtrados=[],marcaAtiva="todos",buscaAtiva="";
 var fotosModal=[],fotoAtual=0,carroModal=null;
-
-// CONTROLE DE ACESSO
-var TOKEN_PRO="ACpro-2026-x7mK";
-var TOKEN_ADMIN="932050Gg";
 var _p=new URLSearchParams(window.location.search);
-var _modo=(function(){
-  if(_p.get("admin")===TOKEN_ADMIN) return "admin";
-  if(_p.get("token")===TOKEN_PRO)   return "pro";
-  if(_p.get("garajeiro"))           return "loja";
-  return "restrito";
-})();
-var _slugLoja=_modo==="loja"?(_p.get("garajeiro")||""):"";
 
 function lerAba(aba){
   var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&headers=1&sheet="+encodeURIComponent(aba);
@@ -241,58 +210,33 @@ function lerAba(aba){
     var d=JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1));
     var cols=d.table.cols.map(function(c){return(c&&c.label)?c.label.trim():"";});
     return d.table.rows.filter(function(r){return r.c&&r.c.some(function(c){return c&&c.v!=null;});}).map(function(r){
-      var o={};
-      cols.forEach(function(col,i){if(col!=="")o[col]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():"";});
-      return o;
+      var o={};cols.forEach(function(col,i){if(col!=="")o[col]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():"";});return o;
     });
   });
 }
 
-function mostrarHome(){
-  document.getElementById("tela-home").classList.add("ativo");
-}
-function mostrarSite(){
-  document.getElementById("tela-home").style.display="none";
-  document.getElementById("site-wrap").style.display="block";
-}
-
 function init(){
-  if(_modo==="restrito"){mostrarHome();return;}
-  mostrarSite();
   Promise.all([lerAba("Garajeiros"),lerAba("Carros")]).then(function(res){
-    garajeiros=res[0]; todosCarros=res[1];
+    garajeiros=res[0];todosCarros=res[1];
     var sel=document.getElementById("sel-garagem");
-
-    if(_modo==="loja"){
-      sel.style.display="none";
-      var logo=document.getElementById("logo-link");
-      if(logo){logo.style.pointerEvents="none";logo.style.cursor="default";}
-      var g=garajeiros.find(function(x){return x.Slug===_slugLoja;});
-      slugAtual=g?_slugLoja:"";
-      numeroAtual=g?g.Numero:"";
-    } else {
-      sel.innerHTML='<option value="">Todos os Veículos</option>';
-      var unicos = [];
-      garajeiros.filter(function(g){return g.Slug&&g.Nome;}).forEach(function(g){
-        if(!unicos.find(function(u){return u.Slug === g.Slug;})){
-          unicos.push(g);
-          var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
-        }
-      });
-      var su=_p.get("garajeiro")||"";
-      var gAtual=garajeiros.find(function(x){return x.Slug===su;});
-      slugAtual=gAtual?su:"";
-      numeroAtual=gAtual?gAtual.Numero:"";
-      sel.value=slugAtual;
-    }
+    sel.innerHTML='<option value="">Todos os Veículos</option>';
+    var unicos=[];
+    garajeiros.filter(function(g){return g.Slug&&g.Nome;}).forEach(function(g){
+      if(!unicos.find(function(u){return u.Slug===g.Slug;})){
+        unicos.push(g);
+        var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
+      }
+    });
+    var slugParam=_p.get("garajeiro")||"";
+    var gAtual=garajeiros.find(function(x){return x.Slug===slugParam;});
+    slugAtual=gAtual?slugParam:"";
+    numeroAtual=gAtual?gAtual.Numero:"";
+    sel.value=slugAtual;
     carregar();
-    // Abrir modal automaticamente se houver parâmetro de carro
-    var carroShare = _p.get("c");
+    var carroShare=_p.get("c");
     if(carroShare){
-      var idxShare = filtrados.findIndex(function(c){ 
-        return String(c.Codigo) === carroShare; 
-      });
-      if(idxShare !== -1) abrirModal(idxShare);
+      var idx=filtrados.findIndex(function(c){return String(c.Codigo)===String(carroShare);});
+      if(idx!==-1)abrirModal(idx);
     }
   }).catch(function(e){
     console.error(e);
@@ -300,23 +244,15 @@ function init(){
   });
 }
 
-function irParaHome(e){
-  e.preventDefault();
-  if(_modo==="loja") return;
-  trocar("");
-}
-function trocarGaragem(s){if(_modo!=="loja") trocar(s);}
+function irParaHome(e){e.preventDefault();trocar("");}
+function trocarGaragem(s){trocar(s);}
 function trocar(slug){
-  if(_modo==="loja") return;
   var g=garajeiros.find(function(x){return x.Slug===slug;});
-  slugAtual=slug;
-  numeroAtual=g?g.Numero:"";
-  var base=window.location.pathname;
-  var extra=_modo==="admin"?"?admin="+TOKEN_ADMIN:(_modo==="pro"?"?token="+TOKEN_PRO:"");
-  var qs=slug?"?garajeiro="+slug+(extra?"&"+extra.slice(1):""):extra;
-  window.history.pushState({},'',( qs?base+qs:base));
+  slugAtual=slug;numeroAtual=g?g.Numero:"";
+  var qs=slug?"?garajeiro="+slug:"";
+  window.history.pushState({},'',window.location.pathname+(qs||""));
   document.getElementById("sel-garagem").value=slug;
-  marcaAtiva="todos"; buscaAtiva=""; document.getElementById("inp-busca").value="";
+  marcaAtiva="todos";buscaAtiva="";document.getElementById("inp-busca").value="";
   carregar();
 }
 
@@ -327,108 +263,56 @@ function carregar(){
     var g=garajeiros.find(function(x){return x.Slug===slugAtual;})||{};
     document.getElementById("p-nome").textContent=g.Nome||"";
     var desc=document.getElementById("p-desc");
-    if(g.Descricao&&g.Descricao.trim()){desc.textContent=g.Descricao.trim();desc.style.display="block";}
-    else desc.style.display="none";
-    document.getElementById("p-initials").textContent=(g.Nome||"V")[0].toUpperCase();
-    var img=document.getElementById("p-img"); img.style.display="none";
-    document.getElementById("p-initials").style.display="flex";
+    if(g.Descricao&&g.Descricao.trim()){desc.textContent=g.Descricao.trim();desc.style.display="block";}else desc.style.display="none";
+    document.getElementById("p-initials").textContent=(g.Nome||"A")[0].toUpperCase();
+    var img=document.getElementById("p-img");img.style.display="none";document.getElementById("p-initials").style.display="flex";
     if(g.FotoPerfil){img.src=fUrl(g.FotoPerfil);}
-    if(g.Localizacao){
-      document.getElementById("p-loc").textContent=g.Localizacao;
-      var pLocWrap = document.getElementById("p-loc-wrap");
-      pLocWrap.href = "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(g.Localizacao);
-      pLocWrap.style.display="inline-block";
-    }
+    if(g.Localizacao){document.getElementById("p-loc").textContent=g.Localizacao;var pw2=document.getElementById("p-loc-wrap");pw2.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(g.Localizacao);pw2.style.display="inline-block";}
     else document.getElementById("p-loc-wrap").style.display="none";
-    // WhatsApp usa o Numero diretamente
-    var tel=String(g.Numero||"").replace(/\D/g,"");
-    document.getElementById("p-wpp").href="https://wa.me/"+tel;
+    document.getElementById("p-wpp").href="https://wa.me/"+String(g.Numero||"").replace(/\D/g,"");
     var li=document.getElementById("p-insta");
     if(g.Instagram){li.href=g.Instagram;li.style.display="inline-flex";}else li.style.display="none";
     pw.style.display="block";
   }
   var carros=base();
-  var marcas=[]; carros.forEach(function(c){if(c.Marca&&!marcas.includes(c.Marca))marcas.push(c.Marca);});
+  var marcas=[];carros.forEach(function(c){if(c.Marca&&!marcas.includes(c.Marca))marcas.push(c.Marca);});
   var bar=document.getElementById("tags-scroll");
   bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b){b.remove();});
   bar.querySelector("[data-marca='todos']").classList.add("active");
-  marcas.sort().forEach(function(m){
-    var b=document.createElement("button");b.className="chip";b.dataset.marca=m;b.textContent=m;
-    b.onclick=function(){filtrar(this);}; bar.appendChild(b);
-  });
-  filtrados=carros; render();
+  marcas.sort().forEach(function(m){var b=document.createElement("button");b.className="chip";b.dataset.marca=m;b.textContent=m;b.onclick=function(){filtrar(this);};bar.appendChild(b);});
+  filtrados=carros;render();
 }
 
 function base(){
   return todosCarros.filter(function(c){
     var s=(c.Status||"").toLowerCase().trim(),d=(s==="disponivel"||s==="disponível");
-    // Garajeiro na aba Carros agora é o Numero (telefone)
     return numeroAtual===""?d:(c.Garajeiro===numeroAtual&&d);
   });
 }
-function filtrar(btn){
-  document.querySelectorAll(".chip").forEach(function(b){b.classList.remove("active");});
-  btn.classList.add("active"); marcaAtiva=btn.dataset.marca; aplicar();
-}
+function filtrar(btn){document.querySelectorAll(".chip").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");marcaAtiva=btn.dataset.marca;aplicar();}
 function buscar(v){buscaAtiva=v.toLowerCase();aplicar();}
 function aplicar(){
   filtrados=base().filter(function(c){
-    return(marcaAtiva==="todos"||c.Marca===marcaAtiva)&&
-      (!buscaAtiva||[c.Marca,c.Modelo,c.Cor].some(function(f){return(f||"").toLowerCase().includes(buscaAtiva);}));
-  }); render();
+    return(marcaAtiva==="todos"||c.Marca===marcaAtiva)&&(!buscaAtiva||[c.Marca,c.Modelo,c.Cor].some(function(f){return(f||"").toLowerCase().includes(buscaAtiva);}));
+  });render();
 }
 
 function fPreco(v){var n=parseInt(String(v||"").replace(/\D/g,""),10);return isNaN(n)?"Consulte":"R$ "+n.toLocaleString("pt-BR");}
 function fKm(v){var n=parseInt(String(v||"").replace(/\D/g,""),10);return isNaN(n)?"0 km":n.toLocaleString("pt-BR")+" km";}
-function fUrl(u){
-  if(!u)return"";
-  var m=String(u).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  return m?"https://drive.google.com/uc?export=view&id="+m[1]:u;
-}
-function fotos(c){
-  var f=[];
-  ["Foto","Foto2","Foto3","Foto4"].forEach(function(k){var u=fUrl(c[k]);if(u)f.push(u);});
-  return f;
-}
-
-// wpp agora busca garajeiro pelo Numero (campo Garajeiro da aba Carros = Numero do garajeiro)
-function wpp(c){
-  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  var tel=String(g.Numero||"").replace(/\D/g,"");
-  var msg="Olá! Vi no AutoClub e tenho interesse no "+(c.Marca||"")+" "+(c.Modelo||"")+" "+(c.Ano||"")+". Ainda está disponível?";
-  return"https://wa.me/"+tel+"?text="+encodeURIComponent(msg);
-}
+function fUrl(u){if(!u)return"";var m=String(u).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);return m?"https://drive.google.com/uc?export=view&id="+m[1]:u;}
+function fotos(c){var f=[];["Foto","Foto2","Foto3","Foto4"].forEach(function(k){var u=fUrl(c[k]);if(u)f.push(u);});return f;}
+function wpp(c){var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};var tel=String(g.Numero||"").replace(/\D/g,"");var msg="Olá! Vi no AutoClub e tenho interesse no "+(c.Marca||"")+" "+(c.Modelo||"")+" "+(c.Ano||"")+". Ainda está disponível?";return"https://wa.me/"+tel+"?text="+encodeURIComponent(msg);}
 
 function render(){
   var meta=document.getElementById("meta"),grid=document.getElementById("grid");
   meta.textContent=numeroAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) disponível(is)";
   if(!filtrados.length){grid.innerHTML='<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';return;}
   grid.innerHTML=filtrados.map(function(c,i){
-    var f=fUrl(c.Foto);
-    // Busca nome do garajeiro pelo Numero
-    var gn=(garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{}).Nome||"";
+    var f=fUrl(c.Foto),gn=(garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{}).Nome||"";
     return'<div class="card" style="animation-delay:'+(i*0.04)+'s">'
-      +'<div class="card-img-wrap" onclick="abrirModal('+i+')">'
-      +(f?'<img class="card-img" src="'+f+'" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">':'')
-      +'<div class="card-ph"'+(f?' style="display:none"':'')+'>🚗</div>'
-      +'</div>'
-      +'<div class="card-body" onclick="abrirModal('+i+')">'
-      +(numeroAtual===""?'<span class="vendedor-tag">📍 '+gn+'</span>':"")
-      +'<div class="card-name">'+(c.Marca||"")+" "+(c.Modelo||"")+'</div>'
-      +'<div class="card-year">'+(c.Ano||"")+'</div>'
-      +'<div class="tags">'
-      +(c.Cor?'<span class="tag">'+c.Cor+'</span>':"")
-      +(c.Km?'<span class="tag">'+fKm(c.Km)+'</span>':"")
-      +(c.Combustivel?'<span class="tag">'+c.Combustivel+'</span>':"")
-      +'</div></div>'
-      +'<div class="card-footer">'
-      +'<span class="price">'+fPreco(c.Preco)+'</span>'
-      +'<div class="card-btns">'
-      +'<button class="btn-detalhes" onclick="abrirModal('+i+')">Ver detalhes</button>'
-      +'<a class="btn-wpp-card" href="'+wpp(c)+'" target="_blank" onclick="event.stopPropagation()" title="WhatsApp">'
-      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>'
-      +'</a>'
-      +'</div></div></div>';
+      +'<div class="card-img-wrap" onclick="abrirModal('+i+')">'+(f?'<img class="card-img" src="'+f+'" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">':'')+'<div class="card-ph"'+(f?' style="display:none"':'')+'>🚗</div></div>'
+      +'<div class="card-body" onclick="abrirModal('+i+')">'+(numeroAtual===""?'<span class="vendedor-tag">📍 '+gn+'</span>':"")+'<div class="card-name">'+(c.Marca||"")+" "+(c.Modelo||"")+'</div><div class="card-year">'+(c.Ano||"")+'</div><div class="tags">'+(c.Cor?'<span class="tag">'+c.Cor+'</span>':"")+(c.Km?'<span class="tag">'+fKm(c.Km)+'</span>':"")+(c.Combustivel?'<span class="tag">'+c.Combustivel+'</span>':"")+'</div></div>'
+      +'<div class="card-footer"><span class="price">'+fPreco(c.Preco)+'</span><div class="card-btns"><button class="btn-detalhes" onclick="abrirModal('+i+')">Ver detalhes</button><a class="btn-wpp-card" href="'+wpp(c)+'" target="_blank" onclick="event.stopPropagation()" title="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a></div></div></div>';
   }).join("");
 }
 
@@ -436,17 +320,17 @@ function galeria(fs,idx){
   var el=document.getElementById("m-gallery");
   if(!fs.length){el.innerHTML='<div class="gallery-ph">🚗</div>';return;}
   var multi=fs.length>1;
-  el.innerHTML=(fs[idx]?'<img class="gallery-main" id="gmain" src="'+fs[idx]+'" alt="foto">':'<div class="gallery-ph">🚗</div>')
+  el.innerHTML=(fs[idx]?'<img class="gallery-main" src="'+fs[idx]+'" alt="foto">':'<div class="gallery-ph">🚗</div>')
     +(multi&&idx>0?'<button class="gallery-nav gallery-prev" onclick="goFoto('+(idx-1)+')">&#8249;</button>':"")
     +(multi&&idx<fs.length-1?'<button class="gallery-nav gallery-next" onclick="goFoto('+(idx+1)+')">&#8250;</button>':"")
-    +(multi?'<div class="gallery-counter">'+(idx+1)+' / '+fs.length+'</div>':"")
+    +(multi?'<div class="gallery-counter">'+(idx+1)+'/'+fs.length+'</div>':"")
     +(multi?'<div class="gallery-dots">'+fs.map(function(_,i){return'<button class="gdot'+(i===idx?' on':'')+'" onclick="goFoto('+i+')"></button>';}).join("")+'</div>':"")
     +(multi?'<div class="gallery-thumbs">'+fs.map(function(f,i){return'<img class="gthumb'+(i===idx?' on':'')+'" src="'+f+'" onclick="goFoto('+i+')" onerror="this.style.display=\'none\'">';}).join("")+'</div>':"");
 }
 function goFoto(i){if(i>=0&&i<fotosModal.length){fotoAtual=i;galeria(fotosModal,i);}}
 
 function abrirModal(i){
-  var c=filtrados[i]; carroModal=c;
+  var c=filtrados[i];carroModal=c;
   var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
   document.getElementById("m-cod").textContent=numeroAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):(c.Codigo?"Cód: "+c.Codigo:"");
   document.getElementById("m-title").textContent=(c.Marca||"")+" "+(c.Modelo||"");
@@ -457,7 +341,7 @@ function abrirModal(i){
   document.getElementById("m-comb").textContent=c.Combustivel||"–";
   var mo=document.getElementById("m-op");
   if(c.Opcionais){mo.style.display="block";document.getElementById("m-op-txt").textContent=c.Opcionais;}else mo.style.display="none";
-  fotosModal=fotos(c); fotoAtual=0; galeria(fotosModal,0);
+  fotosModal=fotos(c);fotoAtual=0;galeria(fotosModal,0);
   document.getElementById("m-wpp").href=wpp(c);
   var sb=document.getElementById("m-share");
   sb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';
@@ -468,46 +352,26 @@ function abrirModal(i){
 
 function compartilhar(){
   if(!carroModal)return;
-  var c=carroModal;
-  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  var slugGarajeiro = g.Slug||c.Garajeiro||"";
-  var carId = c.Codigo || "";
-  var params = [];
-  if (slugGarajeiro) params.push("garajeiro=" + slugGarajeiro);
-  if (carId) params.push("c=" + carId);
-  var url=window.location.origin+window.location.pathname+(params.length ? "?"+params.join("&") : "");
-  
+  var c=carroModal,g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
+  var params=[];if(g.Slug)params.push("garajeiro="+g.Slug);if(c.Codigo)params.push("c="+c.Codigo);
+  var url=window.location.origin+window.location.pathname+(params.length?"?"+params.join("&"):"");
   if(navigator.share){navigator.share({title:c.Marca+" "+c.Modelo,url:url});}
-  else{
-    navigator.clipboard.writeText(url).then(function(){
-      var b=document.getElementById("m-share");
-      b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Link copiado!';
-      b.classList.add("ok");
-      setTimeout(function(){
-        b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';
-        b.classList.remove("ok");
-      },2500);
-    });
-  }
+  else{navigator.clipboard.writeText(url).then(function(){
+    var b=document.getElementById("m-share");
+    b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Link copiado!';b.classList.add("ok");
+    setTimeout(function(){b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';b.classList.remove("ok");},2500);
+  });}
 }
 
 function fechar(e){
   if(e&&e.target!==document.getElementById("overlay"))return;
-  document.getElementById("overlay").classList.remove("on");
-  document.body.style.overflow="";
+  document.getElementById("overlay").classList.remove("on");document.body.style.overflow="";
 }
 
 var txStart=0;
 document.getElementById("overlay").addEventListener("touchstart",function(e){txStart=e.touches[0].clientX;});
-document.getElementById("overlay").addEventListener("touchend",function(e){
-  var d=txStart-e.changedTouches[0].clientX;
-  if(Math.abs(d)>50)goFoto(d>0?fotoAtual+1:fotoAtual-1);
-});
-document.addEventListener("keydown",function(e){
-  if(e.key==="Escape")fechar();
-  if(e.key==="ArrowRight")goFoto(fotoAtual+1);
-  if(e.key==="ArrowLeft")goFoto(fotoAtual-1);
-});
+document.getElementById("overlay").addEventListener("touchend",function(e){var d=txStart-e.changedTouches[0].clientX;if(Math.abs(d)>50)goFoto(d>0?fotoAtual+1:fotoAtual-1);});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")fechar();if(e.key==="ArrowRight")goFoto(fotoAtual+1);if(e.key==="ArrowLeft")goFoto(fotoAtual-1);});
 
 init();
 </script>
