@@ -1,8 +1,32 @@
-<!DOCTYPE html><html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoClub</title>
+<title>AutoClub — O clube dos garajeiros</title>
+<meta name="description" content="AutoClub — Encontre carros seminovos à venda direto com o vendedor pelo WhatsApp. Garajeiros em Uberlândia e região.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.autoclubgaragens.com.br">
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="AutoClub">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.autoclubgaragens.com.br">
+<meta property="og:title" content="AutoClub — O clube dos garajeiros">
+<meta property="og:description" content="Carros seminovos à venda direto com o vendedor pelo WhatsApp.">
+<meta property="og:image" content="https://www.autoclubgaragens.com.br/og-image.jpg">
+
+<!-- JSON-LD padrão (será sobrescrito dinamicamente via JS para páginas de garajeiro) -->
+<script type="application/ld+json" id="ld-json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AutoClub",
+  "url": "https://www.autoclubgaragens.com.br",
+  "description": "Plataforma de venda de carros seminovos direto com garajeiros pelo WhatsApp"
+}
+</script>
+
 <style>
 :root{--bg:#f5f5f7;--white:#ffffff;--blue:#0071e3;--text:#1d1d1f;--muted:#6e6e73;--border:#d2d2d7;--radius:16px;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -11,7 +35,10 @@ header{position:sticky;top:0;z-index:100;height:52px;background:rgba(255,255,255
 .logo{display:flex;flex-direction:column;flex-shrink:0;cursor:pointer;text-decoration:none;color:var(--text);line-height:1;gap:1px;}
 .logo-nome{font-size:1.4rem;font-weight:700;letter-spacing:-.4px;}
 .logo-sub{font-size:.55rem;font-weight:300;color:var(--muted);display:block;}
-.garagem-select{font-family:inherit;font-size:.84rem;font-weight:500;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;outline:none;margin-left:auto;}
+.header-actions{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.btn-juntar{background:transparent;color:var(--blue);border:1.5px solid var(--blue);padding:6px 14px;border-radius:99px;font-family:inherit;font-size:.78rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s;cursor:pointer;display:inline-flex;align-items:center;}
+.btn-juntar:hover{background:var(--blue);color:#fff;}
+.garagem-select{font-family:inherit;font-size:.84rem;font-weight:500;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;outline:none;}
 .profile-wrap{display:none;padding:20px 24px 0;max-width:1200px;margin:0 auto;animation:up .4s ease;}
 .profile-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px 24px;display:flex;flex-direction:column;gap:16px;}
 .profile-header{display:flex;gap:20px;align-items:center;}
@@ -108,19 +135,25 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
 @media(max-width:600px){
   header,.filters-wrap,.main,.profile-wrap{padding-left:16px;padding-right:16px;}
   .grid,.m-grid{grid-template-columns:1fr;}
-  .search-wrap,.search-wrap input{width:140px;}
-}
+  .search-wrap,.search-wrap input{width:130px;}
+  .btn-juntar{font-size:.72rem;padding:5px 10px;}}
 </style>
 </head>
 <body>
+
 <header>
   <a href="/" class="logo" onclick="irParaHome(event)">
     <span class="logo-nome">AutoClub</span>
     <span class="logo-sub">o clube dos garajeiros</span>
   </a>
-  <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
-    <option value="">Carregando...</option>
-  </select>
+  <div class="header-actions">
+    <a href="https://wa.me/5534991396569?text=Ol%C3%A1!%20Quero%20me%20juntar%20ao%20AutoClub%20como%20garajeiro!" target="_blank" class="btn-juntar" id="btn-juntar">
+      Junte-se ao club!
+    </a>
+    <select class="garagem-select" id="sel-garagem" onchange="trocarGaragem(this.value)">
+      <option value="">Carregando...</option>
+    </select>
+  </div>
 </header>
 
 <div class="profile-wrap" id="profile-wrap">
@@ -196,182 +229,415 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-si
   </div>
 </div>
 
-<footer>AutoClub</footer>
+<footer>AutoClub — <a href="https://wa.me/5534991396569?text=Ol%C3%A1!%20Quero%20me%20juntar%20ao%20AutoClub%20como%20garajeiro!" target="_blank" style="color:var(--blue);text-decoration:none;">Junte-se ao nosso club!</a></footer>
 
 <script>
-var SHEET_ID="1oOJZdrgEPvm9J1vTYYk-r2Y7sj00aH6hQcGvsgwLEsM";
-var garajeiros=[],todosCarros=[],slugAtual="",numeroAtual="",filtrados=[],marcaAtiva="todos",buscaAtiva="";
-var fotosModal=[],fotoAtual=0,carroModal=null;
-var _p=new URLSearchParams(window.location.search);
+// ============================================================
+// CONFIGURAÇÃO SUPABASE
+// Substitua pelas suas chaves (anon key — somente leitura)
+// ============================================================
+var SUPABASE_URL  = "https://rhrsqyjrcaxxvpcdffss.supabase.co";
+var SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJocnNxeWpyY2F4eHZwY2RmZnNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1ODMzOTcsImV4cCI6MjA5MTE1OTM5N30.5LOpkZzeyG-jcLyNolAjGRyzqXmCrqep15Zyerg2AYI";
+var BASE_URL      = "https://www.autoclubgaragens.com.br";
 
-function lerAba(aba){
-  var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&headers=1&sheet="+encodeURIComponent(aba);
-  return fetch(url).then(function(r){return r.text();}).then(function(t){
-    var d=JSON.parse(t.slice(t.indexOf("{"),t.lastIndexOf("}")+1));
-    var cols=d.table.cols.map(function(c){return(c&&c.label)?c.label.trim():"";});
-    return d.table.rows.filter(function(r){return r.c&&r.c.some(function(c){return c&&c.v!=null;});}).map(function(r){
-      var o={};cols.forEach(function(col,i){if(col!=="")o[col]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():"";});return o;
-    });
+// ============================================================
+// ESTADO GLOBAL
+// ============================================================
+var garajeiros = [], todosCarros = [], fotosMap = {};
+var slugAtual = "", numeroAtual = "";
+var filtrados = [], marcaAtiva = "todos", buscaAtiva = "";
+var fotosModal = [], fotoAtual = 0, carroModal = null;
+var _p = new URLSearchParams(window.location.search);
+var viaSlug = !!_p.get("garajeiro"); // true = acesso via QR Code ou link direto
+
+// ============================================================
+// FETCH SUPABASE (REST API)
+// ============================================================
+function sbFetch(path) {
+  return fetch(SUPABASE_URL + "/rest/v1/" + path, {
+    headers: {
+      "apikey": SUPABASE_ANON,
+      "Authorization": "Bearer " + SUPABASE_ANON,
+      "Accept": "application/json"
+    }
+  }).then(function(r) {
+    if (!r.ok) throw new Error("Supabase HTTP " + r.status);
+    return r.json();
+  }).then(function(data) {
+    if (!Array.isArray(data)) throw new Error("Resposta inesperada: " + JSON.stringify(data));
+    return data;
   });
 }
 
-function init(){
-  Promise.all([lerAba("Garajeiros"),lerAba("Carros")]).then(function(res){
-    garajeiros=res[0];todosCarros=res[1];
-    var sel=document.getElementById("sel-garagem");
-    sel.innerHTML='<option value="">Todos os Veículos</option>';
-    var unicos=[];
-    garajeiros.filter(function(g){return g.Slug&&g.Nome;}).forEach(function(g){
-      if(!unicos.find(function(u){return u.Slug===g.Slug;})){
-        unicos.push(g);
-        var o=document.createElement("option");o.value=g.Slug;o.textContent=g.Nome;sel.appendChild(o);
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  Promise.all([
+    sbFetch("garajeiros?select=id,numero,nome,slug,instagram,descricao,foto_perfil,localizacao&estado=eq.ATIVO&order=nome.asc"),
+    sbFetch("carros?select=id,garajeiro_num,marca,modelo,ano,cor,km,combustivel,preco,opcionais,status&status=eq.disponivel"),
+    sbFetch("fotos_carros?select=carro_id,url,ordem&order=carro_id.asc,ordem.asc")
+  ]).then(function(res) {
+    garajeiros  = res[0];
+    todosCarros = res[1];
+    var fotos   = res[2];
+
+    // Montar mapa de fotos por carro_id
+    fotos.forEach(function(f) {
+      if (!fotosMap[f.carro_id]) fotosMap[f.carro_id] = [];
+      fotosMap[f.carro_id].push(f.url);
+    });
+
+    // Popular select de garagens
+    var sel = document.getElementById("sel-garagem");
+    sel.innerHTML = '<option value="">Todos os Veículos</option>';
+    garajeiros.forEach(function(g) {
+      if (g.slug && g.nome) {
+        var o = document.createElement("option");
+        o.value = g.slug;
+        o.textContent = g.nome;
+        sel.appendChild(o);
       }
     });
-    var slugParam=_p.get("garajeiro")||"";
-    var gAtual=garajeiros.find(function(x){return x.Slug===slugParam;});
-    slugAtual=gAtual?slugParam:"";
-    numeroAtual=gAtual?gAtual.Numero:"";
-    sel.value=slugAtual;
-    carregar();
-    var carroShare=_p.get("c");
-    if(carroShare){
-      var idx=filtrados.findIndex(function(c){return String(c.Codigo)===String(carroShare);});
-      if(idx!==-1)abrirModal(idx);
+
+    // Resolver slug da URL
+    var slugParam = _p.get("garajeiro") || "";
+    var gAtual = garajeiros.find(function(x) { return x.slug === slugParam; });
+    slugAtual   = gAtual ? slugParam : "";
+    numeroAtual = gAtual ? gAtual.numero : "";
+    sel.value   = slugAtual;
+
+    // Ocultar select e botão juntar SOMENTE quando a URL já tinha o slug ao carregar a página
+    // Isso cobre QR Code e links diretos — mas não esconde quando o usuário navegou pelo select
+    if (viaSlug) {
+      sel.style.display = "none";
+      document.getElementById("btn-juntar").style.display = "none";
     }
-  }).catch(function(e){
+
+    carregar();
+
+    // Abrir modal se URL tiver parâmetro de carro compartilhado
+    var carroShare = _p.get("c");
+    if (carroShare) {
+      var idx = filtrados.findIndex(function(c) { return String(c.id) === String(carroShare); });
+      if (idx !== -1) abrirModal(idx);
+    }
+
+  }).catch(function(e) {
     console.error(e);
-    document.getElementById("grid").innerHTML='<div class="state"><div class="icon">⚠️</div><p>Não foi possível conectar à base de dados.</p></div>';
+    document.getElementById("grid").innerHTML = '<div class="state"><div class="icon">⚠️</div><p>Não foi possível conectar à base de dados.</p></div>';
   });
 }
 
-function irParaHome(e){e.preventDefault();trocar("");}
-function trocarGaragem(s){trocar(s);}
-function trocar(slug){
-  var g=garajeiros.find(function(x){return x.Slug===slug;});
-  slugAtual=slug;numeroAtual=g?g.Numero:"";
-  var qs=slug?"?garajeiro="+slug:"";
-  window.history.pushState({},'',window.location.pathname+(qs||""));
-  document.getElementById("sel-garagem").value=slug;
-  marcaAtiva="todos";buscaAtiva="";document.getElementById("inp-busca").value="";
+// ============================================================
+// SEO — atualizar meta tags dinamicamente
+// ============================================================
+function atualizarSEO(g) {
+  var nome = g ? g.nome : "";
+  var desc = g ? g.descricao : "";
+  var loc  = g ? g.localizacao : "";
+  var slug = g ? g.slug : "";
+  var foto = g ? g.foto_perfil : "";
+
+  var title = g
+    ? nome + " — Garagem de Carros" + (loc ? " em " + loc : "") + " | AutoClub"
+    : "AutoClub — O clube dos garajeiros | Carros à venda";
+
+  var metaDesc = g
+    ? "Veja os carros à venda de " + nome + (loc ? " em " + loc : "") + ". " + (desc || "Compre direto pelo WhatsApp.") + " | AutoClub"
+    : "AutoClub — Encontre carros seminovos à venda direto com o vendedor pelo WhatsApp. Garajeiros em Uberlândia e região.";
+
+  var canonical = g
+    ? BASE_URL + "/?garajeiro=" + slug
+    : BASE_URL;
+
+  document.title = title;
+  setMeta("description", metaDesc);
+  setMeta("og:title", title);
+  setMeta("og:description", metaDesc);
+  setMeta("og:url", canonical);
+  if (foto) setMeta("og:image", foto);
+  document.querySelector('link[rel="canonical"]').href = canonical;
+
+  // JSON-LD para página de garajeiro
+  if (g) {
+    var ld = {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": nome,
+      "description": desc || "",
+      "url": canonical,
+      "telephone": "+" + g.numero,
+      "address": { "@type": "PostalAddress", "addressLocality": loc || "Uberlândia", "addressCountry": "BR" }
+    };
+    if (foto) ld.image = foto;
+    document.getElementById("ld-json").textContent = JSON.stringify(ld);
+  }
+}
+
+function setMeta(name, content) {
+  var el = document.querySelector('meta[name="' + name + '"], meta[property="' + name + '"]');
+  if (el) { el.setAttribute("content", content); return; }
+  var m = document.createElement("meta");
+  m.setAttribute(name.startsWith("og:") ? "property" : "name", name);
+  m.setAttribute("content", content);
+  document.head.appendChild(m);
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+function irParaHome(e) { e.preventDefault(); trocar(""); }
+function trocarGaragem(s) { trocar(s); }
+
+function trocar(slug) {
+  var g = garajeiros.find(function(x) { return x.slug === slug; });
+  slugAtual   = slug;
+  numeroAtual = g ? g.numero : "";
+  var qs = slug ? "?garajeiro=" + slug : "";
+  window.history.pushState({}, "", window.location.pathname + (qs || ""));
+  document.getElementById("sel-garagem").value = slug;
+  marcaAtiva = "todos";
+  buscaAtiva = "";
+  document.getElementById("inp-busca").value = "";
   carregar();
 }
 
-function carregar(){
-  var pw=document.getElementById("profile-wrap");
-  if(slugAtual===""){pw.style.display="none";}
-  else{
-    var g=garajeiros.find(function(x){return x.Slug===slugAtual;})||{};
-    document.getElementById("p-nome").textContent=g.Nome||"";
-    var desc=document.getElementById("p-desc");
-    if(g.Descricao&&g.Descricao.trim()){desc.textContent=g.Descricao.trim();desc.style.display="block";}else desc.style.display="none";
-    document.getElementById("p-initials").textContent=(g.Nome||"A")[0].toUpperCase();
-    var img=document.getElementById("p-img");img.style.display="none";document.getElementById("p-initials").style.display="flex";
-    if(g.FotoPerfil){img.src=fUrl(g.FotoPerfil);}
-    if(g.Localizacao){document.getElementById("p-loc").textContent=g.Localizacao;var pw2=document.getElementById("p-loc-wrap");pw2.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(g.Localizacao);pw2.style.display="inline-block";}
-    else document.getElementById("p-loc-wrap").style.display="none";
-    document.getElementById("p-wpp").href="https://wa.me/"+String(g.Numero||"").replace(/\D/g,"");
-    var li=document.getElementById("p-insta");
-    if(g.Instagram){li.href=g.Instagram;li.style.display="inline-flex";}else li.style.display="none";
-    pw.style.display="block";
+// ============================================================
+// CARREGAR PERFIL + CARDS
+// ============================================================
+function carregar() {
+  var pw = document.getElementById("profile-wrap");
+  if (!slugAtual) {
+    pw.style.display = "none";
+    atualizarSEO(null);
+  } else {
+    var g = garajeiros.find(function(x) { return x.slug === slugAtual; }) || {};
+    document.getElementById("p-nome").textContent = g.nome || "";
+    var desc = document.getElementById("p-desc");
+    if (g.descricao && g.descricao.trim()) { desc.textContent = g.descricao.trim(); desc.style.display = "block"; }
+    else desc.style.display = "none";
+    document.getElementById("p-initials").textContent = (g.nome || "A")[0].toUpperCase();
+    var img = document.getElementById("p-img");
+    img.style.display = "none";
+    document.getElementById("p-initials").style.display = "flex";
+    if (g.foto_perfil) img.src = g.foto_perfil;
+    if (g.localizacao) {
+      document.getElementById("p-loc").textContent = g.localizacao;
+      var pw2 = document.getElementById("p-loc-wrap");
+      pw2.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(g.localizacao);
+      pw2.style.display = "inline-block";
+    } else document.getElementById("p-loc-wrap").style.display = "none";
+    document.getElementById("p-wpp").href = "https://wa.me/" + String(g.numero || "").replace(/\D/g, "");
+    var li = document.getElementById("p-insta");
+    if (g.instagram) { li.href = g.instagram; li.style.display = "inline-flex"; }
+    else li.style.display = "none";
+    pw.style.display = "block";
+    atualizarSEO(g);
   }
-  var carros=base();
-  var marcas=[];carros.forEach(function(c){if(c.Marca&&!marcas.includes(c.Marca))marcas.push(c.Marca);});
-  var bar=document.getElementById("tags-scroll");
-  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b){b.remove();});
+
+  var carros = base();
+  var marcas = [];
+  carros.forEach(function(c) { if (c.marca && !marcas.includes(c.marca)) marcas.push(c.marca); });
+  var bar = document.getElementById("tags-scroll");
+  bar.querySelectorAll(".chip:not([data-marca='todos'])").forEach(function(b) { b.remove(); });
   bar.querySelector("[data-marca='todos']").classList.add("active");
-  marcas.sort().forEach(function(m){var b=document.createElement("button");b.className="chip";b.dataset.marca=m;b.textContent=m;b.onclick=function(){filtrar(this);};bar.appendChild(b);});
-  filtrados=carros;render();
+  marcas.sort().forEach(function(m) {
+    var b = document.createElement("button");
+    b.className = "chip"; b.dataset.marca = m; b.textContent = m;
+    b.onclick = function() { filtrar(this); };
+    bar.appendChild(b);
+  });
+  filtrados = carros;
+  render();
 }
 
-function base(){
-  return todosCarros.filter(function(c){
-    var s=(c.Status||"").toLowerCase().trim(),d=(s==="disponivel"||s==="disponível");
-    return numeroAtual===""?d:(c.Garajeiro===numeroAtual&&d);
+function base() {
+  return todosCarros.filter(function(c) {
+    var s = (c.status || "").toLowerCase().trim();
+    var disp = (s === "disponivel" || s === "disponível");
+    return numeroAtual === "" ? disp : (c.garajeiro_num === numeroAtual && disp);
   });
 }
-function filtrar(btn){document.querySelectorAll(".chip").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");marcaAtiva=btn.dataset.marca;aplicar();}
-function buscar(v){buscaAtiva=v.toLowerCase();aplicar();}
-function aplicar(){
-  filtrados=base().filter(function(c){
-    return(marcaAtiva==="todos"||c.Marca===marcaAtiva)&&(!buscaAtiva||[c.Marca,c.Modelo,c.Cor].some(function(f){return(f||"").toLowerCase().includes(buscaAtiva);}));
-  });render();
+
+function filtrar(btn) {
+  document.querySelectorAll(".chip").forEach(function(b) { b.classList.remove("active"); });
+  btn.classList.add("active");
+  marcaAtiva = btn.dataset.marca;
+  aplicar();
 }
 
-function fPreco(v){var n=parseInt(String(v||"").replace(/\D/g,""),10);return isNaN(n)?"Consulte":"R$ "+n.toLocaleString("pt-BR");}
-function fKm(v){var n=parseInt(String(v||"").replace(/\D/g,""),10);return isNaN(n)?"0 km":n.toLocaleString("pt-BR")+" km";}
-function fUrl(u){if(!u)return"";var m=String(u).match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);return m?"https://drive.google.com/uc?export=view&id="+m[1]:u;}
-function fotos(c){var f=[];["Foto","Foto2","Foto3","Foto4"].forEach(function(k){var u=fUrl(c[k]);if(u)f.push(u);});return f;}
-function wpp(c){var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};var tel=String(g.Numero||"").replace(/\D/g,"");var msg="Olá! Vi no AutoClub e tenho interesse no "+(c.Marca||"")+" "+(c.Modelo||"")+" "+(c.Ano||"")+". Ainda está disponível?";return"https://wa.me/"+tel+"?text="+encodeURIComponent(msg);}
+function buscar(v) { buscaAtiva = v.toLowerCase(); aplicar(); }
 
-function render(){
-  var meta=document.getElementById("meta"),grid=document.getElementById("grid");
-  meta.textContent=numeroAtual===""?"Vitrine Geral — "+filtrados.length+" veículos de parceiros":filtrados.length+" veículo(s) disponível(is)";
-  if(!filtrados.length){grid.innerHTML='<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';return;}
-  grid.innerHTML=filtrados.map(function(c,i){
-    var f=fUrl(c.Foto),gn=(garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{}).Nome||"";
-    return'<div class="card" style="animation-delay:'+(i*0.04)+'s">'
-      +'<div class="card-img-wrap" onclick="abrirModal('+i+')">'+(f?'<img class="card-img" src="'+f+'" alt="Carro" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">':'')+'<div class="card-ph"'+(f?' style="display:none"':'')+'>🚗</div></div>'
-      +'<div class="card-body" onclick="abrirModal('+i+')">'+(numeroAtual===""?'<span class="vendedor-tag">📍 '+gn+'</span>':"")+'<div class="card-name">'+(c.Marca||"")+" "+(c.Modelo||"")+'</div><div class="card-year">'+(c.Ano||"")+'</div><div class="tags">'+(c.Cor?'<span class="tag">'+c.Cor+'</span>':"")+(c.Km?'<span class="tag">'+fKm(c.Km)+'</span>':"")+(c.Combustivel?'<span class="tag">'+c.Combustivel+'</span>':"")+'</div></div>'
-      +'<div class="card-footer"><span class="price">'+fPreco(c.Preco)+'</span><div class="card-btns"><button class="btn-detalhes" onclick="abrirModal('+i+')">Ver detalhes</button><a class="btn-wpp-card" href="'+wpp(c)+'" target="_blank" onclick="event.stopPropagation()" title="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a></div></div></div>';
+function aplicar() {
+  filtrados = base().filter(function(c) {
+    return (marcaAtiva === "todos" || c.marca === marcaAtiva) &&
+      (!buscaAtiva || [c.marca, c.modelo, c.cor].some(function(f) {
+        return (f || "").toLowerCase().includes(buscaAtiva);
+      }));
+  });
+  render();
+}
+
+// ============================================================
+// FORMATAÇÃO
+// ============================================================
+function fPreco(v) {
+  var n = parseInt(String(v || "").replace(/\D/g, ""), 10);
+  return isNaN(n) ? "Consulte" : "R$ " + n.toLocaleString("pt-BR");
+}
+function fKm(v) {
+  var n = parseInt(String(v || "").replace(/\D/g, ""), 10);
+  return isNaN(n) ? "0 km" : n.toLocaleString("pt-BR") + " km";
+}
+function fotos(c) {
+  return fotosMap[c.id] || [];
+}
+function wpp(c) {
+  var g = garajeiros.find(function(x) { return x.numero === c.garajeiro_num; }) || {};
+  var tel = String(g.numero || "").replace(/\D/g, "");
+  var msg = "Olá! Vi no AutoClub e tenho interesse no " + (c.marca || "") + " " + (c.modelo || "") + " " + (c.ano || "") + ". Ainda está disponível?";
+  return "https://wa.me/" + tel + "?text=" + encodeURIComponent(msg);
+}
+
+// ============================================================
+// RENDER GRID
+// ============================================================
+function render() {
+  var meta = document.getElementById("meta"), grid = document.getElementById("grid");
+  meta.textContent = numeroAtual === ""
+    ? "Vitrine Geral — " + filtrados.length + " veículos de parceiros"
+    : filtrados.length + " veículo(s) disponível(is)";
+  if (!filtrados.length) {
+    grid.innerHTML = '<div class="state"><div class="icon">🔍</div><p>Nenhum veículo encontrado.</p></div>';
+    return;
+  }
+  var SVG_WPP = '<svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+  grid.innerHTML = filtrados.map(function(c, i) {
+    var fs = fotos(c), f = fs[0] || "";
+    var gn = (garajeiros.find(function(x) { return x.numero === c.garajeiro_num; }) || {}).nome || "";
+    return '<div class="card" style="animation-delay:' + (i * 0.04) + 's">'
+      + '<div class="card-img-wrap" onclick="abrirModal(' + i + ')">'
+      + (f ? '<img class="card-img" src="' + f + '" alt="' + (c.marca||'') + ' ' + (c.modelo||'') + '" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">' : '')
+      + '<div class="card-ph"' + (f ? ' style="display:none"' : '') + '>🚗</div></div>'
+      + '<div class="card-body" onclick="abrirModal(' + i + ')">'
+      + (numeroAtual === "" ? '<span class="vendedor-tag">📍 ' + gn + '</span>' : '')
+      + '<div class="card-name">' + (c.marca||"") + " " + (c.modelo||"") + '</div>'
+      + '<div class="card-year">' + (c.ano||"") + '</div>'
+      + '<div class="tags">'
+      + (c.cor ? '<span class="tag">' + c.cor + '</span>' : '')
+      + (c.km  ? '<span class="tag">' + fKm(c.km) + '</span>' : '')
+      + (c.combustivel ? '<span class="tag">' + c.combustivel + '</span>' : '')
+      + '</div></div>'
+      + '<div class="card-footer">'
+      + '<span class="price">' + fPreco(c.preco) + '</span>'
+      + '<div class="card-btns">'
+      + '<button class="btn-detalhes" onclick="abrirModal(' + i + ')">Ver detalhes</button>'
+      + '<a class="btn-wpp-card" href="' + wpp(c) + '" target="_blank" onclick="event.stopPropagation()" title="WhatsApp">' + SVG_WPP + '</a>'
+      + '</div></div></div>';
   }).join("");
 }
 
-function galeria(fs,idx){
-  var el=document.getElementById("m-gallery");
-  if(!fs.length){el.innerHTML='<div class="gallery-ph">🚗</div>';return;}
-  var multi=fs.length>1;
-  el.innerHTML=(fs[idx]?'<img class="gallery-main" src="'+fs[idx]+'" alt="foto">':'<div class="gallery-ph">🚗</div>')
-    +(multi&&idx>0?'<button class="gallery-nav gallery-prev" onclick="goFoto('+(idx-1)+')">&#8249;</button>':"")
-    +(multi&&idx<fs.length-1?'<button class="gallery-nav gallery-next" onclick="goFoto('+(idx+1)+')">&#8250;</button>':"")
-    +(multi?'<div class="gallery-counter">'+(idx+1)+'/'+fs.length+'</div>':"")
-    +(multi?'<div class="gallery-dots">'+fs.map(function(_,i){return'<button class="gdot'+(i===idx?' on':'')+'" onclick="goFoto('+i+')"></button>';}).join("")+'</div>':"")
-    +(multi?'<div class="gallery-thumbs">'+fs.map(function(f,i){return'<img class="gthumb'+(i===idx?' on':'')+'" src="'+f+'" onclick="goFoto('+i+')" onerror="this.style.display=\'none\'">';}).join("")+'</div>':"");
+// ============================================================
+// GALERIA MODAL
+// ============================================================
+function galeria(fs, idx) {
+  var el = document.getElementById("m-gallery");
+  if (!fs.length) { el.innerHTML = '<div class="gallery-ph">🚗</div>'; return; }
+  var multi = fs.length > 1;
+  el.innerHTML = (fs[idx] ? '<img class="gallery-main" src="' + fs[idx] + '" alt="foto">' : '<div class="gallery-ph">🚗</div>')
+    + (multi && idx > 0 ? '<button class="gallery-nav gallery-prev" onclick="goFoto(' + (idx-1) + ')">&#8249;</button>' : "")
+    + (multi && idx < fs.length-1 ? '<button class="gallery-nav gallery-next" onclick="goFoto(' + (idx+1) + ')">&#8250;</button>' : "")
+    + (multi ? '<div class="gallery-counter">' + (idx+1) + '/' + fs.length + '</div>' : "")
+    + (multi ? '<div class="gallery-dots">' + fs.map(function(_,i){ return '<button class="gdot' + (i===idx?' on':'') + '" onclick="goFoto(' + i + ')"></button>'; }).join("") + '</div>' : "")
+    + (multi ? '<div class="gallery-thumbs">' + fs.map(function(f,i){ return '<img class="gthumb' + (i===idx?' on':'') + '" src="' + f + '" onclick="goFoto(' + i + ')" onerror="this.style.display=\'none\'">'; }).join("") + '</div>' : "");
 }
-function goFoto(i){if(i>=0&&i<fotosModal.length){fotoAtual=i;galeria(fotosModal,i);}}
 
-function abrirModal(i){
-  var c=filtrados[i];carroModal=c;
-  var g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  document.getElementById("m-cod").textContent=numeroAtual===""?"Vendido por: "+(g.Nome||"Parceiro"):(c.Codigo?"Cód: "+c.Codigo:"");
-  document.getElementById("m-title").textContent=(c.Marca||"")+" "+(c.Modelo||"");
-  document.getElementById("m-year").textContent=c.Ano?"Ano "+c.Ano:"";
-  document.getElementById("m-preco").textContent=fPreco(c.Preco);
-  document.getElementById("m-cor").textContent=c.Cor||"–";
-  document.getElementById("m-km").textContent=fKm(c.Km);
-  document.getElementById("m-comb").textContent=c.Combustivel||"–";
-  var mo=document.getElementById("m-op");
-  if(c.Opcionais){mo.style.display="block";document.getElementById("m-op-txt").textContent=c.Opcionais;}else mo.style.display="none";
-  fotosModal=fotos(c);fotoAtual=0;galeria(fotosModal,0);
-  document.getElementById("m-wpp").href=wpp(c);
-  var sb=document.getElementById("m-share");
-  sb.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';
+function goFoto(i) { if (i >= 0 && i < fotosModal.length) { fotoAtual = i; galeria(fotosModal, i); } }
+
+// ============================================================
+// MODAL
+// ============================================================
+function abrirModal(i) {
+  var c = filtrados[i]; carroModal = c;
+  var g = garajeiros.find(function(x) { return x.numero === c.garajeiro_num; }) || {};
+  document.getElementById("m-cod").textContent = numeroAtual === "" ? "Vendido por: " + (g.nome || "Parceiro") : "";
+  document.getElementById("m-title").textContent = (c.marca||"") + " " + (c.modelo||"");
+  document.getElementById("m-year").textContent = c.ano ? "Ano " + c.ano : "";
+  document.getElementById("m-preco").textContent = fPreco(c.preco);
+  document.getElementById("m-cor").textContent = c.cor || "–";
+  document.getElementById("m-km").textContent = fKm(c.km);
+  document.getElementById("m-comb").textContent = c.combustivel || "–";
+  var mo = document.getElementById("m-op");
+  if (c.opcionais) { mo.style.display = "block"; document.getElementById("m-op-txt").textContent = c.opcionais; }
+  else mo.style.display = "none";
+  fotosModal = fotos(c); fotoAtual = 0; galeria(fotosModal, 0);
+  document.getElementById("m-wpp").href = wpp(c);
+  var sb = document.getElementById("m-share");
+  sb.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';
   sb.classList.remove("ok");
   document.getElementById("overlay").classList.add("on");
-  document.body.style.overflow="hidden";
+  document.body.style.overflow = "hidden";
+
+  // Atualizar JSON-LD do carro aberto (rich snippet de produto)
+  var ldCarro = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": (c.marca||"") + " " + (c.modelo||"") + " " + (c.ano||""),
+    "description": [c.cor, fKm(c.km), c.combustivel, c.opcionais].filter(Boolean).join(", "),
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "BRL",
+      "price": c.preco || 0,
+      "availability": "https://schema.org/InStock",
+      "seller": { "@type": "Person", "name": g.nome || "Garajeiro AutoClub" }
+    }
+  };
+  if (fotosModal.length) ldCarro.image = fotosModal[0];
+  document.getElementById("ld-json").textContent = JSON.stringify(ldCarro);
 }
 
-function compartilhar(){
-  if(!carroModal)return;
-  var c=carroModal,g=garajeiros.find(function(x){return x.Numero===c.Garajeiro;})||{};
-  var params=[];if(g.Slug)params.push("garajeiro="+g.Slug);if(c.Codigo)params.push("c="+c.Codigo);
-  var url=window.location.origin+window.location.pathname+(params.length?"?"+params.join("&"):"");
-  if(navigator.share){navigator.share({title:c.Marca+" "+c.Modelo,url:url});}
-  else{navigator.clipboard.writeText(url).then(function(){
-    var b=document.getElementById("m-share");
-    b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Link copiado!';b.classList.add("ok");
-    setTimeout(function(){b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';b.classList.remove("ok");},2500);
-  });}
+function compartilhar() {
+  if (!carroModal) return;
+  var c = carroModal;
+  var g = garajeiros.find(function(x) { return x.numero === c.garajeiro_num; }) || {};
+  var params = [];
+  if (g.slug) params.push("garajeiro=" + g.slug);
+  if (c.id) params.push("c=" + c.id);
+  var url = BASE_URL + (params.length ? "?" + params.join("&") : "");
+  if (navigator.share) {
+    navigator.share({ title: (c.marca||"") + " " + (c.modelo||""), url: url });
+  } else {
+    navigator.clipboard.writeText(url).then(function() {
+      var b = document.getElementById("m-share");
+      b.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Link copiado!';
+      b.classList.add("ok");
+      setTimeout(function() {
+        b.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartilhar';
+        b.classList.remove("ok");
+      }, 2500);
+    });
+  }
 }
 
-function fechar(e){
-  if(e&&e.target!==document.getElementById("overlay"))return;
-  document.getElementById("overlay").classList.remove("on");document.body.style.overflow="";
+function fechar(e) {
+  if (e && e.target !== document.getElementById("overlay")) return;
+  document.getElementById("overlay").classList.remove("on");
+  document.body.style.overflow = "";
 }
 
-var txStart=0;
-document.getElementById("overlay").addEventListener("touchstart",function(e){txStart=e.touches[0].clientX;});
-document.getElementById("overlay").addEventListener("touchend",function(e){var d=txStart-e.changedTouches[0].clientX;if(Math.abs(d)>50)goFoto(d>0?fotoAtual+1:fotoAtual-1);});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")fechar();if(e.key==="ArrowRight")goFoto(fotoAtual+1);if(e.key==="ArrowLeft")goFoto(fotoAtual-1);});
+// Swipe na galeria
+var txStart = 0;
+document.getElementById("overlay").addEventListener("touchstart", function(e) { txStart = e.touches[0].clientX; });
+document.getElementById("overlay").addEventListener("touchend", function(e) {
+  var d = txStart - e.changedTouches[0].clientX;
+  if (Math.abs(d) > 50) goFoto(d > 0 ? fotoAtual + 1 : fotoAtual - 1);
+});
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") fechar();
+  if (e.key === "ArrowRight") goFoto(fotoAtual + 1);
+  if (e.key === "ArrowLeft")  goFoto(fotoAtual - 1);
+});
 
 init();
 </script>
